@@ -1,0 +1,73 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">GeoQuiz</string>
+    <string name="question_australia">Канберра – столиця Австралії.</string>
+    <string name="question_oceans">Тихий океан більший за Атлантичний океан.</string>
+    <string name="question_mideast">Суецький канал з`єднує Червоне море та Індійський океан.</string>
+    <string name="question_africa">Виток річки Ніл знаходиться в Єгипті.</string>
+    <string name="question_americas">Річка Амазонка – найдовша річка в Америці.</string>
+    <string name="question_asia">Озеро Байкал - найстаріше та найглибше прісноводне озеро у світі.</string>
+
+    <string name="question_riverInRussia">Найдовша річка в Росії – Лена.</string>
+    <string name="question_headquarters">Штаб-квартира ООН знаходиться у Нью-Йорку.</string>
+    <string name="question_Gabon">Габороне - кафедра Габону.</string>
+    <string name="question_Sicily">Сицилію омиває Середземне море.</string>
+    <string name="question_Ireland">Столиця Ірландії - Дублін.</string>
+    <string name="question_Paris">Раніше Париж звався Лютеція.</string>
+    <string name="question_Atlas">Атлас – це ланцюг гірських хребтів, розташований у Європі.</string>
+    <string name="question_China">У Китаї, незважаючи на його значні розміри, лише один часовий пояс.</string>
+    <string name="question_Mayan">Піраміди майя міста Чичен-Іца знаходяться в Перу.</string>
+    <string name="question_Reykjavik">Рейк`явік - столиця Ісландії.</string>
+    <string name="question_Oymyakon">Найхолодніша точка світу, де постійно проживають люди, — російське село Ойм`якон.</string>
+
+    <string name="true_button">Вірно</string>
+    <string name="false_button">Не вірно</string>
+    <string name="next_button">Наступний</string>
+    <string name="pref_button">Попередній</string>
+    <string name="correct_toast">Вірно!!</string>
+    <string name="incorrect_toast">Не вірно!!</string>
+    <string name="null_toast">Питань більше немає</string>
+
+    <string name="load_front_list">Синхронизація базових питань</string>
+
+    <string name="warning_text">Ви впевнені що хочете це зробити?</string>
+    <string name="show_answer_button">Переглянути відповідь</string>
+    <string name="cheat_button">Cheat!</string>
+    <string name="judgment_toast">Cheating is wrong.</string>
+
+    <string name="title_text">Quiz</string>
+    <string name="menu_home_text">Home</string>
+    <string name="menu_new">New quiz</string>
+    <string name="menu_info">Info</string>
+    <string name="menu_settings">Settings</string>
+    <string name="main_title_name">Home</string>
+    <string name="vandroid">vandroid</string>
+    <string name="name">Імя...</string>
+    <string name="question">Питання...</string>
+    <string name="new_question">Назва квесту</string>
+    <string name="end_button">Закінчити</string>
+    <string name="hard_question">Важкі питання</string>
+    <string name="unswer">Відповідь</string>
+    <string name="light_question">Легкі питання</string>
+    <string name="clear">Очистити</string>
+    <string name="load_geo_quiz">Load GeoQuiz</string>
+    <string name="load_сrime">Завантажена незакінчена сесія</string>
+    <string name="go">Go</string>
+    <string name="error_load_question">Помилка завантаження квесту</string>
+    <string name="nice">Nice</string>
+    <string name="no_nice">No nice</string>
+    <string name="go_hard_question">Вам доступні важкі питання</string>
+    <string name="inter_ad_id">ca-app-pub-6279944059986833/5924755266</string>
+    <string name="massage_show_ads">ads</string>
+    <string name="time_format_key">time_format_key</string>
+    <string name="chose_time_format">Chose time format</string>
+    <string name="remove_ads">Вилучити рекламу</string>
+    <string name="remove_summary">Вилучити рекламу</string>
+
+    <string name="start_massage_1">Quiz - це квест правда/не правда, в якому спочатку є базові питання з можливістю додаванням власних, відповідаючи на яких ви заробляєте очки 1 до 100.</string>
+    <string name="start_massage_2">Після натискання на назву квесту ви переходите на этап проходження, що складається з 2 частин (легкі питання та складні). Спочатку ви проходите легкі питання, якими можна заробити максимум 83,3% (2 зірки), якщо ви набрали 2 зірки – на чергове проходження квесту ви відповідатимете на складні питання якими можна набрати 83,3 до 100% (2,3 зірки)</string>
+    <string name="start_massage_3">Квести також можна видаляти - натисканням на сміттєвий бак, з спливаючим вікном з підтвердженням і можливість не видаляти самі питання з бази даних (Радимо ставити галочку - видалити всі питання)</string>
+    <string name="start_massage_4">Також квестами можна поділитися, з відповідями чи без залежно поставите ви галочку, складні питання будуть відзначені знаком - *. (Базові питання не показують відповіді якщо ними поділіться)</string>
+    <string name="start_massage_7">Біля кнопки з назвою квесту є індикатор, який вказує на складність питань після її натискання, у неї може бути 2 стани, lite question/hard question. Нижче є 3 числа, які показують: до легких питань/ складних/ до спроб проходження. Над зірками є два показання: ліве – це середній відсоток за всі спроби, праве – кращий результат. Зірки показують найкращий результат. Дата – це дата створення квесту, над датою відображено ім`я кращого результату, якщо воно було вказано.</string>
+    <string name="start_massage_5">При спробі створення власного питання вам завадить діалогове вікно, в якому ви повинні вказати назву квесту, далі ви вказуєте саме питання, відповідь на нього, складність та кнопку next, та заповнюєте наступне питання, тощо. поки вам не набридне, потім тиснете end. Зверніть увагу, що end також записує питання.</string>
+    <string name="start_massage_6">Надалі будуть додаватися різні шкільні питання, нові можливості. Також можете поділитися своїми питаннями у відгук, найкращі питання можливо будуть додані у програму. А також можете підтримати автора оцінкою 5, або прибрати рекламу, і у вас буде все true ^)</string>
+</resources>
