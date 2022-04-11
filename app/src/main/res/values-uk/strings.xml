@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">GeoQuiz</string>
+    <string name="app_name">Quiz</string>
     <string name="question_australia">Канберра – столиця Австралії.</string>
     <string name="question_oceans">Тихий океан більший за Атлантичний океан.</string>
     <string name="question_mideast">Суецький канал з`єднує Червоне море та Індійський океан.</string>
