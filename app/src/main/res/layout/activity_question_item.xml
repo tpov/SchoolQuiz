@@ -22,4 +22,10 @@ android:padding="8dp">
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="short_question_text_view" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#000000"
+        android:orientation="vertical"></LinearLayout>
 </LinearLayout>

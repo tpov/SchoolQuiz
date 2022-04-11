@@ -9,8 +9,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
-        android:backgroundTint="#0024B5"
-        app:cardBackgroundColor="#001871"
+        android:backgroundTint="#BA0048FF"
+        app:cardBackgroundColor="#6888FF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,6 +19,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#BA0048FF"
+            android:backgroundTint="#BA0048FF"
             android:orientation="vertical">
 
             <EditText

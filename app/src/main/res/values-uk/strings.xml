@@ -21,8 +21,8 @@
 
     <string name="true_button">Вірно</string>
     <string name="false_button">Не вірно</string>
-    <string name="next_button">Наступний</string>
-    <string name="pref_button">Попередній</string>
+    <string name="next_button">Наст.</string>
+    <string name="pref_button">Попер.</string>
     <string name="correct_toast">Вірно!!</string>
     <string name="incorrect_toast">Не вірно!!</string>
     <string name="null_toast">Питань більше немає</string>
