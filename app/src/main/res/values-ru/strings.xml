@@ -24,8 +24,8 @@
 
     <string name="true_button">Верно</string>
     <string name="false_button">Не верно</string>
-    <string name="next_button">Следующий</string>
-    <string name="pref_button">Предыдущий</string>
+    <string name="next_button">След.</string>
+    <string name="pref_button">Пред.</string>
     <string name="correct_toast">Верно!!</string>
     <string name="incorrect_toast">Не верно!!</string>
     <string name="null_toast">Вопросов не осталось</string>
@@ -47,7 +47,7 @@
     <string name="name">Имя...</string>
     <string name="question">Вопрос...</string>
     <string name="new_question">Имя квеста</string>
-    <string name="end_button">Завержить</string>
+    <string name="end_button">END</string>
     <string name="hard_question">Сложный вопрос</string>
     <string name="unswer">Ответ</string>
     <string name="light_question">Легкий вопрос</string>
