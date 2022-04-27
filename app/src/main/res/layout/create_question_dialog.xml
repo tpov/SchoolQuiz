@@ -113,9 +113,8 @@
 
                 <TextView
                     android:id="@+id/num"
-                    android:layout_width="3dp"
+                    android:layout_width="20dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:background="#002F8C"
                     android:backgroundTint="#001853"
                     android:text="0"
