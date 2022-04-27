@@ -16,8 +16,8 @@ android {
         applicationId "com.tpov.geoquiz"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 2000
-        versionName "2.0"
+        versionCode 2100
+        versionName "2.1"
 
         javaCompileOptions {
             annotationProcessorOptions {

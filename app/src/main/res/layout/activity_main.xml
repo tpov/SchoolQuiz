@@ -190,7 +190,7 @@
 
     <TextView
         android:id="@+id/ListAnswer_View"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:paddingStart="15dp"
@@ -206,7 +206,7 @@
 
     <TextView
         android:id="@+id/updateAnswer_View"
-        android:layout_width="wrap_content"
+        android:layout_width="115dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Автообновление вопроса"
