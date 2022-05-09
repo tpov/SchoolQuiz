@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.tpov.geoquiz.activity.FrontActivity
 import com.tpov.geoquiz.activity.MainActivity
 import com.tpov.geoquiz.activity.MainApp
 import com.tpov.geoquiz.database.MainViewModel
@@ -40,7 +41,7 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
         //var closeDialog = mainViewModel.isGeoQuizFrontnoSuspend()
         var closeDialog = false
         CreateQuestionDialog.showDialog(
-            activity as AppCompatActivity, name, closeDialog,
+            activity as FrontActivity, name, closeDialog,
             object : CreateQuestionDialog.Listener {
                 override fun onClick(
                     listNameQuestion: String,
