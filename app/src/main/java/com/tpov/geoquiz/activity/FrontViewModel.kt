@@ -28,7 +28,8 @@ class FrontViewModel(
         get() = _gameResult
 
 
-    private fun startTimer(createTimer: Boolean) {
+    private fun startTimer(typeAnswer: Boolean) {
+        timer?.cancel()
         timer = object : CountDownTimer(
             getCurrentTimer(typeQuestion) * MILLIS_IN_SECONDS,
             MILLIS_IN_SECONDS
@@ -55,7 +56,7 @@ class FrontViewModel(
 
     fun updatePercentAnswer(leftAnswer: Int, numAnswer: Int) {
         if (numAnswer == 0) _answerQuiz.value = 0
-        else _answerQuiz.value = (100 * (leftAnswer!! + numAnswer!!) / numAnswer!!)
+        else _answerQuiz.value = (100 * numAnswer!! / (leftAnswer!! + numAnswer!!))
     }
 
     private fun formatTime(millisUntilFinished: Long): String {
