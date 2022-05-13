@@ -30,19 +30,22 @@ class FrontViewModel(
 
     private fun startTimer(typeAnswer: Boolean) {
         timer?.cancel()
-        timer = object : CountDownTimer(
-            getCurrentTimer(typeQuestion) * MILLIS_IN_SECONDS,
-            MILLIS_IN_SECONDS
-        ) {
-            override fun onTick(millisUntilFinished: Long) {
-                _formattedTime.value = formatTime(millisUntilFinished)
-            }
+        if (typeAnswer) {
+            timer = object : CountDownTimer(
+                getCurrentTimer(typeQuestion) * MILLIS_IN_SECONDS,
+                MILLIS_IN_SECONDS
+            ) {
+                override fun onTick(millisUntilFinished: Long) {
+                    _formattedTime.value = formatTime(millisUntilFinished)
+                }
 
-            override fun onFinish() {
-                _gameResult.value = false
+                override fun onFinish() {
+                    _gameResult.value = false
+
+                }
             }
+            timer?.start()
         }
-        timer?.start()
     }
 
     private fun getCurrentTimer(typeQuestion: Boolean): Int {

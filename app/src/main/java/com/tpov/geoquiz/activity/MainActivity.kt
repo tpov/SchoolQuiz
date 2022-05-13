@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
     private var idGeoQuiz: String? = NAME_GEOQUIZ
     private var codeAnswer: String? = ""
     private var codeMap: String? = ""
-    private var currentIndexThis: Int = 0
+    private var currentIndexThis: Int = -1
     private var isCheater: Boolean = false
     private var updateAnswer: Boolean = true
     private var insertCrime: Boolean = true
@@ -175,7 +175,7 @@ class MainActivity : AppCompatActivity() {
                 constCurrentIndex += 1
                 resultTextView(points)
 
-                if (currentIndexThis == numAnswer!! - 1) {
+                if (currentIndex == numAnswer!! - 1) {
                     val toastNull = Toast.makeText(this, R.string.null_toast, Toast.LENGTH_SHORT)
                     toastNull.show()
                 } else {
@@ -216,7 +216,7 @@ class MainActivity : AppCompatActivity() {
                 constCurrentIndex += 1
                 resultTextView(points)
 
-                if (currentIndexThis == numAnswer!! - 1) {
+                if (currentIndex == numAnswer!! - 1) {
                     val toastNull = Toast.makeText(this, R.string.null_toast, Toast.LENGTH_SHORT)
                     toastNull.show()
                 } else {
@@ -269,8 +269,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         nextButton.setOnClickListener {
-            loadTimer(false)
-            if (currentIndexThis == numAnswer!! - 1) {
+            if (currentIndex == numAnswer!! - 1) {
                 val toastNull = Toast.makeText(this, R.string.null_toast, Toast.LENGTH_SHORT)
                 toastNull.show()
             } else {
@@ -281,7 +280,6 @@ class MainActivity : AppCompatActivity() {
 
         }
         prefButton.setOnClickListener {
-            loadTimer(false)
             if (currentIndex == 0) {
                 Toast.makeText(this, R.string.null_toast, Toast.LENGTH_SHORT).show()
             } else {
@@ -300,6 +298,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         actionBarSettings()
+
     }
 
     private fun endTimer() {
@@ -325,7 +324,7 @@ class MainActivity : AppCompatActivity() {
             constCurrentIndex += 1
             resultTextView(points)
 
-            if (currentIndexThis == numAnswer!! - 1) {
+            if (currentIndex == numAnswer!! - 1) {
                 val toastNull = Toast.makeText(this, R.string.null_toast, Toast.LENGTH_SHORT)
                 toastNull.show()
             } else {
@@ -342,6 +341,7 @@ class MainActivity : AppCompatActivity() {
         if (constCurrentIndex != numAnswer) {
             updatePersentView(leftAnswer!!, persentPoints)
         }
+        checkTimer = false
     }
 
     private fun intToBool(nextInt: Int): Boolean = nextInt == 1
@@ -504,7 +504,6 @@ class MainActivity : AppCompatActivity() {
 
                 updateQuestion()
                 loadPBAnswer(persentAnswer)
-                loadTimer(hardQuestion)
 
                 loadResultTimer()
             }
@@ -513,12 +512,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadTimer(hardQuestion: Boolean) {
         if (!checkTimer) {
-            if (mapAnswer[currentIndex]!!) {
-                viewModel.startGame(mapAnswer[currentIndexThis]!!)
-                viewModel.formattedTime.observe(this, {
-                    tvTimer.text = it
-                })
-            }
+            viewModel.startGame(mapAnswer[currentIndex]!!)
+            viewModel.formattedTime.observe(this, {
+                tvTimer.text = it
+            })
             checkTimer = true
         }
     }
@@ -645,7 +642,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateQuestion() {
         val questionTextResId = currentQuestionText
-        if (mapAnswer[currentIndex]!!) currentIndex = currentIndexThis
 
         if (updateAnswer) {
             questionTextView.text = questionTextResId
@@ -653,16 +649,19 @@ class MainActivity : AppCompatActivity() {
             questionTextView.text = questionTextResId
             lastToast.text = " "
         }
+
+        if (mapAnswer[currentIndex]!! && !mapAnswer[currentIndexThis]!!) checkTimer = false
+        if (mapAnswer[currentIndex]!!) currentIndexThis = currentIndex
+
+        loadTimer(false)
     }
 
     private fun moveToPref() {
         currentIndex = (currentIndex - 1) % numQuestion!!
-        if (mapAnswer[currentIndex]!!) currentIndexThis = currentIndex
     }
 
     private fun moveToNext() {
         currentIndex = (currentIndex + 1) % numQuestion!!
-        if (mapAnswer[currentIndex]!!) currentIndexThis = currentIndex
     }
 
     private val currentQuestionAnswer: Boolean
@@ -835,8 +834,7 @@ class MainActivity : AppCompatActivity() {
         updatePersentView(leftAnswer!!, persentPoints)
 
         checkTimer = false
-        currentIndexThis = currentIndex
-        loadTimer(hardQuestion)
+
         loadPBAnswer(persentAnswer)
     }
 
