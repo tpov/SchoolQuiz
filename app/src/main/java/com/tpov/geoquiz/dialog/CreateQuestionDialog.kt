@@ -1,25 +1,37 @@
 package com.tpov.geoquiz.dialog
 
 import android.app.AlertDialog
-import android.content.Context
-import android.util.Log
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.tpov.geoquiz.R
+import com.tpov.geoquiz.activity.FrontActivity
 import com.tpov.geoquiz.databinding.CreateQuestionDialogBinding
-import com.tpov.geoquiz.entities.FrontList
+import kotlinx.coroutines.InternalCoroutinesApi
 
 object CreateQuestionDialog {
-    fun showDialog(context: Context, nameQuiz: String, closeDialog: Boolean, listener: Listener) {
+    @InternalCoroutinesApi
+    fun showDialog(
+        activity: FrontActivity,
+        nameQuiz: String,
+        closeDialog: Boolean,
+        listener: Listener
+    ) {
+        val viewModel by lazy {
+            ViewModelProvider(activity)[CreateQuestionDialiogViewModel::class.java]
+        }
+
         var numQuestion = 0
-        var unswer = false
+        var Answer = false
         var hardQuestion = false
 
         var dialog: AlertDialog? = null
-        val builder = AlertDialog.Builder(context)
-        val binding = CreateQuestionDialogBinding.inflate(LayoutInflater.from(context))
+        val builder = AlertDialog.Builder(activity)
+        val binding = CreateQuestionDialogBinding.inflate(LayoutInflater.from(activity))
         builder.setView(binding.root)
+        addTextChangeListeners(binding, viewModel)
 
         binding.apply {
             if (closeDialog) dialog?.dismiss()
@@ -31,18 +43,21 @@ object CreateQuestionDialog {
                     num.text = numQuestion.toString()
 
                     bNext.setOnClickListener {
-                        listener.onClick(
-                            "",
-                            tvQuestion.text.toString(),
-                            false,
-                            hardQuestion,
-                            numQuestion,
-                            false,
-                            ""
-                        )
-                        clearDialog(binding)
-                        numQuestion++
-                        dialog?.dismiss()
+                        val fieledsValid = viewModel.validateInput(tvQuestion.text.toString())
+                        if (fieledsValid) {
+                            listener.onClick(
+                                "",
+                                tvQuestion.text.toString(),
+                                false,
+                                hardQuestion,
+                                numQuestion,
+                                false,
+                                ""
+                            )
+                            clearDialog(binding)
+                            numQuestion++
+                            dialog?.dismiss()
+                        }
                     }
                 }
                 "deleteQuiz" -> {
@@ -54,7 +69,7 @@ object CreateQuestionDialog {
 
                     clickAll(binding, false)
                     binding.CheckBox.visibility = View.VISIBLE
-                    binding.num.visibility= View.GONE
+                    binding.num.visibility = View.GONE
 
                     tvQuestion.setText("Delete quiz?")
                     tvQuestion.setRawInputType(0x00000000)
@@ -80,7 +95,7 @@ object CreateQuestionDialog {
 
                     clickAll(binding, false)
                     binding.CheckBox.visibility = View.VISIBLE
-                    binding.num.visibility= View.GONE
+                    binding.num.visibility = View.GONE
 
                     tvQuestion.setText("Share quiz")
                     tvQuestion.setRawInputType(0x00000000)
@@ -129,6 +144,23 @@ object CreateQuestionDialog {
         dialog.show()
     }
 
+    private fun addTextChangeListeners(
+        binding: CreateQuestionDialogBinding,
+        viewModel: CreateQuestionDialiogViewModel
+    ) {
+        binding.tvQuestion.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                viewModel.resetErrorInputName()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
+    }
+
     private fun clearDialog(binding: CreateQuestionDialogBinding) {
         binding.apply {
             tvQuestion.setText("")
@@ -162,13 +194,14 @@ object CreateQuestionDialog {
     }
 
     interface Listener {
-        fun onClick(listNameQuestion: String,
-                    listUserName: String,
-                    nameAnswerQuestion: Boolean,
-                    nameTypeQuestion: Boolean,
-                    numQuestion: Int,
-                    closeDialog: Boolean,
-                    name: String
+        fun onClick(
+            listNameQuestion: String,
+            listUserName: String,
+            nameAnswerQuestion: Boolean,
+            nameTypeQuestion: Boolean,
+            numQuestion: Int,
+            closeDialog: Boolean,
+            name: String
         )
     }
 }
