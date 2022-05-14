@@ -1,32 +1,37 @@
 package com.tpov.geoquiz.dialog
 
 import android.app.AlertDialog
-import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
-import androidx.annotation.NonNull
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.tpov.geoquiz.R
+import com.tpov.geoquiz.activity.FrontActivity
 import com.tpov.geoquiz.databinding.CreateQuestionDialogBinding
+import kotlinx.coroutines.InternalCoroutinesApi
 
 object CreateQuestionDialog {
-    private lateinit var viewModel: CreateQuestionDialiogViewModel
-    fun showDialog(context: Context, nameQuiz: String, closeDialog: Boolean, listener: Listener) {
+    @InternalCoroutinesApi
+    fun showDialog(
+        activity: FrontActivity,
+        nameQuiz: String,
+        closeDialog: Boolean,
+        listener: Listener
+    ) {
+        val viewModel by lazy {
+            ViewModelProvider(activity)[CreateQuestionDialiogViewModel::class.java]
+        }
+
         var numQuestion = 0
-        var unswer = false
+        var Answer = false
         var hardQuestion = false
 
         var dialog: AlertDialog? = null
-        val builder = AlertDialog.Builder(context)
-        val binding = CreateQuestionDialogBinding.inflate(LayoutInflater.from(context))
+        val builder = AlertDialog.Builder(activity)
+        val binding = CreateQuestionDialogBinding.inflate(LayoutInflater.from(activity))
         builder.setView(binding.root)
-        addTextChangeListeners(binding)
-
-        viewModel = ViewModelProvider()[CreateQuestionDialiogViewModel::class.java]
+        addTextChangeListeners(binding, viewModel)
 
         binding.apply {
             if (closeDialog) dialog?.dismiss()
@@ -139,7 +144,10 @@ object CreateQuestionDialog {
         dialog.show()
     }
 
-    private fun addTextChangeListeners(binding: CreateQuestionDialogBinding) {
+    private fun addTextChangeListeners(
+        binding: CreateQuestionDialogBinding,
+        viewModel: CreateQuestionDialiogViewModel
+    ) {
         binding.tvQuestion.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }

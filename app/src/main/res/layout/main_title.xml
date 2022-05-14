@@ -46,8 +46,9 @@
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:background="@color/colorFront"
-                android:text="name quiz" />
+                android:shadowColor="#AD00754D"
+                android:text="name quiz"
+                app:strokeColor="#00590C" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -70,9 +71,11 @@
                         android:layout_marginTop="20dp"
                         android:layout_weight="1"
                         android:background="@color/colorFront"
-                        android:backgroundTint="#186C00"
+                        android:backgroundTint="#6D186E00"
                         android:gravity="left"
-                        android:text="light quiz" />
+                        android:text="light quiz"
+                        android:textColorHighlight="#FFFFFF"
+                        android:textColorLink="#FFFFFF" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -89,7 +92,7 @@
                             android:layout_marginTop="10dp"
                             android:layout_marginRight="2dp"
                             android:background="@color/colorFront"
-                            android:backgroundTint="#186C00"
+                            android:backgroundTint="#66186C00"
                             android:gravity="center"
                             android:text="000"
                             android:textSize="12sp" />

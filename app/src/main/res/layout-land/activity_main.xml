@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:background="#3D8780"
     android:gravity="center"
-    android:orientation="vertical"
-    android:id="@+id/linearLayout5">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/lifecycle"
@@ -207,8 +206,7 @@
 
     <Button
         android:id="@+id/ListQuestion_Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="90dp"
         android:layout_marginStart="68dp"
         android:layout_marginTop="2dp"
         android:drawablePadding="4sp"
@@ -218,7 +216,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ListAnswer_View"
         tools:layout_conversion_absoluteHeight="48dp"
-        tools:layout_conversion_absoluteWidth="85dp" />
+        tools:layout_conversion_absoluteWidth="85dp" android:layout_height="0dp"/>
 
     <TextView
         android:id="@+id/viewResult"
@@ -290,7 +288,7 @@
         android:id="@+id/ListAnswer_View"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
+        android:layout_marginStart="53dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="2dp"
         android:paddingStart="15dp"
@@ -317,5 +315,28 @@
         app:layout_constraintTop_toBottomOf="@+id/pref_button"
         tools:layout_conversion_absoluteHeight="0dp"
         tools:layout_conversion_absoluteWidth="0dp" />
+
+    <ProgressBar
+        android:id="@+id/pbAnswer"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="208dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/ListQuestion_Button"
+        app:layout_constraintTop_toBottomOf="@+id/cheat_button" />
+
+    <TextView
+        android:id="@+id/tvTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="00:00"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/question_text_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
