@@ -103,6 +103,7 @@ class MainActivity : AppCompatActivity() {
     private var currentIndex = 0
     private var thisTimer = false
     private var checkTimer = false
+    private var currentTimer = 0
 
     private var mapAnswer: MutableMap<Int, Boolean> = mutableMapOf(
         0 to true,
@@ -515,6 +516,7 @@ class MainActivity : AppCompatActivity() {
             viewModel.startGame(mapAnswer[currentIndex]!!)
             viewModel.formattedTime.observe(this, {
                 tvTimer.text = it
+                currentTimer = it.toInt()
             })
             checkTimer = true
         }
@@ -618,6 +620,7 @@ class MainActivity : AppCompatActivity() {
             putBoolean("isCheater", isCheater)
             putInt("cheatPoints", cheatPoints)
             putInt("leftAnswer", leftAnswer!!)
+            putInt("currentTimer", currentTimer!!)
         }
         super.onSaveInstanceState(outState)
     }
@@ -632,6 +635,7 @@ class MainActivity : AppCompatActivity() {
         isCheater = saveInstanceState.getBoolean("isCheater")
         cheatPoints = saveInstanceState.getInt("cheatPoints")
         leftAnswer = saveInstanceState.getInt("leftAnswer")
+        currentTimer = saveInstanceState.getInt("currentTimer")
 
         vAndroid.text =
             "vAndroid - ${android.os.Build.VERSION.SDK_INT}, vCode - ${android.os.Build.VERSION_CODES.M}"
