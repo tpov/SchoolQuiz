@@ -11,15 +11,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
-import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.tpov.geoquiz.*
 import com.tpov.geoquiz.database.MainViewModel
+import com.tpov.geoquiz.databinding.ActivityMainBinding
 import com.tpov.geoquiz.entities.Crime
 import com.tpov.geoquiz.entities.FrontList
 import com.tpov.shoppinglist.utils.TimeManager
@@ -55,21 +53,7 @@ class MainActivity : AppCompatActivity() {
     var quizListHardQuestion = mutableListOf<Quiz>()
     var quizListHQVar = mutableListOf<Quiz>()
 
-    private lateinit var trueButton: Button
-    private lateinit var falseButton: Button
-    private lateinit var nextButton: Button
-    private lateinit var prefButton: Button
-    private lateinit var cheatButton: Button
-    private lateinit var questionTextView: TextView
-    private lateinit var updateAnswerButton: Button
-    private lateinit var viewResult: TextView
-    private lateinit var cheatPointsLife: TextView
-    private lateinit var lastToast: TextView
-    private lateinit var vAndroid: TextView
-    private lateinit var listQuestionButton: Button
-    private lateinit var viewCodeAnswer: TextView
-    private lateinit var tvTimer: TextView
-    private lateinit var pbAnswer: ProgressBar
+    private lateinit var binding: ActivityMainBinding
 
     private var numQ: Int? = 0
     private var numQuestion: Int? = 0
@@ -105,54 +89,29 @@ class MainActivity : AppCompatActivity() {
     private var checkTimer = false
     private var currentTimer = 0
 
-    private var mapAnswer: MutableMap<Int, Boolean> = mutableMapOf(
-        0 to true,
-        1 to true,
-        2 to true,
-        3 to true,
-        4 to true,
-        5 to true
-    )
+    private var mapAnswer: MutableMap<Int, Boolean> = mutableMapOf(0 to true)
     private val TAG = "QuizViewModel"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val nameQuestionUser = intent.getStringExtra(NAME_QUESTION)
         userName = intent.getStringExtra(NAME_USER)
         stars = intent.getStringExtra(STARS)!!.toInt()
         idUser = nameQuestionUser!!
-        testMainActivity(0)
         hardQuestion = getHardQuestion(stars)
-
 
         getUpdateCrime(true, idUser)
         getQuizList()
 
-        trueButton = findViewById(R.id.true_button)
-        falseButton = findViewById(R.id.false_button)
-        nextButton = findViewById(R.id.next_button)
-        prefButton = findViewById(R.id.pref_button)
-        cheatButton = findViewById(R.id.cheat_button)
-        updateAnswerButton = findViewById(R.id.updateAnswerButton)
-        questionTextView = findViewById(R.id.question_text_view)
-        viewResult = findViewById(R.id.viewResult)
-        cheatPointsLife = findViewById(R.id.cheatPointsLife)
-        lastToast = findViewById(R.id.lastToast)
-        vAndroid = findViewById(R.id.vAndroid)
-        vAndroid.text =
-            "vAndroid - ${Build.VERSION.SDK_INT}, vCode - ${Build.VERSION_CODES.M}"
-        listQuestionButton = findViewById(R.id.ListQuestion_Button)
-        tvTimer = findViewById(R.id.tvTimer)
-        pbAnswer = findViewById(R.id.pbAnswer)
-
-
+        binding!!.vAndroid!!.text = "vAndroid - ${Build.VERSION.SDK_INT}, vCode - ${Build.VERSION_CODES.M}"
         if (hardQuestion) {
-            listQuestionButton.isEnabled = false
-            listQuestionButton.isClickable = false
+            binding.ListQuestionButton!!.isEnabled = false
+            binding.ListQuestionButton!!.isClickable = false
         }
-        trueButton.setOnClickListener {
+        binding.trueButton!!.setOnClickListener {
 
             if (!updateAnswer) {
                 checkBlockMap()
@@ -194,7 +153,7 @@ class MainActivity : AppCompatActivity() {
                 updatePersentView(leftAnswer!!, persentPoints)
             }
         }
-        falseButton.setOnClickListener { _: View ->
+        binding.falseButton!!.setOnClickListener { _: View ->
 
             if (!updateAnswer) {
                 checkBlockMap()
@@ -236,7 +195,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        cheatButton.setOnClickListener { view ->
+        binding.cheatButton!!.setOnClickListener { view ->
             val answerIsTrue = currentQuestionAnswer
             val intent = CheatActivity.newIntent(this@MainActivity, answerIsTrue)
 
@@ -248,7 +207,7 @@ class MainActivity : AppCompatActivity() {
                 startActivityForResult(intent, REQUEST_CODE_CHEAT)
             }
         }
-        listQuestionButton.setOnClickListener { view ->
+        binding.ListQuestionButton!!.setOnClickListener { view ->
 
             val questionActivityIntent = Intent(this, QuestionActivity::class.java)
 
@@ -269,7 +228,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        nextButton.setOnClickListener {
+        binding.nextButton!!.setOnClickListener {
             if (currentIndex == numAnswer!! - 1) {
                 val toastNull = Toast.makeText(this, R.string.null_toast, Toast.LENGTH_SHORT)
                 toastNull.show()
@@ -280,7 +239,7 @@ class MainActivity : AppCompatActivity() {
             checkBlock()
 
         }
-        prefButton.setOnClickListener {
+        binding.prefButton!!.setOnClickListener {
             if (currentIndex == 0) {
                 Toast.makeText(this, R.string.null_toast, Toast.LENGTH_SHORT).show()
             } else {
@@ -289,13 +248,16 @@ class MainActivity : AppCompatActivity() {
             }
             checkBlock()
         }
-        updateAnswerButton.setOnClickListener {
-            if (!updateAnswer) {
-                updateAnswerButton.text = "true"
-                updateAnswer = true
-            } else {
-                updateAnswerButton.text = "false"
-                updateAnswer = false
+        binding.updateAnswerButton!!.setOnClickListener {
+            binding.apply {
+                if (!updateAnswer) {
+                    updateAnswerButton!!.text = "true"
+                    updateAnswer = true
+                } else {
+
+                    updateAnswerButton!!.text = "false"
+                    updateAnswer = false
+                }
             }
         }
         actionBarSettings()
@@ -351,43 +313,14 @@ class MainActivity : AppCompatActivity() {
         return stars >= 100
     }
 
-    private fun testMainActivity(numI: Int) {
-
-        Log.d("MainActivity", "$numI")
-        Log.d("MainActivity", "numQuestion = $numQuestion")
-        Log.d("MainActivity", "numAnswer = $numAnswer")
-        Log.d("MainActivity", "leftAnswer = $leftAnswer")
-        Log.d("MainActivity", "codeAnswer = $codeAnswer")
-        Log.d("MainActivity", "codeMap = $codeMap")
-        Log.d("MainActivity", "currentIndex = $currentIndexThis")
-        Log.d("MainActivity", "isCheater = $isCheater")
-        Log.d("MainActivity", "updateAnswer = $updateAnswer")
-        Log.d("MainActivity", "insertCrime = $insertCrime")
-        Log.d("MainActivity", "insertCrimeNewQuiz = $insertCrimeNewQuiz")
-        Log.d("MainActivity", "constCurrentIndex = $constCurrentIndex")
-        Log.d("MainActivity", "points = $points")
-        Log.d("MainActivity", "persentPoints = $persentPoints")
-        Log.d("MainActivity", "cheatPoints = $cheatPoints")
-        Log.d("MainActivity", "charMap = $charMap")
-        Log.d("MainActivity", "i = $i")
-        Log.d("MainActivity", "j = $j")
-        Log.d("MainActivity", "idCrime = $idCrime")
-        Log.d("MainActivity", "userName = $userName")
-        Log.d("MainActivity", "idUser = $idUser")
-        Log.d("MainActivity", "____________________________________________")
-
-    }
-
     private fun getUpdateCrime(updateQuiz: Boolean, idUser: String) {
+        binding.insertCrime = insertCrime
         mainViewModel.insertAnswerCrime(true, insertQuiz(idUser), idUser)
         mainViewModel.updateUnswerMutableCrime.observe(this, {
-
             if (insertCrime) {
                 !insertCrime
                 it.forEach { item ->
-                    // if (item.idNameQuiz != idUser) recreate()
                     loadCrime(item)
-                    testMainActivity(2)
                 }
             }
         })
@@ -443,10 +376,7 @@ class MainActivity : AppCompatActivity() {
         if (userName == "") {
             userName = quizTable.userName
         }
-        testMainActivity(1)
-
         mainViewModel.getQuestionCrimeNewQuiz()
-
     }
 
     private fun actionBarSettings() {       //Кнопка назад в баре
@@ -476,7 +406,6 @@ class MainActivity : AppCompatActivity() {
                         else quizList.add(Quiz(item.nameQuestion, item.answerQuestion))
                     }
                 }
-                testMainActivity(3)
 
                 //if (quizListHardQuestion.isEmpty()) quizListHardQuestion = quizList
                 if (hardQuestion) {
@@ -515,7 +444,7 @@ class MainActivity : AppCompatActivity() {
         if (!checkTimer) {
             viewModel.startGame(mapAnswer[currentIndex]!!)
             viewModel.formattedTime.observe(this, {
-                tvTimer.text = it
+                binding.tvTimer!!.text = it
                 currentTimer = it.toInt()
             })
             checkTimer = true
@@ -526,9 +455,9 @@ class MainActivity : AppCompatActivity() {
         viewModel.updatePercentAnswer(leftAnswer!!, constCurrentIndex!!)
         viewModel.answerQuiz.observe(this, {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                pbAnswer.setProgress(it, true)
+                binding.pbAnswer!!.setProgress(it, true)
             } else {
-                pbAnswer.progress = it
+                binding.pbAnswer!!.progress = it
             }
         })
     }
@@ -589,7 +518,6 @@ class MainActivity : AppCompatActivity() {
                 )
                 mainViewModel.updateCrime(crimeUpdate)
             }
-            testMainActivity(10)
         }
     }
 
@@ -637,7 +565,7 @@ class MainActivity : AppCompatActivity() {
         leftAnswer = saveInstanceState.getInt("leftAnswer")
         currentTimer = saveInstanceState.getInt("currentTimer")
 
-        vAndroid.text =
+        binding.vAndroid!!.text =
             "vAndroid - ${android.os.Build.VERSION.SDK_INT}, vCode - ${android.os.Build.VERSION_CODES.M}"
         updatePersentView(leftAnswer!!, persentPoints)
         decoderBlockMap()
@@ -648,10 +576,10 @@ class MainActivity : AppCompatActivity() {
         val questionTextResId = currentQuestionText
 
         if (updateAnswer) {
-            questionTextView.text = questionTextResId
+            binding.questionTextView!!.text = questionTextResId
         } else {
-            questionTextView.text = questionTextResId
-            lastToast.text = " "
+            binding.questionTextView!!.text = questionTextResId
+            binding.lastToast!!.text = " "
         }
 
         if (mapAnswer[currentIndex]!! && !mapAnswer[currentIndexThis]!!) checkTimer = false
@@ -689,10 +617,10 @@ class MainActivity : AppCompatActivity() {
 
                 useCheat()
                 if (hardQuestion) {
-                    lastToast.text = "Читер Х2"
+                    binding.lastToast!!.text = "Читер Х2"
                     val toastCheckAnswer = Toast.makeText(this, R.string.nice, Toast.LENGTH_SHORT)
                     toastCheckAnswer.show()
-                } else lastToast.text = "Читер! Бан!"
+                } else binding.lastToast!!.text = "Читер! Бан!"
                 val toastCheckAnswer =
                     Toast.makeText(this, R.string.judgment_toast, Toast.LENGTH_SHORT)
                 toastCheckAnswer.show()
@@ -703,11 +631,11 @@ class MainActivity : AppCompatActivity() {
                 points += 1
 
                 if (hardQuestion) {
-                    lastToast.text = "HARD QUIZ!!"
+                    binding.lastToast!!.text = "HARD QUIZ!!"
                     val toastCheckAnswer = Toast.makeText(this, R.string.nice, Toast.LENGTH_SHORT)
                     toastCheckAnswer.show()
                 } else {
-                    lastToast.text = "Верно!"
+                    binding.lastToast!!.text = "Верно!"
                     val toastCheckAnswer =
                         Toast.makeText(this, R.string.correct_toast, Toast.LENGTH_SHORT)
                     toastCheckAnswer.show()
@@ -716,12 +644,12 @@ class MainActivity : AppCompatActivity() {
             else -> {
                 coderCodeAnswer(1)
                 if (hardQuestion) {
-                    lastToast.text = "HARD QUIZ!!"
+                    binding.lastToast!!.text = "HARD QUIZ!!"
                     val toastCheckAnswer = Toast.makeText(this, R.string.nice, Toast.LENGTH_SHORT)
                     toastCheckAnswer.show()
 
                 } else {
-                    lastToast.text = "Не верно!"
+                    binding.lastToast!!.text = "Не верно!"
                     val toastCheckAnswer =
                         Toast.makeText(this, R.string.incorrect_toast, Toast.LENGTH_SHORT)
                     toastCheckAnswer.show()
@@ -777,20 +705,22 @@ class MainActivity : AppCompatActivity() {
         setCrimeVar(getUpdateQuestion = false, insertCrime = false)
 
         loadFrontList()
-        testMainActivity(11)
+        thisTimer = false
+        checkTimer = false
+        loadTimer(hardQuestion)
     }
 
-    private fun checkBlock() {
+    private fun checkBlock() = with(binding) {
         if (mapAnswer[currentIndex] == false) {
-            falseButton.isEnabled = false
-            falseButton.isClickable = false
-            trueButton.isEnabled = false
-            trueButton.isClickable = false
+            falseButton!!.isEnabled = false
+            falseButton!!.isClickable = false
+            trueButton!!.isEnabled = false
+            trueButton!!.isClickable = false
         } else {
-            falseButton.isEnabled = true
-            falseButton.isClickable = true
-            trueButton.isEnabled = true
-            trueButton.isClickable = true
+            falseButton!!.isEnabled = true
+            falseButton!!.isClickable = true
+            trueButton!!.isEnabled = true
+            trueButton!!.isClickable = true
         }
     }
 
@@ -823,12 +753,12 @@ class MainActivity : AppCompatActivity() {
         j = 0
     }
 
-    private fun useCheat() {
+    private fun useCheat() = with(binding) {
         cheatPoints -= 1
-        cheatPointsLife.text = "Life = $cheatPoints"
+        cheatPointsLife!!.text = "Life = $cheatPoints"
         if (cheatPoints == 0) {
-            cheatButton.isEnabled = false
-            cheatButton.isClickable = false
+            cheatButton!!.isEnabled = false
+            cheatButton!!.isClickable = false
         }
         isCheater = false
     }
@@ -844,8 +774,8 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun updatePersentView(leftAnswer: Int, persentPoints: Int) {
-        if (hardQuestion) viewResult.text = "(I don`t no) % Осталось - $leftAnswer"
-        else viewResult.text = "$persentPoints % Осталось - $leftAnswer"
+        if (hardQuestion) binding.viewResult!!.text = "(I don`t no) % Осталось - $leftAnswer"
+        else binding.viewResult!!.text = "$persentPoints % Осталось - $leftAnswer"
     }
 
     private fun loadFrontList() {
@@ -916,21 +846,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadStarsFun(question: String): Int {
-        var num = 0
-        var name = ""
-        listCrime.forEach {
-            if (it.listIdNameQuiz == question) {
-                if (it.listPoints > num) {
-                    num = it.listPoints
-                    name = it.userName
-                    loadStars(it.listPoints)
-                }
-            }
-        }
-        return num
-    }
-
-    private fun loadPoints(question: String): Int {
         var num = 0
         var name = ""
         listCrime.forEach {
