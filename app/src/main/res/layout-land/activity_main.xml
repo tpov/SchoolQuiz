@@ -127,7 +127,7 @@
         app:layout_constraintVertical_bias="0.0"
         tools:layout_conversion_absoluteHeight="0dp"
         tools:layout_conversion_absoluteWidth="0dp"
-        tools:text="@string/question_australia" />
+        tools:text="@string/question_light1" />
 
     <Button
         android:id="@+id/true_button"

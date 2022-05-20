@@ -1,23 +1,48 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Quiz</string>
-    <string name="question_australia">Канберра – столиця Австралії.</string>
-    <string name="question_oceans">Тихий океан більший за Атлантичний океан.</string>
-    <string name="question_mideast">Суецький канал з`єднує Червоне море та Індійський океан.</string>
-    <string name="question_africa">Виток річки Ніл знаходиться в Єгипті.</string>
-    <string name="question_americas">Річка Амазонка – найдовша річка в Америці.</string>
-    <string name="question_asia">Озеро Байкал - найстаріше та найглибше прісноводне озеро у світі.</string>
+    <string name="question_light1">Канберра – столиця Австралії.</string>
+    <string name="question_light2">Тихий океан більший за Атлантичний океан.</string>
+    <string name="question_light3">Суецький канал з`єднує Червоне море та Індійський океан.</string>
+    <string name="question_light4">Витік річки Ніл знаходиться в Єгипті.</string>
+    <string name="question_light5">Річка Амазонка – найдовша річка в Америці.</string>
+    <string name="question_light6">Озеро Байкал - найстаріше та найглибше прісноводне озеро у світі.</string>
 
-    <string name="question_riverInRussia">Найдовша річка в Росії – Лена.</string>
-    <string name="question_headquarters">Штаб-квартира ООН знаходиться у Нью-Йорку.</string>
-    <string name="question_Gabon">Габороне - кафедра Габону.</string>
-    <string name="question_Sicily">Сицилію омиває Середземне море.</string>
-    <string name="question_Ireland">Столиця Ірландії - Дублін.</string>
-    <string name="question_Paris">Раніше Париж звався Лютеція.</string>
-    <string name="question_Atlas">Атлас – це ланцюг гірських хребтів, розташований у Європі.</string>
-    <string name="question_China">У Китаї, незважаючи на його значні розміри, лише один часовий пояс.</string>
-    <string name="question_Mayan">Піраміди майя міста Чичен-Іца знаходяться в Перу.</string>
-    <string name="question_Reykjavik">Рейк`явік - столиця Ісландії.</string>
-    <string name="question_Oymyakon">Найхолодніша точка світу, де постійно проживають люди, — російське село Ойм`якон.</string>
+    <string name="question_light7">Найдовша річка в росії – Лена.</string>
+    <string name="question_light8">Штаб-квартира ООН знаходиться у Нью-Йорку.</string>
+    <string name="question_light9">Габороне - столиця Габону.</string>
+    <string name="question_light10">Сицилію омиває Середземне море.</string>
+    <string name="question_light11">Столиця Ірландії - Дублін.</string>
+    <string name="question_light12">Раніше Париж звався Лютеція.</string>
+    <string name="question_light13">Атлас – це ланцюг гірських хребтів, розташований у Європі.</string>
+    <string name="question_light14">У Китаї, незважаючи на його значні розміри, лише один часовий пояс.</string>
+    <string name="question_light15">Піраміди майя міста Чичен-Іца знаходяться в Перу.</string>
+    <string name="question_light16">Рейк`явік - столиця Ісландії.</string>
+    <string name="question_light17">Найхолодніша точка світу, де постійно проживають люди, — російське село Ойм`якон.</string>
+    <string name="question_light18">Україна - сама велика країна, яка повністю розташована в Європі.</string>
+    <string name="question_light19">Німецька імперія - це теж саме, що й Третій Рейх.</string>
+    <string name="question_light20">Каспійське море - саме солоне озеро в світі.</string>
+
+    <string name="question_hard1">Більшість бельгейців живуть у сільській місцевості.</string>
+    <string name="question_hard2">У прибалтійських країнах жодна жінка не обиралася на пост президента.</string>
+    <string name="question_hard3">Андорра – єдине князівство у світі.</string>
+    <string name="question_hard4">Назва держави Бельгія походить від назви стародавнього племені.</string>
+    <string name="question_hard5">Усередині Італії знаходяться дві незалежні держави.</string>
+    <string name="question_hard6">У Європі немає країн, які не мають виходу на море.</string>
+    <string name="question_hard7">В Дублине нет ни одного парка.</string>
+    <string name="question_hard8">Сан-Маріно претендує на звання найстарішої суверенної держави у світі.</string>
+    <string name="question_hard9">Великобританія – єдина європейська країна з лівостороннім рухом.</string>
+    <string name="question_hard10">У Шотладнії дуже спекотний клімат.</string>
+    <string name="question_hard11">Найбільша ірландська церква знаходиться у Дубліні.</string>
+    <string name="question_hard12">У паризькому Пантеоні не поховано жодної жінки.</string>
+    <string name="question_hard13">У Бельгії майже немає жодних фабрик та заводів.</string>
+    <string name="question_hard14">Неаполь – найбільше місто в Італії.</string>
+    <string name="question_hard15">В Англії є місто, в назві якого присутній знак оклику (!).</string>
+    <string name="question_hard16">Швеція – найменша скандинавська країна.</string>
+
+    <string name="question_hard17">Швейцарія не брала долі у другій світовій війні</string>
+    <string name="question_hard18">Раніше корейський півострів був під контролем Японії.</string>
+    <string name="question_hard19">США забрала Аляску війною.</string>
+    <string name="question_hard20">В`єтнам переміг у війні зі США завдяки чисельності населення</string>
 
     <string name="true_button">Вірно</string>
     <string name="false_button">Не вірно</string>
@@ -31,7 +56,7 @@
 
     <string name="warning_text">Ви впевнені що хочете це зробити?</string>
     <string name="show_answer_button">Переглянути відповідь</string>
-    <string name="cheat_button">Cheat!</string>
+    <string name="cheat_button">Чіт!</string>
     <string name="judgment_toast">Cheating is wrong.</string>
 
     <string name="title_text">Quiz</string>
@@ -41,7 +66,7 @@
     <string name="menu_settings">Settings</string>
     <string name="main_title_name">Home</string>
     <string name="vandroid">vandroid</string>
-    <string name="name">Імя...</string>
+    <string name="name">Ім`я...</string>
     <string name="question">Питання...</string>
     <string name="new_question">Назва квесту</string>
     <string name="end_button">Закінчити</string>
@@ -52,12 +77,12 @@
     <string name="load_geo_quiz">Load GeoQuiz</string>
     <string name="load_сrime">Завантажена незакінчена сесія</string>
     <string name="go">Go</string>
-    <string name="error_load_question">Помилка завантаження квесту</string>
+    <string name="error_load_question">Помилка завантаження квесту, повторіть спробу</string>
     <string name="nice">Nice</string>
     <string name="no_nice">No nice</string>
     <string name="go_hard_question">Вам доступні важкі питання</string>
     <string name="inter_ad_id">ca-app-pub-6279944059986833/5924755266</string>
-    <string name="massage_show_ads">ads</string>
+    <string name="massage_show_ads">Реклама</string>
     <string name="time_format_key">time_format_key</string>
     <string name="chose_time_format">Chose time format</string>
     <string name="remove_ads">Вилучити рекламу</string>

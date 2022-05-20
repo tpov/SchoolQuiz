@@ -26,7 +26,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 
 @InternalCoroutinesApi
 class FrontActivity : AppCompatActivity() {
-    lateinit var binding: FrontActivityBinding
+    private lateinit var binding: FrontActivityBinding
     private var idNameQuiz = ""
     private var time = ""
     private var numQuestion = 0
@@ -36,24 +36,49 @@ class FrontActivity : AppCompatActivity() {
     private var iAd: InterstitialAd? = null
 
     private val questionBank = listOf(
-        Question(R.string.question_australia, true),
-        Question(R.string.question_oceans, true),
-        Question(R.string.question_mideast, false),
-        Question(R.string.question_africa, false),
-        Question(R.string.question_americas, true),
-        Question(R.string.question_asia, true),
+        Question(R.string.question_light1, true, false),
+        Question(R.string.question_light2, true, false),
+        Question(R.string.question_light3, false, false),
+        Question(R.string.question_light4, false, false),
+        Question(R.string.question_light5, true, false),
+        Question(R.string.question_light6, true, false),
 
-        Question(R.string.question_riverInRussia, true),
-        Question(R.string.question_headquarters, true),
-        Question(R.string.question_Gabon, false),
-        Question(R.string.question_Sicily, true),
-        Question(R.string.question_Ireland, true),
-        Question(R.string.question_Paris, true),
-        Question(R.string.question_Atlas, false),
-        Question(R.string.question_China, true),
-        Question(R.string.question_Mayan, false),
-        Question(R.string.question_Reykjavik, true),
-        Question(R.string.question_Oymyakon, true)
+        Question(R.string.question_light7, true, false),
+        Question(R.string.question_light8, true, false),
+        Question(R.string.question_light9, false, false),
+        Question(R.string.question_light10, true, false),
+        Question(R.string.question_light11, true, false),
+        Question(R.string.question_light12, true, false),
+        Question(R.string.question_light13, false, false),
+        Question(R.string.question_light14, true, false),
+        Question(R.string.question_light15, false, false),
+        Question(R.string.question_light16, true, false),
+        Question(R.string.question_light17, true, false),
+        Question(R.string.question_light18, true, false),
+        Question(R.string.question_light19, false, false),
+        Question(R.string.question_light20, false, false),
+
+        Question(R.string.question_hard1, false, true),
+        Question(R.string.question_hard2, false, true),
+        Question(R.string.question_hard3, false, true),
+        Question(R.string.question_hard4, true, true),
+        Question(R.string.question_hard5, true, true),
+        Question(R.string.question_hard6, false, true),
+        Question(R.string.question_hard7, false, true),
+        Question(R.string.question_hard8, true, true),
+        Question(R.string.question_hard9, false, true),
+        Question(R.string.question_hard10, false, true),
+        Question(R.string.question_hard11, true, true),
+        Question(R.string.question_hard12, false, true),
+        Question(R.string.question_hard13, false, true),
+        Question(R.string.question_hard14, false, true),
+        Question(R.string.question_hard15, true, true),
+        Question(R.string.question_hard16, false, true),
+
+        Question(R.string.question_hard17, true, true),
+        Question(R.string.question_hard18, true, true),
+        Question(R.string.question_hard19, false, true),
+        Question(R.string.question_hard20, false, true)
     )
 
     @InternalCoroutinesApi
@@ -104,7 +129,7 @@ class FrontActivity : AppCompatActivity() {
                 null,
                 getString(it.textResId),
                 it.answer,
-                false,
+                it.typeQuestion,
                 idQuiz
             )
             mainViewModel.insertCrimeNewQuiz(name)

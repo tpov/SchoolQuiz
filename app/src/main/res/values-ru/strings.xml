@@ -1,24 +1,48 @@
 <resources>
 
     <string name="app_name">Quiz</string>
-    <string name="question_australia">Канберра - столица Австралии.</string>
-    <string name="question_oceans">Тихий океан больше Атлантического океана.</string>
-    <string name="question_mideast">Суэцкий канал соединяет Красное море и Индийский океан.</string>
-    <string name="question_africa">Исток реки Нил находится в Египте.</string>
-    <string name="question_americas">Река Амазонка - самая длинная река в Америке.</string>
-    <string name="question_asia">Озеро Байкал - старейшее и самое глубокое пресноводное озеро в мире.</string>
+    <string name="question_light1">Канберра - столица Австралии.</string>
+    <string name="question_light2">Тихий океан больше Атлантического океана.</string>
+    <string name="question_light3">Суэцкий канал соединяет Красное море и Индийский океан.</string>
+    <string name="question_light4">Исток реки Нил находится в Египте.</string>
+    <string name="question_light5">Река Амазонка - самая длинная река в Америке.</string>
+    <string name="question_light6">Озеро Байкал - старейшее и самое глубокое пресноводное озеро в мире.</string>
 
-    <string name="question_riverInRussia">Самая длинная река в России — Лена.</string>
-    <string name="question_headquarters">Штаб-квартира ООН находится в Нью-Йорке.</string>
-    <string name="question_Gabon">Габороне — столица Габона.</string>
-    <string name="question_Sicily">Сицилию омывает Средиземное море.</string>
-    <string name="question_Ireland">Столица Ирландии — Дублин.</string>
-    <string name="question_Paris">Раньше Париж носил название Лютеция.</string>
-    <string name="question_Atlas">Атлас – это цепь горных хребтов, расположенная в Европе.</string>
-    <string name="question_China">В Китае, несмотря на его внушительные размеры, всего один часовой пояс.</string>
-    <string name="question_Mayan">Пирамиды майя города Чичен-Ица находятся в Перу.</string>
-    <string name="question_Reykjavik">Рейкьявик — столица Исландии.</string>
-    <string name="question_Oymyakon">Самая холодная точка мира, где постоянно проживают люди, — российское село Оймякон.</string>
+    <string name="question_light7">Самая длинная река в России — Лена.</string>
+    <string name="question_light8">Штаб-квартира ООН находится в Нью-Йорке.</string>
+    <string name="question_light9">Габороне — столица Габона.</string>
+    <string name="question_light10">Сицилию омывает Средиземное море.</string>
+    <string name="question_light11">Столица Ирландии — Дублин.</string>
+    <string name="question_light12">Раньше Париж носил название Лютеция.</string>
+    <string name="question_light13">Атлас – это цепь горных хребтов, расположенная в Европе.</string>
+    <string name="question_light14">В Китае, несмотря на его внушительные размеры, всего один часовой пояс.</string>
+    <string name="question_light15">Пирамиды майя города Чичен-Ица находятся в Перу.</string>
+    <string name="question_light16">Рейкьявик — столица Исландии.</string>
+    <string name="question_light17">Самая холодная точка мира, где постоянно проживают люди, — российское село Оймякон.</string>
+    <string name="question_light18">Украина - самая большая страна, которая полностью находится в Европе.</string>
+    <string name="question_light19">Германская империя - это тоже самое, что и Третий Рейх.</string>
+    <string name="question_light20">Каспийское море - самое солёное озеро в мире.</string>
+
+    <string name="question_hard1">Большенство бельгейцев живут в сельской местности.</string>
+    <string name="question_hard2">В прибалтийских странах ни одна женщина не избиралась на пост президента.</string>
+    <string name="question_hard3">Андорра - единственное княжество в мире.</string>
+    <string name="question_hard4">Название государства Бельгия происходит от названия древнего племени.</string>
+    <string name="question_hard5">Внутри Италии находятся два независимых государства.</string>
+    <string name="question_hard6">В Европе нет стран, которые не имеют выхода к морю.</string>
+    <string name="question_hard7">В Дублине нет ни одного парка.</string>
+    <string name="question_hard8">Сан-Марино претендует на звание старейшого суверенного государства в мире.</string>
+    <string name="question_hard9">Великобритания - единственная европейская страна с левосторонним движением.</string>
+    <string name="question_hard10">В Шотладнии очень жаркий климат.</string>
+    <string name="question_hard11">Самая большая ирландская церковь находится в Дублине.</string>
+    <string name="question_hard12">В парижском Пантеоне не захоронено ни одной женжины.</string>
+    <string name="question_hard13">В Бельгии почти нет никаких фабрик и заводов.</string>
+    <string name="question_hard14">Неаполь - самый большой город в Италии.</string>
+    <string name="question_hard15">В Англии есть город, в названии которого присутсвует воскликательный знак(!).</string>
+    <string name="question_hard16">Швеция - самая маленькая скандинавская страна.</string>
+    <string name="question_hard17">Швейцария не брала участи во второй мировой войне</string>
+    <string name="question_hard18">Раньше корейский полуостров была под контролем Японии</string>
+    <string name="question_hard19">США забрала Аляску войной</string>
+    <string name="question_hard20">Вьетнам победил у войне с США благодаря численности населения</string>
 
     <string name="true_button">Верно</string>
     <string name="false_button">Не верно</string>
