@@ -1,9 +1,9 @@
 package com.tpov.geoquiz
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tpov.geoquiz.activity.MainActivity
@@ -23,8 +23,6 @@ class QuestionActivity : AppCompatActivity(), CustomRecyclerAdapter.UpdateData {
     private val mainViewModel: MainViewModel by viewModels {
         MainViewModel.MainViewModelFactory((applicationContext as MainApp).database)
     }
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,11 +50,23 @@ class QuestionActivity : AppCompatActivity(), CustomRecyclerAdapter.UpdateData {
                 Log.d("QuestionActivity", "idUser ${idUser}")
                 Log.d("QuestionActivity", "item.idListNameQuestion ${item.idListNameQuestion}")
 
-                if (idUser == item.idListNameQuestion){
-                    if (!item.typeQuestion) QUESTION_BANK_ADAPTER.add(Quiz(item.nameQuestion, item.answerQuestion))
+                if (idUser == item.idListNameQuestion) {
+                    if (!item.typeQuestion) QUESTION_BANK_ADAPTER.add(
+                        Quiz(
+                            item.nameQuestion,
+                            item.answerQuestion
+                        )
+                    )
                 }
             }
-            funIntent(recyclerView, currentIndex2, codeAnswer2, idUser, codeAnswer2Array, QUESTION_BANK_ADAPTER)
+            funIntent(
+                recyclerView,
+                currentIndex2,
+                codeAnswer2,
+                idUser,
+                codeAnswer2Array,
+                QUESTION_BANK_ADAPTER
+            )
         })
         mainViewModel.getQuestionCrimeNewQuiz()
     }
@@ -68,7 +78,7 @@ class QuestionActivity : AppCompatActivity(), CustomRecyclerAdapter.UpdateData {
         idUser: String,
         codeAnswer2Array: MutableList<Char>,
         QUESTION_BANK_ADAPTER: MutableList<Quiz>,
-        ) {
+    ) {
 
         Log.d("QuestionActivity", "map1 = ${QUESTION_BANK_ADAPTER.map { (it.textResId) }}")
 

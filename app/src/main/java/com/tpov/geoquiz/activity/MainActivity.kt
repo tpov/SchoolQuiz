@@ -125,7 +125,6 @@ class MainActivity : AppCompatActivity() {
         testMainActivity(0)
         hardQuestion = getHardQuestion(stars)
 
-
         getUpdateCrime(true, idUser)
         getQuizList()
 
@@ -773,6 +772,8 @@ class MainActivity : AppCompatActivity() {
         setCrimeVar(getUpdateQuestion = false, insertCrime = false)
 
         loadFrontList()
+        checkTimer = false
+        loadTimer(false)
         testMainActivity(11)
     }
 

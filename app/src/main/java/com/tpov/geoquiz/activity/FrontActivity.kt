@@ -53,6 +53,7 @@ class FrontActivity : AppCompatActivity() {
         Question(R.string.question_light14, true, false),
         Question(R.string.question_light15, false, false),
         Question(R.string.question_light16, true, false),
+
         Question(R.string.question_light17, true, false),
         Question(R.string.question_light18, true, false),
         Question(R.string.question_light19, false, false),

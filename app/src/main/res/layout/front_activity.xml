@@ -1,11 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/teal_700"
-    android:foregroundGravity="center_vertical">
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/teal_700"
+        android:foregroundGravity="center_vertical">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/title_fragment"
@@ -13,9 +14,10 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="3dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="80dp"
         android:layout_marginEnd="3dp"
         android:layout_marginBottom="50dp"
+        android:background="#1865FF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -30,7 +32,7 @@
         android:layout_marginStart="1dp"
         android:layout_marginEnd="1dp"
         android:layout_marginBottom="1dp"
-        android:background="@color/teal_700"
+        android:background="#2D73FF"
         app:circularflow_defaultRadius="3dip"
         app:itemRippleColor="#00FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -42,20 +44,17 @@
     <TextView
         android:id="@+id/title_text_view"
         style="@style/Widget.MaterialComponents.TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="61dp"
-        android:background="#1E7AB3"
-        android:foregroundGravity="fill_vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#0037FF"
+        android:foregroundGravity="center_horizontal"
         android:gravity="center"
         android:text="@string/title_text"
         android:textColor="#BBDEFB"
-        android:textSize="80sp"
+        android:textSize="60sp"
         android:textStyle="bold|italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>

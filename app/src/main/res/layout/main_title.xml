@@ -19,7 +19,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="32dp"
-            android:background="@color/colorFront"
+            android:background="#4E4E4E"
             android:orientation="vertical">
 
         </LinearLayout>
@@ -27,7 +27,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorFront"
+            android:background="#4E4E4E"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -37,9 +37,8 @@
             <LinearLayout
                 android:layout_width="10dp"
                 android:layout_height="match_parent"
-                android:background="@color/colorFront"
-                android:orientation="horizontal">
-            </LinearLayout>
+                android:background="#4E4E4E"
+                android:orientation="horizontal"></LinearLayout>
 
             <Button
                 android:id="@+id/main_title_button"
@@ -53,13 +52,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorFront"
+                android:background="#4E4E4E"
                 android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="#4E4E4E"
                     android:orientation="vertical">
 
                     <TextView
@@ -80,7 +80,7 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:background="@color/colorFront"
+                        android:background="#4E4E4E"
                         android:orientation="horizontal">
 
                         <TextView
@@ -132,6 +132,7 @@
                     android:layout_height="40dp"
                     android:layout_gravity="center|right"
                     android:layout_weight="1"
+                    android:background="#4E4E4E"
                     android:backgroundTint="#00FFFFFF"
                     android:elevation="15dp"
                     android:foregroundGravity="right"
@@ -142,6 +143,7 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_gravity="center"
+                    android:background="#808080"
                     android:backgroundTint="#323232"
                     android:elevation="15dp"
                     app:srcCompat="@drawable/ic_baseline_quiz"
@@ -161,7 +163,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@color/colorFront"
+                android:background="#4E4E4E"
                 android:gravity="end"
                 android:orientation="horizontal"
                 android:paddingRight="10dp">
@@ -177,7 +179,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
                         android:layout_weight="1"
-                        android:background="@color/colorFront"
+                        android:background="#4E4E4E"
                         android:backgroundTint="@color/colorFront"
                         android:foregroundGravity="left"
                         android:text="Name"
@@ -191,7 +193,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
                         android:layout_weight="1"
-                        android:background="@color/colorFront"
+                        android:background="#4E4E4E"
                         android:backgroundTint="@color/colorFront"
                         android:gravity="end"
                         android:text="time"
