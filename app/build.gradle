@@ -73,6 +73,7 @@ dependencies {
     implementation 'com.android.billingclient:billing:4.1.0'
     implementation 'com.google.android.gms:play-services-ads:20.6.0'
     implementation 'com.android.databinding:viewbinding:4.0.1'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
 
     kapt 'androidx.room:room-compiler:2.4.1'
     testImplementation 'junit:junit:4.13.2'

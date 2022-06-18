@@ -11,12 +11,14 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.dynamicanimation.animation.DynamicAnimation
+import androidx.dynamicanimation.animation.SpringAnimation
+import androidx.dynamicanimation.animation.SpringForce
 import androidx.lifecycle.ViewModelProvider
 import com.tpov.geoquiz.*
 import com.tpov.geoquiz.database.MainViewModel
@@ -59,7 +61,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var falseButton: Button
     private lateinit var nextButton: Button
     private lateinit var prefButton: Button
-    private lateinit var cheatButton: Button
+    private lateinit var cheatButton: ImageButton
     private lateinit var questionTextView: TextView
     private lateinit var updateAnswerButton: Button
     private lateinit var viewResult: TextView
@@ -70,6 +72,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewCodeAnswer: TextView
     private lateinit var tvTimer: TextView
     private lateinit var pbAnswer: ProgressBar
+    private lateinit var tv321: TextView
 
     private var numQ: Int? = 0
     private var numQuestion: Int? = 0
@@ -144,6 +147,7 @@ class MainActivity : AppCompatActivity() {
         listQuestionButton = findViewById(R.id.ListQuestion_Button)
         tvTimer = findViewById(R.id.tvTimer)
         pbAnswer = findViewById(R.id.pbAnswer)
+        tv321 = findViewById(R.id.tv_3_2_1)
 
 
         if (hardQuestion) {
@@ -177,9 +181,9 @@ class MainActivity : AppCompatActivity() {
                 if (currentIndex == numAnswer!! - 1) {
                     val toastNull = Toast.makeText(this, R.string.null_toast, Toast.LENGTH_SHORT)
                     toastNull.show()
+                    springAnim(true)
                 } else {
                     moveToNext()
-                    updateQuestion()
                 }
                 checkBlock()
                 if (constCurrentIndex == numAnswer) {
@@ -218,9 +222,9 @@ class MainActivity : AppCompatActivity() {
                 if (currentIndex == numAnswer!! - 1) {
                     val toastNull = Toast.makeText(this, R.string.null_toast, Toast.LENGTH_SHORT)
                     toastNull.show()
+                    springAnim(true)
                 } else {
                     moveToNext()
-                    updateQuestion()
                 }
                 checkBlock()
             }
@@ -271,9 +275,9 @@ class MainActivity : AppCompatActivity() {
             if (currentIndex == numAnswer!! - 1) {
                 val toastNull = Toast.makeText(this, R.string.null_toast, Toast.LENGTH_SHORT)
                 toastNull.show()
+                springAnim(true)
             } else {
                 moveToNext()
-                updateQuestion()
             }
             checkBlock()
 
@@ -281,9 +285,9 @@ class MainActivity : AppCompatActivity() {
         prefButton.setOnClickListener {
             if (currentIndex == 0) {
                 Toast.makeText(this, R.string.null_toast, Toast.LENGTH_SHORT).show()
+                springAnim(false)
             } else {
                 moveToPref()
-                updateQuestion()
             }
             checkBlock()
         }
@@ -391,6 +395,21 @@ class MainActivity : AppCompatActivity() {
         })
 
         mainViewModel.getUpdateAnswerCrime(true, insertQuiz(idUser), idUser)
+    }
+
+    fun springAnim(next: Boolean) {
+        var START_VELOCITY = if (next) -3000f
+        else 3000f
+
+        var springAnimation: SpringAnimation = SpringAnimation(questionTextView, DynamicAnimation.X)
+        var springForce: SpringForce = SpringForce()
+        springForce.finalPosition = questionTextView.x
+        springForce.dampingRatio = SpringForce.DAMPING_RATIO_HIGH_BOUNCY
+        springForce.stiffness = SpringForce.STIFFNESS_HIGH
+
+        springAnimation.setSpring(springForce)
+        springAnimation.setStartVelocity(START_VELOCITY)
+        springAnimation.start()
     }
 
     fun insertQuiz(idName: String): Crime {
@@ -514,9 +533,29 @@ class MainActivity : AppCompatActivity() {
             viewModel.startGame(mapAnswer[currentIndex]!!)
             viewModel.formattedTime.observe(this, {
                 tvTimer.text = it
+                if (it[3] == '0' && it[4] == '3') anim321(3)
+                if (it[3] == '0' && it[4] == '2') anim321(2)
+                if (it[3] == '0' && it[4] == '1') anim321(1)
             })
             checkTimer = true
         }
+    }
+
+    @SuppressLint("ResourceType")
+    private fun anim321(num: Int) {
+        tv321.text = num.toString()
+
+        var anim = AnimationUtils.loadAnimation(this@MainActivity, R.anim.time_3_2_1)
+        anim.setAnimationListener(object: Animation.AnimationListener{
+            override fun onAnimationStart(p0: Animation?) {
+                tv321.visibility = View.VISIBLE
+            }
+            override fun onAnimationEnd(p0: Animation?) {
+                tv321.visibility = View.GONE
+            }
+            override fun onAnimationRepeat(p0: Animation?) {
+            }
+        })
     }
 
     private fun loadPBAnswer(persentPoints: Int) {
@@ -656,11 +695,72 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun moveToPref() {
-        currentIndex = (currentIndex - 1) % numQuestion!!
+
+        var animPref1 = AnimationUtils.loadAnimation(this, R.anim.pref_question1)
+        var animPref2 = AnimationUtils.loadAnimation(this, R.anim.pref_question2)
+
+        animPref1.setAnimationListener(object: Animation.AnimationListener {
+            override fun onAnimationStart(p0: Animation?) {
+            }
+            override fun onAnimationEnd(p0: Animation?) {
+                questionTextView.visibility = View.GONE
+                currentIndex = (currentIndex - 1) % numQuestion!!
+                updateQuestion()
+
+                questionTextView.startAnimation(animPref2)
+            }
+            override fun onAnimationRepeat(p0: Animation?) {
+            }
+        })
+
+        animPref2.setAnimationListener(object: Animation.AnimationListener {
+            override fun onAnimationStart(p0: Animation?) {
+                questionTextView.visibility = View.VISIBLE
+            }
+
+            override fun onAnimationEnd(p0: Animation?) {
+            }
+
+            override fun onAnimationRepeat(p0: Animation?) {
+            }
+        })
+        questionTextView.startAnimation(animPref1)
     }
 
+
     private fun moveToNext() {
-        currentIndex = (currentIndex + 1) % numQuestion!!
+        var animNext1 = AnimationUtils.loadAnimation(this, R.anim.next_question1)
+        var animNext2 = AnimationUtils.loadAnimation(this, R.anim.next_question2)
+
+        animNext1.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(p0: Animation?) {
+            }
+
+            override fun onAnimationEnd(p0: Animation?) {
+                questionTextView.visibility = View.GONE
+                currentIndex = (currentIndex + 1) % numQuestion!!
+                updateQuestion()
+
+                questionTextView.startAnimation(animNext2)
+            }
+
+            override fun onAnimationRepeat(p0: Animation?) {
+            }
+        })
+        animNext2.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(p0: Animation?) {
+
+                questionTextView.visibility = View.VISIBLE
+            }
+
+            override fun onAnimationEnd(p0: Animation?) {
+            }
+
+            override fun onAnimationRepeat(p0: Animation?) {
+            }
+        })
+        questionTextView.startAnimation(animNext1)
+
     }
 
     private val currentQuestionAnswer: Boolean

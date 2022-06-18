@@ -9,8 +9,9 @@
 
     <TextView
         android:id="@+id/tvT"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:fontFamily="@font/diplomata_sc"
         android:text="T"
         android:textColor="@color/splashTextColor"
         android:textSize="60sp"
@@ -22,8 +23,9 @@
 
     <TextView
         android:id="@+id/tvP"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:fontFamily="@font/diplomata_sc"
         android:gravity="center_horizontal"
         android:text="P"
         android:textColor="@color/splashTextColor"
@@ -32,10 +34,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/tvO"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:fontFamily="@font/diplomata_sc"
+        android:fontFeatureSettings="@font/diplomata_sc"
         android:gravity="center_horizontal"
         android:text="O"
         android:textColor="@color/splashTextColor"
@@ -47,8 +52,9 @@
 
     <TextView
         android:id="@+id/tvV"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:fontFamily="@font/diplomata_sc"
         android:gravity="center_horizontal"
         android:text="V"
         android:textColor="@color/splashTextColor"
@@ -64,6 +70,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="50dp"
+        android:fontFamily="@font/rochester"
         android:shadowColor="#B3FFFFFF"
         android:text="ChatNoir"
         android:textColor="#917200"

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/teal_700"
-        android:foregroundGravity="center_vertical">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0021A3"
+    android:foregroundGravity="center_vertical">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/title_fragment"
@@ -17,13 +17,13 @@
         android:layout_marginTop="80dp"
         android:layout_marginEnd="3dp"
         android:layout_marginBottom="50dp"
-        android:background="#1865FF"
+        android:background="#0055FF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bNav"
@@ -32,7 +32,7 @@
         android:layout_marginStart="1dp"
         android:layout_marginEnd="1dp"
         android:layout_marginBottom="1dp"
-        android:background="#2D73FF"
+        android:background="#002FD8"
         app:circularflow_defaultRadius="3dip"
         app:itemRippleColor="#00FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -40,21 +40,154 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/menu_title_activity" />
 
-
-    <TextView
-        android:id="@+id/title_text_view"
-        style="@style/Widget.MaterialComponents.TextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="#0037FF"
-        android:foregroundGravity="center_horizontal"
-        android:gravity="center"
-        android:text="@string/title_text"
-        android:textColor="#BBDEFB"
-        android:textSize="60sp"
-        android:textStyle="bold|italic"
+    <LinearLayout
+        android:layout_width="409dp"
+        android:layout_height="78dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="1dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/title_fragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tv_num_chack_n"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/FrontActivity_num_chack_norice"
+            android:textColor="#FFFFFF" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="1"
+                android:background="@color/num_chack_norice_red"
+                android:gravity="center"
+                android:text="1" />
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="1"
+                android:background="@color/num_chack_norice_red"
+                android:gravity="center"
+                android:text="2" />
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="1"
+                android:background="@color/num_chack_norice_red"
+                android:gravity="center"
+                android:text="3" />
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="1"
+                android:background="@color/num_chack_norice_red"
+                android:gravity="center"
+                android:text="4" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="1"
+                android:background="@color/num_chack_norice_red"
+                android:gravity="center"
+                android:text="5" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="1"
+                android:background="@color/num_chack_norice_red"
+                android:gravity="center"
+                android:text="6" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="1"
+                android:background="@color/num_chack_norice_red"
+                android:gravity="center"
+                android:text="7" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="1"
+                android:background="@color/num_chack_norice_red"
+                android:gravity="center"
+                android:text="8" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="1"
+                android:background="@color/num_chack_norice_red"
+                android:gravity="center"
+                android:text="9" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="1"
+                android:background="@color/num_chack_norice_red"
+                android:gravity="center"
+                android:text="10" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

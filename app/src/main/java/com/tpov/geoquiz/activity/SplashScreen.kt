@@ -2,10 +2,13 @@ package com.tpov.geoquiz.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.tpov.geoquiz.R
 import com.tpov.geoquiz.databinding.ActivitySplashScreenBinding
 import kotlinx.coroutines.InternalCoroutinesApi
 
@@ -30,11 +33,10 @@ class SplashScreen : AppCompatActivity() {
         tvT.startAnimation(AnimationUtils.loadAnimation(this@SplashScreen, R.anim.anim_splash_t))
         tvP.startAnimation(AnimationUtils.loadAnimation(this@SplashScreen, R.anim.anim_splash_p))
         tvO.startAnimation(AnimationUtils.loadAnimation(this@SplashScreen, R.anim.anim_splash_o))
-        tvV.startAnimation(AnimationUtils.loadAnimation(this@SplashScreen, R.anim.anim_splash_v))
-        tvSplash2.startAnimation(AnimationUtils.loadAnimation(this@SplashScreen, R.anim.next_question1))/*
-        var anim3 = AnimationUtils.loadAnimation(this@SplashScreen, R.anim.anim_splash3_alfa)
+
+        var anim3 = AnimationUtils.loadAnimation(this@SplashScreen, R.anim.anim_splash_v)
         animationListener(anim3, 3)
-        tvV.startAnimation(anim3)*/
+        tvV.startAnimation(anim3)
     }
 
     private fun animationListener(anim: Animation, numAnim: Int) {
@@ -48,11 +50,11 @@ class SplashScreen : AppCompatActivity() {
             }
 
             override fun onAnimationEnd(p0: Animation?) {
-
-
-                when(numAnim) {
-                    3 -> toastEnd.show()
-                }
+                binding.tvT.visibility = View.GONE
+                binding.tvP.visibility = View.GONE
+                binding.tvO.visibility = View.GONE
+                binding.tvV.visibility = View.GONE
+                startActivity()
             }
 
             override fun onAnimationRepeat(p0: Animation?) {
