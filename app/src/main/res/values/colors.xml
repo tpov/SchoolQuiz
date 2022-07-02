@@ -12,13 +12,14 @@
 
     <color name="ratingBar">#D6B900</color>
     <color name="nullColor">#00000000</color>
-    <color name="bHardQuestion">#FF0000</color>
+    <color name="bHardQuestion">#59FF0000</color>
     <color name="tvLightQuestion">#167A00</color>
     <color name="tvHardQuestion">#7A0000</color>
 
     <color name="splashTextColor">#670000</color>
     <color name="background_splash_color">#001168</color>
     <color name="num_chack_norice_red">#59FF0000</color>
+    <color name="background_hard_question">#59FF5959</color>
     <color name="num_chack_norice_green">#5915FF00</color>
 
 </resources>

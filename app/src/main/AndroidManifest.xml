@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+
         android:name=".activity.MainApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -29,6 +30,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name=".Services.MyService"/>
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
@@ -37,5 +39,6 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
+
 
 </manifest>

@@ -25,7 +25,7 @@
                 android:id="@+id/rcView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#314173"
+                android:background="#1C3173"
                 android:elevation="20dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

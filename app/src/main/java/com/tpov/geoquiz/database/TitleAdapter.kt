@@ -49,18 +49,21 @@ class TitleAdapter(private val listener: Listener) :
 
             tvAllStars.text =
                 String.format("%.2f", (frontList.starsAll.toFloat() * 0.83333) / frontList.numA)
+
             if (frontList.stars >= 100) {
-                mainTitleButton.setBackgroundColor(R.color.tvHardQuestion)
-            } else mainTitleButton.setBackgroundColor(R.color.tvLightQuestion)
+                mainTitleButton.setBackgroundResource(R.color.num_chack_norice_red)
+            } else mainTitleButton.setBackgroundResource(R.color.num_chack_norice_green)
             imDeleteQuiz.setOnClickListener {
                 listener.deleteItem(frontList.id!!)
             }
 
             var goHardQuiz =
                 "${this.root.context.getString(R.string.go_hard_question)} - ${frontList.nameQuestion}"
+
             if (frontList.stars == 100) {
                 Toast.makeText(binding.root.context, goHardQuiz, Toast.LENGTH_SHORT).show()
             }
+
             if (frontList.stars >= 100) {
                 tvHardQuiz.text = "Hard quiz!"
                 tvHardQuiz.setBackgroundColor(Color.parseColor("#7A0000"))
@@ -68,12 +71,11 @@ class TitleAdapter(private val listener: Listener) :
                 tvHardQuiz.text = "Light quiz!"
                 tvHardQuiz.setBackgroundColor(Color.parseColor("#167A00"))
             }
+
             if (frontList.stars <= 100) ratingBar.rating = (frontList.stars.toFloat() / 50)
             else ratingBar.rating = (((frontList.stars.toFloat() - 100) / 20) + 2)
-            tvStars.text = String.format("%.2f", (frontList.stars.toFloat() * 0.83333))
 
-            Log.d("ShopingListAdapter", "${frontList.stars.toFloat()} ")
-            Log.d("ShopingListAdapter", "${frontList.stars.toFloat() * 0.8}")
+            tvStars.text = String.format("%.2f", (frontList.stars.toFloat() * 0.83333))
             tvTime.text = frontList.data
             mainTitleButton.text = frontList.nameQuestion
             mainTitleButton.setOnClickListener {

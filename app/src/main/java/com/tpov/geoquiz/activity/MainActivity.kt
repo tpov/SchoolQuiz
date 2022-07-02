@@ -9,18 +9,19 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.dynamicanimation.animation.DynamicAnimation
 import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.dynamicanimation.animation.SpringForce
 import androidx.lifecycle.ViewModelProvider
 import com.tpov.geoquiz.*
+import com.tpov.geoquiz.Services.MyService
 import com.tpov.geoquiz.database.MainViewModel
 import com.tpov.geoquiz.entities.Crime
 import com.tpov.geoquiz.entities.FrontList
@@ -28,11 +29,8 @@ import com.tpov.shoppinglist.utils.TimeManager
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlin.random.Random
 
-private const val TAG = "MainActivity"
-private const val KEY_INDEX = "index"
 private const val REQUEST_CODE_CHEAT = 0
 private const val UPDATE_CURRENT_INDEX = 1
-private const val QUESTION_BANK = 0
 
 @InternalCoroutinesApi
 class MainActivity : AppCompatActivity() {
@@ -69,10 +67,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var lastToast: TextView
     private lateinit var vAndroid: TextView
     private lateinit var listQuestionButton: Button
-    private lateinit var viewCodeAnswer: TextView
     private lateinit var tvTimer: TextView
     private lateinit var pbAnswer: ProgressBar
     private lateinit var tv321: TextView
+    private lateinit var viewBackground: ConstraintLayout
 
     private var numQ: Int? = 0
     private var numQuestion: Int? = 0
@@ -117,9 +115,11 @@ class MainActivity : AppCompatActivity() {
     )
     private val TAG = "QuizViewModel"
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         val nameQuestionUser = intent.getStringExtra(NAME_QUESTION)
         userName = intent.getStringExtra(NAME_USER)
@@ -127,6 +127,7 @@ class MainActivity : AppCompatActivity() {
         idUser = nameQuestionUser!!
         testMainActivity(0)
         hardQuestion = getHardQuestion(stars)
+
 
         getUpdateCrime(true, idUser)
         getQuizList()
@@ -136,7 +137,6 @@ class MainActivity : AppCompatActivity() {
         nextButton = findViewById(R.id.next_button)
         prefButton = findViewById(R.id.pref_button)
         cheatButton = findViewById(R.id.cheat_button)
-        updateAnswerButton = findViewById(R.id.updateAnswerButton)
         questionTextView = findViewById(R.id.question_text_view)
         viewResult = findViewById(R.id.viewResult)
         cheatPointsLife = findViewById(R.id.cheatPointsLife)
@@ -144,15 +144,16 @@ class MainActivity : AppCompatActivity() {
         vAndroid = findViewById(R.id.vAndroid)
         vAndroid.text =
             "vAndroid - ${Build.VERSION.SDK_INT}, vCode - ${Build.VERSION_CODES.M}"
-        listQuestionButton = findViewById(R.id.ListQuestion_Button)
         tvTimer = findViewById(R.id.tvTimer)
         pbAnswer = findViewById(R.id.pbAnswer)
         tv321 = findViewById(R.id.tv_3_2_1)
-
+        viewBackground = findViewById(R.id.view_background)
 
         if (hardQuestion) {
             listQuestionButton.isEnabled = false
             listQuestionButton.isClickable = false
+
+            viewBackground.setBackgroundResource(R.color.background_hard_question)
         }
         trueButton.setOnClickListener {
 
@@ -250,26 +251,6 @@ class MainActivity : AppCompatActivity() {
                 startActivityForResult(intent, REQUEST_CODE_CHEAT)
             }
         }
-        listQuestionButton.setOnClickListener { view ->
-
-            val questionActivityIntent = Intent(this, QuestionActivity::class.java)
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                val optionsList =
-                    ActivityOptions.makeClipRevealAnimation(view, 0, 0, view.width, view.height)
-
-                questionActivityIntent.putExtra(EXTRA_CURRENT_INDEX, currentIndex)   //Output
-                questionActivityIntent.putExtra(EXTRA_CODE_ANSWER, codeAnswer)
-                questionActivityIntent.putExtra(EXTRA_CODE_ID_USER, idUser)
-                startActivityForResult(questionActivityIntent, UPDATE_CURRENT_INDEX)
-            } else {
-                questionActivityIntent.putExtra(
-                    EXTRA_UPDATE_CURRENT_INDEX,
-                    currentIndex
-                )   //Output
-                startActivityForResult(questionActivityIntent, UPDATE_CURRENT_INDEX)
-            }
-        }
 
         nextButton.setOnClickListener {
             if (currentIndex == numAnswer!! - 1) {
@@ -291,17 +272,72 @@ class MainActivity : AppCompatActivity() {
             }
             checkBlock()
         }
-        updateAnswerButton.setOnClickListener {
-            if (!updateAnswer) {
-                updateAnswerButton.text = "true"
-                updateAnswer = true
-            } else {
-                updateAnswerButton.text = "false"
-                updateAnswer = false
+
+        actionBarSettings()
+        startService(Intent(this, MyService::class.java))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        stopService(Intent(this, MyService::class.java))
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main_activity, menu)
+        return true
+    }
+
+    override fun getMenuInflater(): MenuInflater {
+        
+        return super.getMenuInflater()
+    }
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.item_auto_update_answer -> {
+                Log.d("MainActivity", "itemAutoUpdateAnswer")
+                item.isChecked = !item.isChecked
+                updateAnswer = if (item.isChecked) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        item.tooltipText = "true"
+                    }
+                    true
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        item.tooltipText = "false"
+                    }
+                    false
+                }
+            }
+
+            R.id.item_list_answer -> {
+                Log.d("MainActivity", "itemListanswer")
+                val questionActivityIntent = Intent(this, QuestionActivity::class.java)
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    val optionsList =
+                        ActivityOptions.makeClipRevealAnimation(
+                            View(this),
+                            0,
+                            0,
+                            View(this).width,
+                            View(this).height
+                        )
+
+                    questionActivityIntent.putExtra(EXTRA_CURRENT_INDEX, currentIndex)   //Output
+                    questionActivityIntent.putExtra(EXTRA_CODE_ANSWER, codeAnswer)
+                    questionActivityIntent.putExtra(EXTRA_CODE_ID_USER, idUser)
+                    startActivityForResult(questionActivityIntent, UPDATE_CURRENT_INDEX)
+                } else {
+                    questionActivityIntent.putExtra(
+                        EXTRA_UPDATE_CURRENT_INDEX,
+                        currentIndex
+                    )   //Output
+                    startActivityForResult(questionActivityIntent, UPDATE_CURRENT_INDEX)
+                }
             }
         }
-        actionBarSettings()
-
+        return true
     }
 
     private fun endTimer() {
@@ -398,8 +434,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun springAnim(next: Boolean) {
-        var START_VELOCITY = if (next) -3000f
-        else 3000f
+        var START_VELOCITY = if (next) -5000f
+        else 5000f
 
         var springAnimation: SpringAnimation = SpringAnimation(questionTextView, DynamicAnimation.X)
         var springForce: SpringForce = SpringForce()
@@ -407,7 +443,7 @@ class MainActivity : AppCompatActivity() {
         springForce.dampingRatio = SpringForce.DAMPING_RATIO_HIGH_BOUNCY
         springForce.stiffness = SpringForce.STIFFNESS_HIGH
 
-        springAnimation.setSpring(springForce)
+        springAnimation.spring = springForce
         springAnimation.setStartVelocity(START_VELOCITY)
         springAnimation.start()
     }
@@ -546,20 +582,24 @@ class MainActivity : AppCompatActivity() {
         tv321.text = num.toString()
 
         var anim = AnimationUtils.loadAnimation(this@MainActivity, R.anim.time_3_2_1)
-        anim.setAnimationListener(object: Animation.AnimationListener{
+        anim.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(p0: Animation?) {
                 tv321.visibility = View.VISIBLE
+
             }
+
             override fun onAnimationEnd(p0: Animation?) {
                 tv321.visibility = View.GONE
             }
+
             override fun onAnimationRepeat(p0: Animation?) {
             }
         })
+        tv321.startAnimation(anim)
     }
 
     private fun loadPBAnswer(persentPoints: Int) {
-        viewModel.updatePercentAnswer(leftAnswer!!, constCurrentIndex!!)
+        viewModel.updatePercentAnswer(leftAnswer!!, constCurrentIndex)
         viewModel.answerQuiz.observe(this, {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 pbAnswer.setProgress(it, true)
@@ -699,9 +739,10 @@ class MainActivity : AppCompatActivity() {
         var animPref1 = AnimationUtils.loadAnimation(this, R.anim.pref_question1)
         var animPref2 = AnimationUtils.loadAnimation(this, R.anim.pref_question2)
 
-        animPref1.setAnimationListener(object: Animation.AnimationListener {
+        animPref1.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(p0: Animation?) {
             }
+
             override fun onAnimationEnd(p0: Animation?) {
                 questionTextView.visibility = View.GONE
                 currentIndex = (currentIndex - 1) % numQuestion!!
@@ -709,16 +750,18 @@ class MainActivity : AppCompatActivity() {
 
                 questionTextView.startAnimation(animPref2)
             }
+
             override fun onAnimationRepeat(p0: Animation?) {
             }
         })
 
-        animPref2.setAnimationListener(object: Animation.AnimationListener {
+        animPref2.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(p0: Animation?) {
                 questionTextView.visibility = View.VISIBLE
             }
 
             override fun onAnimationEnd(p0: Animation?) {
+                checkBlock()
             }
 
             override fun onAnimationRepeat(p0: Animation?) {
@@ -754,6 +797,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onAnimationEnd(p0: Animation?) {
+                checkBlock()
             }
 
             override fun onAnimationRepeat(p0: Animation?) {
@@ -1007,7 +1051,6 @@ class MainActivity : AppCompatActivity() {
                         mainViewModel.updateFrontList(frontList)
                     }
                 }
-
             }
         })
     }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/view_background"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,21 +10,6 @@
     android:background="#1865FF"
     android:foregroundGravity="left"
     android:orientation="vertical">
-
-    <Button
-        android:id="@+id/updateAnswerButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="68dp"
-        android:layout_marginTop="2dp"
-        android:drawablePadding="4sp"
-        android:gravity="center"
-        android:text="false"
-        android:textSize="14dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/updateAnswer_View"
-        tools:layout_conversion_absoluteHeight="48dp"
-        tools:layout_conversion_absoluteWidth="85dp" />
 
     <TextView
         android:id="@+id/question_text_view"
@@ -213,49 +199,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_help" />
 
-    <Button
-        android:id="@+id/ListQuestion_Button"
-        android:layout_width="90dp"
-        android:layout_marginStart="68dp"
-        android:layout_marginTop="2dp"
-        android:drawablePadding="4sp"
-        android:gravity="center"
-        android:text="List"
-        android:textSize="14dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ListAnswer_View"
-        tools:layout_conversion_absoluteHeight="48dp"
-        tools:layout_conversion_absoluteWidth="85dp" android:layout_height="0dp"/>
 
-    <TextView
-        android:id="@+id/ListAnswer_View"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="53dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="2dp"
-        android:paddingStart="15dp"
-        android:text="Список вопросов"
-        android:textColor="#AACA4D"
-        android:textSize="30px"
-        app:layout_constraintBottom_toTopOf="@+id/ListQuestion_Button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        tools:layout_conversion_absoluteHeight="0dp"
-        tools:layout_conversion_absoluteWidth="0dp" />
 
-    <TextView
-        android:id="@+id/updateAnswer_View"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="16dp"
-        android:text="Автообновление вопроса"
-        android:textColor="#AACA4D"
-        android:textSize="30px"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pref_button"
-        tools:layout_conversion_absoluteHeight="0dp"
-        tools:layout_conversion_absoluteWidth="0dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 

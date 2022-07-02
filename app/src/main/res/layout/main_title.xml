@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#124F5E">
+    android:background="#124F5E"
+    android:backgroundTint="#FFFFFF">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -19,7 +20,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="10dp"
+            android:layout_height="6dp"
             android:background="#124F5E"
             android:orientation="vertical">
 
@@ -36,19 +37,22 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
-                android:layout_width="10dp"
+                android:layout_width="4dp"
                 android:layout_height="match_parent"
                 android:background="#124F5E"
                 android:orientation="horizontal"></LinearLayout>
 
             <Button
                 android:id="@+id/main_title_button"
+                style="@android:style/Widget.Material.Light.Button.Borderless.Colored"
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:background="#124F5E"
+                android:background="#AE002CFF"
+                android:inputType="textAutoCorrect"
                 android:shadowColor="#AD00754D"
                 android:text="name quiz"
+                app:cornerRadius="10dip"
                 app:strokeColor="#00590C" />
 
             <LinearLayout
@@ -130,8 +134,8 @@
 
                 <ImageButton
                     android:id="@+id/imShare"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:layout_gravity="center|right"
                     android:layout_weight="1"
                     android:background="#124F5E"
@@ -156,7 +160,7 @@
                             android:id="@+id/tvAllStars"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
+                            android:layout_marginLeft="0dp"
                             android:layout_weight="1"
 
                             android:background="#124F5E"
@@ -180,11 +184,10 @@
                     <RatingBar
                         android:id="@+id/ratingBar"
                         style="?android:attr/ratingBarStyleIndicator"
-                        android:layout_width="wrap_content"
+                        android:layout_width="106dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginBottom="0dp"
                         android:background="#0E3D49"
                         android:numStars="3"
                         android:progressBackgroundTint="#AAAAAA"
@@ -195,9 +198,11 @@
 
                 <ImageButton
                     android:id="@+id/imDeleteQuiz"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
                     android:layout_gravity="center"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginRight="6dp"
                     android:background="#124F5E"
                     android:backgroundTint="#124F5E"
                     android:elevation="15dp"
@@ -230,10 +235,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="#124F5E"
-                    android:backgroundTint="@color/colorFront"
+                    android:backgroundTint="#124F5E"
                     android:foregroundGravity="left"
                     android:text="Name"
-                    android:textColor="#00343A"
+                    android:textColor="#00227A"
                     android:textColorHighlight="#00343A"
                     android:textColorLink="#8E0000" />
 
@@ -244,10 +249,10 @@
                     android:layout_gravity="end"
                     android:layout_weight="1"
                     android:background="#124F5E"
-                    android:backgroundTint="@color/colorFront"
-                    android:gravity="end"
+                    android:backgroundTint="#124F5E"
+                    android:gravity="right|end"
                     android:text="time"
-                    android:textColor="#00343A" />
+                    android:textColor="#00227A" />
 
             </LinearLayout>
         </LinearLayout>
@@ -257,7 +262,8 @@
             android:layout_height="1dp"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
-            android:background="#124F5E"
+            android:background="#FF0000"
+            android:backgroundTint="#FF0000"
             android:orientation="vertical"
             android:paddingEnd="50dp">
 
