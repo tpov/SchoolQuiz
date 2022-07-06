@@ -35,7 +35,7 @@ class RefreshDataWorker(
             try {
                 apiService.getFullPriceList("1")[0]
             } catch (e: NetworkErrorException) {
-                Result.Retry()
+                Result.success()
             }
             //Дозагружаем вопросов столько, сколько нужно что-бы было 10шт
             for (i in questionNum..9) {
