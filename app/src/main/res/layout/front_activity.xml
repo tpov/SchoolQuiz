@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0021A3">
+    android:background="#2C60BC">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/title_fragment"
@@ -14,13 +14,13 @@
         android:layout_height="0dp"
         android:layout_marginTop="80dp"
         android:layout_marginBottom="50dp"
-        android:background="#0055FF"
+        android:background="#547FD5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bNav"
@@ -29,7 +29,7 @@
         android:layout_marginStart="1dp"
         android:layout_marginEnd="1dp"
         android:layout_marginBottom="1dp"
-        android:background="#002FD8"
+        android:background="#4D2C2C2C"
         app:circularflow_defaultRadius="3dip"
         app:itemRippleColor="#00FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -42,10 +42,13 @@
         android:layout_height="78dp"
         android:layout_marginLeft="8dp"
         android:orientation="vertical"
+        android:background="#215BC1"
         app:layout_constraintBottom_toTopOf="@+id/title_fragment"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
         <TextView
             android:id="@+id/tv_num_chack_n"
@@ -67,7 +70,7 @@
                 android:id="@+id/textView10"
                 android:layout_width="25dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="3dp"
+                android:layout_marginLeft="30dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="3dp"
                 android:layout_weight="1"

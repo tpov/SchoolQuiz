@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#002AFF"
+    android:background="#33FFFFFF"
     android:elevation="20dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#0022FF"
+        android:background="#330022FF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,13 +19,13 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#0035FF">
+            android:background="#800035FF">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#1C3173"
+                android:background="#8C1A368C"
                 android:elevation="20dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

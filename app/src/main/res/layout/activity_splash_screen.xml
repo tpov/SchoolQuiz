@@ -8,12 +8,26 @@
     tools:context=".activity.SplashScreen">
 
     <TextView
+        android:id="@+id/tv_answer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/annie_use_your_telescope"
+        android:shadowColor="#B3FFFFFF"
+        android:text="Answer"
+        android:textColor="#789EFF"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/tv_splash2"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
         android:id="@+id/tvT"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:fontFamily="@font/diplomata_sc"
         android:text="T"
-        android:textColor="@color/splashTextColor"
+        android:textColor="#FFFFFF"
         android:textSize="60sp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -28,7 +42,7 @@
         android:fontFamily="@font/diplomata_sc"
         android:gravity="center_horizontal"
         android:text="P"
-        android:textColor="@color/splashTextColor"
+        android:textColor="#FFFFFF"
         android:textSize="60sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,7 +57,7 @@
         android:fontFeatureSettings="@font/diplomata_sc"
         android:gravity="center_horizontal"
         android:text="O"
-        android:textColor="@color/splashTextColor"
+        android:textColor="#FFFFFF"
         android:textSize="60sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -57,7 +71,7 @@
         android:fontFamily="@font/diplomata_sc"
         android:gravity="center_horizontal"
         android:text="V"
-        android:textColor="@color/splashTextColor"
+        android:textColor="#FFFFFF"
         android:textSize="60sp"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -66,14 +80,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_splash"
+        android:id="@+id/tv_question"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
         android:layout_marginBottom="50dp"
-        android:fontFamily="@font/rochester"
+        android:fontFamily="@font/annie_use_your_telescope"
         android:shadowColor="#B3FFFFFF"
         android:text="ChatNoir"
-        android:textColor="#917200"
+        android:textColor="#93923D"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -85,8 +101,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="5dp"
+        android:fontFamily="@font/rochester"
         android:text="TPOV inc. 2021-2022."
-        android:textColor="#780000"
+        android:textColor="#BF2F2F"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

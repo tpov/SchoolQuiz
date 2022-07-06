@@ -101,8 +101,8 @@ until you answer any of the questions or the timer runs out. If the timer runs o
 In general, the timer starts if you read an unanswered question.</string>
     <string name="start_massage_6">In the future, various school questions and new opportunities will be added. You can also share your questions in the review, the best questions will probably be added to the application. And also, you can support the author with a rating of 5, or remove ads, and you will have everything true ^)</string>
 
-    <string name="FrontActivity_num_chack_norice">Осталось фраз Чака в оффлайн режиме</string>
-    <string name="tv_auto_update_question">Автообновление вопроса</string>
-    <string name="list_question">Список вопросов</string>
+    <string name="FrontActivity_num_chack_norice">Remaining questions-days offline</string>
+    <string name="tv_auto_update_question">Question auto-update</string>
+    <string name="list_question">A list of questions</string>
 
 </resources>

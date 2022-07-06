@@ -72,12 +72,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tv321: TextView
     private lateinit var viewBackground: ConstraintLayout
 
-    private var numQ: Int? = 0
     private var numQuestion: Int? = 0
     private var numAnswer: Int? = 0
     private var leftAnswer: Int? = 0
 
-    private var idGeoQuiz: String? = NAME_GEOQUIZ
     private var codeAnswer: String? = ""
     private var codeMap: String? = ""
     private var currentIndexThis: Int = -1
@@ -95,14 +93,11 @@ class MainActivity : AppCompatActivity() {
     private var idCrime = 0
     private var userName: String? = ""
     private var idUser = ""
-    private var closeActivity = true
     private var hardQuestion = false
     private var updateFrontList = 0
     private var stars = 0
-    private var quizA = 0
     private var persentAnswer = 0
     private var currentIndex = 0
-    private var thisTimer = false
     private var checkTimer = false
 
     private var mapAnswer: MutableMap<Int, Boolean> = mutableMapOf(
@@ -125,9 +120,7 @@ class MainActivity : AppCompatActivity() {
         userName = intent.getStringExtra(NAME_USER)
         stars = intent.getStringExtra(STARS)!!.toInt()
         idUser = nameQuestionUser!!
-        testMainActivity(0)
         hardQuestion = getHardQuestion(stars)
-
 
         getUpdateCrime(true, idUser)
         getQuizList()
@@ -150,10 +143,8 @@ class MainActivity : AppCompatActivity() {
         viewBackground = findViewById(R.id.view_background)
 
         if (hardQuestion) {
-            listQuestionButton.isEnabled = false
-            listQuestionButton.isClickable = false
-
             viewBackground.setBackgroundResource(R.color.background_hard_question)
+            cheatButton.visibility = View.GONE
         }
         trueButton.setOnClickListener {
 
@@ -288,12 +279,10 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    override fun getMenuInflater(): MenuInflater {
-        
-        return super.getMenuInflater()
-    }
-    override fun onContextItemSelected(item: MenuItem): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            android.R.id.home -> finish()
+
             R.id.item_auto_update_answer -> {
                 Log.d("MainActivity", "itemAutoUpdateAnswer")
                 item.isChecked = !item.isChecked
@@ -311,37 +300,46 @@ class MainActivity : AppCompatActivity() {
             }
 
             R.id.item_list_answer -> {
-                Log.d("MainActivity", "itemListanswer")
-                val questionActivityIntent = Intent(this, QuestionActivity::class.java)
+                if (!hardQuestion) {
+                    Log.d("MainActivity", "itemListanswer")
+                    val questionActivityIntent = Intent(this, QuestionActivity::class.java)
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    val optionsList =
-                        ActivityOptions.makeClipRevealAnimation(
-                            View(this),
-                            0,
-                            0,
-                            View(this).width,
-                            View(this).height
-                        )
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        val optionsList =
+                            ActivityOptions.makeClipRevealAnimation(
+                                View(this),
+                                0,
+                                0,
+                                View(this).width,
+                                View(this).height
+                            )
 
-                    questionActivityIntent.putExtra(EXTRA_CURRENT_INDEX, currentIndex)   //Output
-                    questionActivityIntent.putExtra(EXTRA_CODE_ANSWER, codeAnswer)
-                    questionActivityIntent.putExtra(EXTRA_CODE_ID_USER, idUser)
-                    startActivityForResult(questionActivityIntent, UPDATE_CURRENT_INDEX)
-                } else {
-                    questionActivityIntent.putExtra(
-                        EXTRA_UPDATE_CURRENT_INDEX,
-                        currentIndex
-                    )   //Output
-                    startActivityForResult(questionActivityIntent, UPDATE_CURRENT_INDEX)
+                        questionActivityIntent.putExtra(
+                            EXTRA_CURRENT_INDEX,
+                            currentIndex
+                        )   //Output
+                        questionActivityIntent.putExtra(EXTRA_CODE_ANSWER, codeAnswer)
+                        questionActivityIntent.putExtra(EXTRA_CODE_ID_USER, idUser)
+                        startActivityForResult(questionActivityIntent, UPDATE_CURRENT_INDEX)
+                    } else {
+                        questionActivityIntent.putExtra(
+                            EXTRA_UPDATE_CURRENT_INDEX,
+                            currentIndex
+                        )   //Output
+                        startActivityForResult(questionActivityIntent, UPDATE_CURRENT_INDEX)
+                    }
+
                 }
             }
         }
         return true
+
     }
-
+    private fun log(text: String) {
+        Log.d("MainActivity", "$text")
+    }
     private fun endTimer() {
-
+        log("endTimer.")
         if (!updateAnswer) {
             checkBlockMap()
             checkBlock()
@@ -389,34 +387,8 @@ class MainActivity : AppCompatActivity() {
         return stars >= 100
     }
 
-    private fun testMainActivity(numI: Int) {
-
-        Log.d("MainActivity", "$numI")
-        Log.d("MainActivity", "numQuestion = $numQuestion")
-        Log.d("MainActivity", "numAnswer = $numAnswer")
-        Log.d("MainActivity", "leftAnswer = $leftAnswer")
-        Log.d("MainActivity", "codeAnswer = $codeAnswer")
-        Log.d("MainActivity", "codeMap = $codeMap")
-        Log.d("MainActivity", "currentIndex = $currentIndexThis")
-        Log.d("MainActivity", "isCheater = $isCheater")
-        Log.d("MainActivity", "updateAnswer = $updateAnswer")
-        Log.d("MainActivity", "insertCrime = $insertCrime")
-        Log.d("MainActivity", "insertCrimeNewQuiz = $insertCrimeNewQuiz")
-        Log.d("MainActivity", "constCurrentIndex = $constCurrentIndex")
-        Log.d("MainActivity", "points = $points")
-        Log.d("MainActivity", "persentPoints = $persentPoints")
-        Log.d("MainActivity", "cheatPoints = $cheatPoints")
-        Log.d("MainActivity", "charMap = $charMap")
-        Log.d("MainActivity", "i = $i")
-        Log.d("MainActivity", "j = $j")
-        Log.d("MainActivity", "idCrime = $idCrime")
-        Log.d("MainActivity", "userName = $userName")
-        Log.d("MainActivity", "idUser = $idUser")
-        Log.d("MainActivity", "____________________________________________")
-
-    }
-
     private fun getUpdateCrime(updateQuiz: Boolean, idUser: String) {
+        log("getUpdateCrime.")
         mainViewModel.insertAnswerCrime(true, insertQuiz(idUser), idUser)
         mainViewModel.updateUnswerMutableCrime.observe(this, {
 
@@ -425,7 +397,6 @@ class MainActivity : AppCompatActivity() {
                 it.forEach { item ->
                     // if (item.idNameQuiz != idUser) recreate()
                     loadCrime(item)
-                    testMainActivity(2)
                 }
             }
         })
@@ -433,7 +404,8 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.getUpdateAnswerCrime(true, insertQuiz(idUser), idUser)
     }
 
-    fun springAnim(next: Boolean) {
+    private fun springAnim(next: Boolean) {
+        log("springAnim.")
         var START_VELOCITY = if (next) -5000f
         else 5000f
 
@@ -449,6 +421,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun insertQuiz(idName: String): Crime {
+        log("insertQuiz.")
         return Crime(
             null,
             idName,
@@ -474,6 +447,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun loadCrime(quizTable: Crime) {
+        log("loadCrime ${quizTable.codeMap}")
         codeAnswer = quizTable.codeAnswer
         codeMap = quizTable.codeMap
         currentIndexThis = quizTable.currentIndex
@@ -496,7 +470,6 @@ class MainActivity : AppCompatActivity() {
         if (userName == "") {
             userName = quizTable.userName
         }
-        testMainActivity(1)
 
         mainViewModel.getQuestionCrimeNewQuiz()
 
@@ -507,12 +480,9 @@ class MainActivity : AppCompatActivity() {
         ab?.setDisplayHomeAsUpEnabled(true)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) finish()
-        return super.onOptionsItemSelected(item)
-    }
 
     private fun getQuizList() {
+        log("getQuizList.")
 
         mainViewModel.allCrimeNewQuiz.observe(this, {
             if (insertCrimeNewQuiz) {
@@ -529,7 +499,6 @@ class MainActivity : AppCompatActivity() {
                         else quizList.add(Quiz(item.nameQuestion, item.answerQuestion))
                     }
                 }
-                testMainActivity(3)
 
                 //if (quizListHardQuestion.isEmpty()) quizListHardQuestion = quizList
                 if (hardQuestion) {
@@ -565,6 +534,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadTimer(hardQuestion: Boolean) {
+        log("loadTimer")
         if (!checkTimer) {
             viewModel.startGame(mapAnswer[currentIndex]!!)
             viewModel.formattedTime.observe(this, {
@@ -599,6 +569,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadPBAnswer(persentPoints: Int) {
+        log("loadPBAnswer")
         viewModel.updatePercentAnswer(leftAnswer!!, constCurrentIndex)
         viewModel.answerQuiz.observe(this, {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -610,12 +581,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadResultTimer() {
+        log("loadResultTimer")
         viewModel.gameResult.observe(this, {
             if (!it) endTimer()
         })
     }
 
     private fun setCrimeVar(getUpdateQuestion: Boolean, insertCrime: Boolean) {
+        log("setCrimeVar $codeMap")
 
         if (!insertCrime) {
             if (hardQuestion) {
@@ -665,7 +638,6 @@ class MainActivity : AppCompatActivity() {
                 )
                 mainViewModel.updateCrime(crimeUpdate)
             }
-            testMainActivity(10)
         }
     }
 
@@ -686,6 +658,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
+        log("onSaveInstanceState $codeMap")
         outState.run {
             putString("codeMap", codeMap)
             putString("codeAnswer", codeAnswer)
@@ -696,12 +669,30 @@ class MainActivity : AppCompatActivity() {
             putBoolean("isCheater", isCheater)
             putInt("cheatPoints", cheatPoints)
             putInt("leftAnswer", leftAnswer!!)
+            putInt("numQuestion", numQuestion!!)
+            putInt("numAnswer", numAnswer!!)
+            putBoolean("updateAnswer", updateAnswer)
+            putBoolean("insertCrime", insertCrime)
+            putBoolean("insertCrimeNewQuiz", insertCrimeNewQuiz)
+            putString("charMap", charMap)
+            putInt("i", i)
+            putInt("j", j)
+            putInt("idCrime", idCrime)
+            putString("userName", userName)
+            putString("idUser", idUser)
+            putBoolean("hardQuestion", hardQuestion)
+            putInt("updateFrontList", updateFrontList)
+            putInt("stars", stars)
+            putInt("persentAnswer", persentAnswer)
+            putInt("currentIndex", currentIndex)
+            putBoolean("checkTimer", checkTimer)
         }
         super.onSaveInstanceState(outState)
     }
 
     override fun onRestoreInstanceState(saveInstanceState: Bundle) {
         super.onRestoreInstanceState(saveInstanceState)
+        log("onRestoreInsatanceState $codeMap")
         codeMap = saveInstanceState.getString("codeMap")!!
         codeAnswer = saveInstanceState.getString("codeAnswer")!!
         currentIndexThis = saveInstanceState.getInt("currentIndex")
@@ -710,15 +701,36 @@ class MainActivity : AppCompatActivity() {
         isCheater = saveInstanceState.getBoolean("isCheater")
         cheatPoints = saveInstanceState.getInt("cheatPoints")
         leftAnswer = saveInstanceState.getInt("leftAnswer")
+        numQuestion = saveInstanceState.getInt("numQuestion")
+        numAnswer = saveInstanceState.getInt("numAnswer")
+        updateAnswer = saveInstanceState.getBoolean("updateAnswer")
+        insertCrime = saveInstanceState.getBoolean("insertCrime")
+        insertCrimeNewQuiz = saveInstanceState.getBoolean("insertCrimeNewQuiz")
+        charMap = saveInstanceState.getString("charMap")
+        i = saveInstanceState.getInt("i")
+        j = saveInstanceState.getInt("j")
+        idCrime = saveInstanceState.getInt("idCrime")
+        userName = saveInstanceState.getString("userName")
+        idUser = saveInstanceState.getString("idUser")!!
+        hardQuestion = saveInstanceState.getBoolean("hardQuestion")
+        updateFrontList = saveInstanceState.getInt("updateFrontList")
+        stars = saveInstanceState.getInt("stars")
+        persentAnswer = saveInstanceState.getInt("persentAnswer")
+        currentIndex = saveInstanceState.getInt("currentIndex")
+        checkTimer = saveInstanceState.getBoolean("checkTimer")
+        constCurrentIndex = saveInstanceState.getInt("constCurrentIndex")
+        log("onRestoreInsatanceState $codeMap")
 
         vAndroid.text =
             "vAndroid - ${android.os.Build.VERSION.SDK_INT}, vCode - ${android.os.Build.VERSION_CODES.M}"
         updatePersentView(leftAnswer!!, persentPoints)
         decoderBlockMap()
         checkBlock()
+        setCrimeVar(true, false)
     }
 
     private fun updateQuestion() {
+        log("updateQuestion")
         val questionTextResId = currentQuestionText
 
         if (updateAnswer) {
@@ -735,6 +747,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun moveToPref() {
+        log("moveToPref")
 
         var animPref1 = AnimationUtils.loadAnimation(this, R.anim.pref_question1)
         var animPref2 = AnimationUtils.loadAnimation(this, R.anim.pref_question2)
@@ -772,6 +785,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun moveToNext() {
+        log("moveToNext")
         var animNext1 = AnimationUtils.loadAnimation(this, R.anim.next_question1)
         var animNext2 = AnimationUtils.loadAnimation(this, R.anim.next_question2)
 
@@ -814,6 +828,7 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun checkAnswer(userAnswer: Boolean) {
+        log("checkAnswer")
         viewModel.updatePercentAnswer(leftAnswer!!, numAnswer!!)
 
         val correctAnswer = currentQuestionAnswer
@@ -874,6 +889,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createCodeUnswer() {
+        log("createCodeAnswer")
         codeAnswer = ""
         quizList.forEach {
             codeAnswer += '0'
@@ -881,6 +897,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun coderCodeAnswer(charAnswer: Int) {
+        log("coderCodeAnswer")
         var codeAnswerArray = codeAnswer
 
         when (charAnswer) {
@@ -907,6 +924,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun result(points: Int) {
+        log("result")
         persentPoints = if (hardQuestion) (points * 20 / numQuestion!!) + 100
         else points * 100 / numQuestion!!
         val toastPoints =
@@ -918,10 +936,10 @@ class MainActivity : AppCompatActivity() {
         loadFrontList()
         checkTimer = false
         loadTimer(false)
-        testMainActivity(11)
     }
 
     private fun checkBlock() {
+        log("checkBlock")
         if (mapAnswer[currentIndex] == false) {
             falseButton.isEnabled = false
             falseButton.isClickable = false
@@ -936,6 +954,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkBlockMap() {
+        log("checkBlockMap")
         mapAnswer[currentIndexThis] = false
         leftAnswer = leftAnswer!!.minus(1)
         updatePersentView(leftAnswer!!, persentPoints)
@@ -943,6 +962,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun coderBlockMap() {
+        log("coderBlockMap")
         codeMap = ""
         for (i in 0 until numAnswer!!) {
             if (mapAnswer[i] == false) {
@@ -957,6 +977,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun decoderBlockMap() {
+        log("decoderBlockMap")
         for (i in 0 until numAnswer!!) {
             mapAnswer[j] = codeMap!![j] == '1'
             j++
@@ -965,6 +986,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun useCheat() {
+        log("useCheat")
         cheatPoints -= 1
         cheatPointsLife.text = "Life = $cheatPoints"
         if (cheatPoints == 0) {
@@ -975,6 +997,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun resultTextView(points: Int) {
+        log("resultTextView")
         persentPoints = points * 100 / numAnswer!!
         updatePersentView(leftAnswer!!, persentPoints)
 
@@ -985,11 +1008,13 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun updatePersentView(leftAnswer: Int, persentPoints: Int) {
+        log("updatePercentView")
         if (hardQuestion) viewResult.text = "(I don`t no) % Осталось - $leftAnswer"
         else viewResult.text = "$persentPoints % Осталось - $leftAnswer"
     }
 
     private fun loadFrontList() {
+        log("laodFrontList")
         mainViewModel.getCrime()
 
         mainViewModel.allCrime.observe(this, { item ->
@@ -1056,21 +1081,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadStarsFun(question: String): Int {
-        var num = 0
-        var name = ""
-        listCrime.forEach {
-            if (it.listIdNameQuiz == question) {
-                if (it.listPoints > num) {
-                    num = it.listPoints
-                    name = it.userName
-                    loadStars(it.listPoints)
-                }
-            }
-        }
-        return num
-    }
-
-    private fun loadPoints(question: String): Int {
+        log("loadStarsFun")
         var num = 0
         var name = ""
         listCrime.forEach {
@@ -1086,6 +1097,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadUserName(question: String): String {
+        log("loadUserName")
         var num = 0
         var name = ""
         listCrime.forEach {
@@ -1103,8 +1115,6 @@ class MainActivity : AppCompatActivity() {
     private fun loadStars(points: Int): Int = points / 100
 
     companion object {
-        const val NAME_GEOQUIZ = "GeoQuiz"
-
         const val NAME_QUESTION = "name_question"
         const val NAME_USER = "name_user"
         const val STARS = "stars"

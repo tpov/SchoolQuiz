@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/view_background"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/view_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="left"
-    android:background="#1865FF"
+    android:background="#2261DD"
     android:foregroundGravity="left"
     android:orientation="vertical">
 
@@ -17,11 +17,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
-        android:background="#3C004003"
+        android:background="#3C15881A"
         android:elevation="-10dp"
         android:gravity="center"
         android:padding="20px"
-        android:textColor="#C8B300"
+        android:textColor="#001901"
         android:textSize="13dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,7 +39,7 @@
         android:layout_width="150dp"
         android:layout_height="100dp"
         android:layout_marginBottom="30dp"
-        android:backgroundTint="#66005508"
+        android:backgroundTint="#4D005508"
         android:elevation="20dp"
         android:text="@string/true_button"
         android:textSize="14dp"
@@ -55,7 +55,7 @@
         android:layout_width="150dp"
         android:layout_height="100dp"
         android:layout_marginBottom="30dp"
-        android:backgroundTint="#66911C1C"
+        android:backgroundTint="#4D911C1C"
         android:elevation="10dp"
         android:gravity="center"
         android:text="@string/false_button"
@@ -71,7 +71,7 @@
         android:id="@+id/next_button"
         android:layout_width="35dp"
         android:layout_height="70dp"
-        android:backgroundTint="#80134FFF"
+        android:backgroundTint="#3C225AFF"
         android:drawableEnd="@drawable/arrow_right"
         android:drawablePadding="10sp"
         android:elevation="10dp"
@@ -87,7 +87,7 @@
         android:id="@+id/pref_button"
         android:layout_width="35dp"
         android:layout_height="70dp"
-        android:backgroundTint="#80134FFF"
+        android:backgroundTint="#3C225AFF"
         android:drawableLeft="@drawable/arrow_left"
         android:elevation="10dp"
         android:gravity="center"
@@ -100,10 +100,10 @@
 
     <TextView
         android:id="@+id/viewResult"
-        android:layout_width="120dp"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
-        android:background="#4DA89B54"
+        android:background="#33A89B54"
         android:text="Приятной игры))"
         android:textSize="14dp"
         app:layout_constraintBottom_toTopOf="@+id/cheatPointsLife"
@@ -113,10 +113,10 @@
 
     <TextView
         android:id="@+id/cheatPointsLife"
-        android:layout_width="120dp"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
-        android:background="#4DA89B54"
+        android:background="#33A89B54"
         android:text="Life - 3"
         android:textSize="14dp"
         app:layout_constraintBottom_toTopOf="@+id/lastToast"
@@ -126,12 +126,12 @@
 
     <TextView
         android:id="@+id/lastToast"
-        android:layout_width="120dp"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
 
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="16dp"
-        android:background="#4DA89B54"
+        android:background="#33A89B54"
         android:text="------ "
         android:textSize="14dp"
         app:layout_constraintBottom_toTopOf="@+id/true_button"
@@ -169,7 +169,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="#005FE8"
+        android:background="#81005FE8"
         android:text="00:00"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -180,9 +180,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="3"
-        android:visibility="gone"
         android:textColor="#66FF0000"
         android:textSize="100sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -192,13 +192,12 @@
         android:id="@+id/cheat_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
         android:backgroundTint="#00FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/viewResult"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_help" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

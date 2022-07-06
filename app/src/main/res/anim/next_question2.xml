@@ -2,8 +2,9 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android">
     <translate
         android:interpolator="@android:anim/decelerate_interpolator"
-        android:fromXDelta="700"
+        android:fromXDelta="1000"
         android:fromYDelta="0"
+        android:factor="10"
         android:duration="100"
         android:startOffset="200"
         android:toXDelta="0"

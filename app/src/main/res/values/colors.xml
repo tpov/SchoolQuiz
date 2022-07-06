@@ -18,8 +18,10 @@
 
     <color name="splashTextColor">#670000</color>
     <color name="background_splash_color">#001168</color>
-    <color name="num_chack_norice_red">#59FF0000</color>
-    <color name="background_hard_question">#59FF5959</color>
-    <color name="num_chack_norice_green">#5915FF00</color>
+    <color name="num_chack_norice_red">#33FF0000</color>
+    <color name="background_hard_question">#80770000</color>
+    <color name="num_chack_norice_green">#3315FF00</color>
+    <color name="tv_main_activity">#3C208324</color>
 
+    <color name="backgraund_item_front_activity">#BF124F5E</color>
 </resources>

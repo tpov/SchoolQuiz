@@ -107,17 +107,23 @@ class FrontActivity : AppCompatActivity() {
 
 
     private fun loadNumQuestionNotDate() = with(binding) {
-        if (numQuestionNotDate > 0) textView.setBackgroundResource(R.color.num_chack_norice_green)
-        if (numQuestionNotDate > 1) textView2.setBackgroundResource(R.color.num_chack_norice_green)
-        if (numQuestionNotDate > 2) textView3.setBackgroundResource(R.color.num_chack_norice_green)
-        if (numQuestionNotDate > 3) textView4.setBackgroundResource(R.color.num_chack_norice_green)
-        if (numQuestionNotDate > 4) textView5.setBackgroundResource(R.color.num_chack_norice_green)
-        if (numQuestionNotDate > 5) textView6.setBackgroundResource(R.color.num_chack_norice_green)
-        if (numQuestionNotDate > 6) textView7.setBackgroundResource(R.color.num_chack_norice_green)
-        if (numQuestionNotDate > 7) textView8.setBackgroundResource(R.color.num_chack_norice_green)
-        if (numQuestionNotDate > 8) textView9.setBackgroundResource(R.color.num_chack_norice_green)
-        if (numQuestionNotDate > 9) textView10.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 0) textView10.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 1) textView9.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 2) textView8.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 3) textView7.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 4) textView6.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 5) textView5.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 6) textView4.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 7) textView3.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 8) textView2.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 9) textView.setBackgroundResource(R.color.num_chack_norice_green)
     }
+
+
+
+
+
+
 
     private fun insertNumQuestion() {
 
