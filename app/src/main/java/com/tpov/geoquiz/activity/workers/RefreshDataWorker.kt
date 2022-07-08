@@ -70,11 +70,8 @@ class RefreshDataWorker(
         const val CHANNEL_ID = "1"
 
         @SuppressLint("RestrictedApi")
-        fun makeRequest(numQuestionNotData: Int): PeriodicWorkRequest {
-            return PeriodicWorkRequestBuilder<RefreshDataWorker>(
-                15,
-                TimeUnit.MINUTES
-            ).apply {
+        fun makeRequest(numQuestionNotData: Int): OneTimeWorkRequest {
+            return OneTimeWorkRequestBuilder<RefreshDataWorker>().apply {
                 setInputData(workDataOf(QUESTION_NUM to numQuestionNotData))
                 Log.d("WorkManager", "Воркер получил данные $numQuestionNotData")
             }.build()
