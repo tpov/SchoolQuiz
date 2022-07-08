@@ -1,25 +1,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/back"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#1865FF"
     android:gravity="center"
-    android:background="#3D8780"
     android:orientation="vertical"
     tools:context="com.tpov.geoquiz.activity.CheatActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#4CAF50"
+        android:background="#0758FF"
         android:padding="24dp"
-        android:text="@string/warning_text" />
+        android:text="@string/warning_text"
+        android:textColor="#FFFFFF" />
 
     <TextView
         android:id="@+id/answer_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="24dp"
-        android:text="Answer" />
+        android:text="Answer"
+        android:textColor="#FFFFFF" />
 
     <Button
         android:id="@+id/show_answer_button"

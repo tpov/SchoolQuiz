@@ -8,11 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.NonNull
 import androidx.core.graphics.green
 import androidx.core.graphics.red
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.color.MaterialColors.getColor
 import com.tpov.geoquiz.R
 import com.tpov.geoquiz.databinding.MainTitleBinding
 import com.tpov.geoquiz.entities.FrontList
@@ -41,7 +43,7 @@ class TitleAdapter(private val listener: Listener) :
     class ItemHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val binding = MainTitleBinding.bind(view)
 
-        @SuppressLint("ResourceAsColor")
+        @SuppressLint("ResourceAsColor", "ResourceType")
         fun setData(frontList: FrontList, listener: Listener) = with(binding) {
             tvNumQuestion.text = frontList.numQ.toString()
             tvNumAnswer.text = frontList.numA.toString()
@@ -49,31 +51,33 @@ class TitleAdapter(private val listener: Listener) :
 
             tvAllStars.text =
                 String.format("%.2f", (frontList.starsAll.toFloat() * 0.83333) / frontList.numA)
+
             if (frontList.stars >= 100) {
-                mainTitleButton.setBackgroundColor(R.color.tvHardQuestion)
-            } else mainTitleButton.setBackgroundColor(R.color.tvLightQuestion)
+                mainTitleButton.setBackgroundResource(R.color.num_chack_norice_red)
+            } else mainTitleButton.setBackgroundResource(R.color.num_chack_norice_green)
             imDeleteQuiz.setOnClickListener {
                 listener.deleteItem(frontList.id!!)
             }
 
             var goHardQuiz =
                 "${this.root.context.getString(R.string.go_hard_question)} - ${frontList.nameQuestion}"
+
             if (frontList.stars == 100) {
                 Toast.makeText(binding.root.context, goHardQuiz, Toast.LENGTH_SHORT).show()
             }
+
             if (frontList.stars >= 100) {
                 tvHardQuiz.text = "Hard quiz!"
-                tvHardQuiz.setBackgroundColor(Color.parseColor("#7A0000"))
+                tvHardQuiz.setBackgroundResource(R.color.num_chack_norice_red)
             } else {
                 tvHardQuiz.text = "Light quiz!"
-                tvHardQuiz.setBackgroundColor(Color.parseColor("#167A00"))
+                tvHardQuiz.setBackgroundResource(R.color.num_chack_norice_green)
             }
+
             if (frontList.stars <= 100) ratingBar.rating = (frontList.stars.toFloat() / 50)
             else ratingBar.rating = (((frontList.stars.toFloat() - 100) / 20) + 2)
-            tvStars.text = String.format("%.2f", (frontList.stars.toFloat() * 0.83333))
 
-            Log.d("ShopingListAdapter", "${frontList.stars.toFloat()} ")
-            Log.d("ShopingListAdapter", "${frontList.stars.toFloat() * 0.8}")
+            tvStars.text = String.format("%.2f", (frontList.stars.toFloat() * 0.83333))
             tvTime.text = frontList.data
             mainTitleButton.text = frontList.nameQuestion
             mainTitleButton.setOnClickListener {
@@ -83,6 +87,25 @@ class TitleAdapter(private val listener: Listener) :
                 listener.shareItem("shareQuiz", frontList.id!!)
             }
             tvName.text = frontList.userName
+
+            tvVisibleOrGone()
+        }
+
+        private fun MainTitleBinding.tvVisibleOrGone() {
+            if (tvAllStars.text == "0,00" || tvAllStars == null) tvAllStars.visibility = View.GONE
+            else tvAllStars.visibility = View.VISIBLE
+
+            if (tvNumAnswer.text == "0") tvNumAnswer.visibility = View.GONE
+            else tvNumAnswer.visibility = View.VISIBLE
+
+            if (tvNumHardQuiz.text == "0") tvNumHardQuiz.visibility = View.GONE
+            else tvNumHardQuiz.visibility = View.VISIBLE
+
+            if (tvNumQuestion.text == "0") tvNumQuestion.visibility = View.GONE
+            else tvNumQuestion.visibility = View.VISIBLE
+
+            if (tvStars.text == "0") tvStars.visibility = View.GONE
+            else tvStars.visibility = View.VISIBLE
         }
 
 

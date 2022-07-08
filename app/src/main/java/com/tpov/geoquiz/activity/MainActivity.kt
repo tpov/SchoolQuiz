@@ -9,16 +9,19 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
-import android.view.View
-import android.widget.Button
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
+import android.view.*
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.dynamicanimation.animation.DynamicAnimation
+import androidx.dynamicanimation.animation.SpringAnimation
+import androidx.dynamicanimation.animation.SpringForce
 import androidx.lifecycle.ViewModelProvider
 import com.tpov.geoquiz.*
+import com.tpov.geoquiz.Services.MyService
 import com.tpov.geoquiz.database.MainViewModel
 import com.tpov.geoquiz.entities.Crime
 import com.tpov.geoquiz.entities.FrontList
@@ -26,11 +29,8 @@ import com.tpov.shoppinglist.utils.TimeManager
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlin.random.Random
 
-private const val TAG = "MainActivity"
-private const val KEY_INDEX = "index"
 private const val REQUEST_CODE_CHEAT = 0
 private const val UPDATE_CURRENT_INDEX = 1
-private const val QUESTION_BANK = 0
 
 @InternalCoroutinesApi
 class MainActivity : AppCompatActivity() {
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var falseButton: Button
     private lateinit var nextButton: Button
     private lateinit var prefButton: Button
-    private lateinit var cheatButton: Button
+    private lateinit var cheatButton: ImageButton
     private lateinit var questionTextView: TextView
     private lateinit var updateAnswerButton: Button
     private lateinit var viewResult: TextView
@@ -67,16 +67,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var lastToast: TextView
     private lateinit var vAndroid: TextView
     private lateinit var listQuestionButton: Button
-    private lateinit var viewCodeAnswer: TextView
     private lateinit var tvTimer: TextView
     private lateinit var pbAnswer: ProgressBar
+    private lateinit var tv321: TextView
+    private lateinit var viewBackground: ConstraintLayout
 
-    private var numQ: Int? = 0
     private var numQuestion: Int? = 0
     private var numAnswer: Int? = 0
     private var leftAnswer: Int? = 0
 
-    private var idGeoQuiz: String? = NAME_GEOQUIZ
     private var codeAnswer: String? = ""
     private var codeMap: String? = ""
     private var currentIndexThis: Int = -1
@@ -94,14 +93,11 @@ class MainActivity : AppCompatActivity() {
     private var idCrime = 0
     private var userName: String? = ""
     private var idUser = ""
-    private var closeActivity = true
     private var hardQuestion = false
     private var updateFrontList = 0
     private var stars = 0
-    private var quizA = 0
     private var persentAnswer = 0
     private var currentIndex = 0
-    private var thisTimer = false
     private var checkTimer = false
 
     private var mapAnswer: MutableMap<Int, Boolean> = mutableMapOf(
@@ -114,17 +110,17 @@ class MainActivity : AppCompatActivity() {
     )
     private val TAG = "QuizViewModel"
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         val nameQuestionUser = intent.getStringExtra(NAME_QUESTION)
         userName = intent.getStringExtra(NAME_USER)
         stars = intent.getStringExtra(STARS)!!.toInt()
         idUser = nameQuestionUser!!
-        testMainActivity(0)
         hardQuestion = getHardQuestion(stars)
-
 
         getUpdateCrime(true, idUser)
         getQuizList()
@@ -134,7 +130,6 @@ class MainActivity : AppCompatActivity() {
         nextButton = findViewById(R.id.next_button)
         prefButton = findViewById(R.id.pref_button)
         cheatButton = findViewById(R.id.cheat_button)
-        updateAnswerButton = findViewById(R.id.updateAnswerButton)
         questionTextView = findViewById(R.id.question_text_view)
         viewResult = findViewById(R.id.viewResult)
         cheatPointsLife = findViewById(R.id.cheatPointsLife)
@@ -142,14 +137,14 @@ class MainActivity : AppCompatActivity() {
         vAndroid = findViewById(R.id.vAndroid)
         vAndroid.text =
             "vAndroid - ${Build.VERSION.SDK_INT}, vCode - ${Build.VERSION_CODES.M}"
-        listQuestionButton = findViewById(R.id.ListQuestion_Button)
         tvTimer = findViewById(R.id.tvTimer)
         pbAnswer = findViewById(R.id.pbAnswer)
-
+        tv321 = findViewById(R.id.tv_3_2_1)
+        viewBackground = findViewById(R.id.view_background)
 
         if (hardQuestion) {
-            listQuestionButton.isEnabled = false
-            listQuestionButton.isClickable = false
+            viewBackground.setBackgroundResource(R.color.background_hard_question)
+            cheatButton.visibility = View.GONE
         }
         trueButton.setOnClickListener {
 
@@ -178,9 +173,9 @@ class MainActivity : AppCompatActivity() {
                 if (currentIndex == numAnswer!! - 1) {
                     val toastNull = Toast.makeText(this, R.string.null_toast, Toast.LENGTH_SHORT)
                     toastNull.show()
+                    springAnim(true)
                 } else {
                     moveToNext()
-                    updateQuestion()
                 }
                 checkBlock()
                 if (constCurrentIndex == numAnswer) {
@@ -219,9 +214,9 @@ class MainActivity : AppCompatActivity() {
                 if (currentIndex == numAnswer!! - 1) {
                     val toastNull = Toast.makeText(this, R.string.null_toast, Toast.LENGTH_SHORT)
                     toastNull.show()
+                    springAnim(true)
                 } else {
                     moveToNext()
-                    updateQuestion()
                 }
                 checkBlock()
             }
@@ -247,34 +242,14 @@ class MainActivity : AppCompatActivity() {
                 startActivityForResult(intent, REQUEST_CODE_CHEAT)
             }
         }
-        listQuestionButton.setOnClickListener { view ->
-
-            val questionActivityIntent = Intent(this, QuestionActivity::class.java)
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                val optionsList =
-                    ActivityOptions.makeClipRevealAnimation(view, 0, 0, view.width, view.height)
-
-                questionActivityIntent.putExtra(EXTRA_CURRENT_INDEX, currentIndex)   //Output
-                questionActivityIntent.putExtra(EXTRA_CODE_ANSWER, codeAnswer)
-                questionActivityIntent.putExtra(EXTRA_CODE_ID_USER, idUser)
-                startActivityForResult(questionActivityIntent, UPDATE_CURRENT_INDEX)
-            } else {
-                questionActivityIntent.putExtra(
-                    EXTRA_UPDATE_CURRENT_INDEX,
-                    currentIndex
-                )   //Output
-                startActivityForResult(questionActivityIntent, UPDATE_CURRENT_INDEX)
-            }
-        }
 
         nextButton.setOnClickListener {
             if (currentIndex == numAnswer!! - 1) {
                 val toastNull = Toast.makeText(this, R.string.null_toast, Toast.LENGTH_SHORT)
                 toastNull.show()
+                springAnim(true)
             } else {
                 moveToNext()
-                updateQuestion()
             }
             checkBlock()
 
@@ -282,27 +257,89 @@ class MainActivity : AppCompatActivity() {
         prefButton.setOnClickListener {
             if (currentIndex == 0) {
                 Toast.makeText(this, R.string.null_toast, Toast.LENGTH_SHORT).show()
+                springAnim(false)
             } else {
                 moveToPref()
-                updateQuestion()
             }
             checkBlock()
         }
-        updateAnswerButton.setOnClickListener {
-            if (!updateAnswer) {
-                updateAnswerButton.text = "true"
-                updateAnswer = true
-            } else {
-                updateAnswerButton.text = "false"
-                updateAnswer = false
-            }
-        }
-        actionBarSettings()
 
+        actionBarSettings()
+        startService(Intent(this, MyService::class.java))
     }
 
-    private fun endTimer() {
+    override fun onDestroy() {
+        super.onDestroy()
 
+        stopService(Intent(this, MyService::class.java))
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main_activity, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> finish()
+
+            R.id.item_auto_update_answer -> {
+                Log.d("MainActivity", "itemAutoUpdateAnswer")
+                item.isChecked = !item.isChecked
+                updateAnswer = if (item.isChecked) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        item.tooltipText = "true"
+                    }
+                    true
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        item.tooltipText = "false"
+                    }
+                    false
+                }
+            }
+
+            R.id.item_list_answer -> {
+                if (!hardQuestion) {
+                    Log.d("MainActivity", "itemListanswer")
+                    val questionActivityIntent = Intent(this, QuestionActivity::class.java)
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        val optionsList =
+                            ActivityOptions.makeClipRevealAnimation(
+                                View(this),
+                                0,
+                                0,
+                                View(this).width,
+                                View(this).height
+                            )
+
+                        questionActivityIntent.putExtra(
+                            EXTRA_CURRENT_INDEX,
+                            currentIndex
+                        )   //Output
+                        questionActivityIntent.putExtra(EXTRA_CODE_ANSWER, codeAnswer)
+                        questionActivityIntent.putExtra(EXTRA_CODE_ID_USER, idUser)
+                        startActivityForResult(questionActivityIntent, UPDATE_CURRENT_INDEX)
+                    } else {
+                        questionActivityIntent.putExtra(
+                            EXTRA_UPDATE_CURRENT_INDEX,
+                            currentIndex
+                        )   //Output
+                        startActivityForResult(questionActivityIntent, UPDATE_CURRENT_INDEX)
+                    }
+
+                }
+            }
+        }
+        return true
+
+    }
+    private fun log(text: String) {
+        Log.d("MainActivity", "$text")
+    }
+    private fun endTimer() {
+        log("endTimer.")
         if (!updateAnswer) {
             checkBlockMap()
             checkBlock()
@@ -350,34 +387,8 @@ class MainActivity : AppCompatActivity() {
         return stars >= 100
     }
 
-    private fun testMainActivity(numI: Int) {
-
-        Log.d("MainActivity", "$numI")
-        Log.d("MainActivity", "numQuestion = $numQuestion")
-        Log.d("MainActivity", "numAnswer = $numAnswer")
-        Log.d("MainActivity", "leftAnswer = $leftAnswer")
-        Log.d("MainActivity", "codeAnswer = $codeAnswer")
-        Log.d("MainActivity", "codeMap = $codeMap")
-        Log.d("MainActivity", "currentIndex = $currentIndexThis")
-        Log.d("MainActivity", "isCheater = $isCheater")
-        Log.d("MainActivity", "updateAnswer = $updateAnswer")
-        Log.d("MainActivity", "insertCrime = $insertCrime")
-        Log.d("MainActivity", "insertCrimeNewQuiz = $insertCrimeNewQuiz")
-        Log.d("MainActivity", "constCurrentIndex = $constCurrentIndex")
-        Log.d("MainActivity", "points = $points")
-        Log.d("MainActivity", "persentPoints = $persentPoints")
-        Log.d("MainActivity", "cheatPoints = $cheatPoints")
-        Log.d("MainActivity", "charMap = $charMap")
-        Log.d("MainActivity", "i = $i")
-        Log.d("MainActivity", "j = $j")
-        Log.d("MainActivity", "idCrime = $idCrime")
-        Log.d("MainActivity", "userName = $userName")
-        Log.d("MainActivity", "idUser = $idUser")
-        Log.d("MainActivity", "____________________________________________")
-
-    }
-
     private fun getUpdateCrime(updateQuiz: Boolean, idUser: String) {
+        log("getUpdateCrime.")
         mainViewModel.insertAnswerCrime(true, insertQuiz(idUser), idUser)
         mainViewModel.updateUnswerMutableCrime.observe(this, {
 
@@ -386,7 +397,6 @@ class MainActivity : AppCompatActivity() {
                 it.forEach { item ->
                     // if (item.idNameQuiz != idUser) recreate()
                     loadCrime(item)
-                    testMainActivity(2)
                 }
             }
         })
@@ -394,7 +404,24 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.getUpdateAnswerCrime(true, insertQuiz(idUser), idUser)
     }
 
+    private fun springAnim(next: Boolean) {
+        log("springAnim.")
+        var START_VELOCITY = if (next) -5000f
+        else 5000f
+
+        var springAnimation: SpringAnimation = SpringAnimation(questionTextView, DynamicAnimation.X)
+        var springForce: SpringForce = SpringForce()
+        springForce.finalPosition = questionTextView.x
+        springForce.dampingRatio = SpringForce.DAMPING_RATIO_HIGH_BOUNCY
+        springForce.stiffness = SpringForce.STIFFNESS_HIGH
+
+        springAnimation.spring = springForce
+        springAnimation.setStartVelocity(START_VELOCITY)
+        springAnimation.start()
+    }
+
     fun insertQuiz(idName: String): Crime {
+        log("insertQuiz.")
         return Crime(
             null,
             idName,
@@ -420,6 +447,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun loadCrime(quizTable: Crime) {
+        log("loadCrime ${quizTable.codeMap}")
         codeAnswer = quizTable.codeAnswer
         codeMap = quizTable.codeMap
         currentIndexThis = quizTable.currentIndex
@@ -442,7 +470,6 @@ class MainActivity : AppCompatActivity() {
         if (userName == "") {
             userName = quizTable.userName
         }
-        testMainActivity(1)
 
         mainViewModel.getQuestionCrimeNewQuiz()
 
@@ -453,12 +480,9 @@ class MainActivity : AppCompatActivity() {
         ab?.setDisplayHomeAsUpEnabled(true)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) finish()
-        return super.onOptionsItemSelected(item)
-    }
 
     private fun getQuizList() {
+        log("getQuizList.")
 
         mainViewModel.allCrimeNewQuiz.observe(this, {
             if (insertCrimeNewQuiz) {
@@ -475,7 +499,6 @@ class MainActivity : AppCompatActivity() {
                         else quizList.add(Quiz(item.nameQuestion, item.answerQuestion))
                     }
                 }
-                testMainActivity(3)
 
                 //if (quizListHardQuestion.isEmpty()) quizListHardQuestion = quizList
                 if (hardQuestion) {
@@ -511,17 +534,43 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadTimer(hardQuestion: Boolean) {
+        log("loadTimer")
         if (!checkTimer) {
             viewModel.startGame(mapAnswer[currentIndex]!!)
             viewModel.formattedTime.observe(this, {
                 tvTimer.text = it
+                if (it[3] == '0' && it[4] == '3') anim321(3)
+                if (it[3] == '0' && it[4] == '2') anim321(2)
+                if (it[3] == '0' && it[4] == '1') anim321(1)
             })
             checkTimer = true
         }
     }
 
+    @SuppressLint("ResourceType")
+    private fun anim321(num: Int) {
+        tv321.text = num.toString()
+
+        var anim = AnimationUtils.loadAnimation(this@MainActivity, R.anim.time_3_2_1)
+        anim.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(p0: Animation?) {
+                tv321.visibility = View.VISIBLE
+
+            }
+
+            override fun onAnimationEnd(p0: Animation?) {
+                tv321.visibility = View.GONE
+            }
+
+            override fun onAnimationRepeat(p0: Animation?) {
+            }
+        })
+        tv321.startAnimation(anim)
+    }
+
     private fun loadPBAnswer(persentPoints: Int) {
-        viewModel.updatePercentAnswer(leftAnswer!!, constCurrentIndex!!)
+        log("loadPBAnswer")
+        viewModel.updatePercentAnswer(leftAnswer!!, constCurrentIndex)
         viewModel.answerQuiz.observe(this, {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 pbAnswer.setProgress(it, true)
@@ -532,12 +581,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadResultTimer() {
+        log("loadResultTimer")
         viewModel.gameResult.observe(this, {
             if (!it) endTimer()
         })
     }
 
     private fun setCrimeVar(getUpdateQuestion: Boolean, insertCrime: Boolean) {
+        log("setCrimeVar $codeMap")
 
         if (!insertCrime) {
             if (hardQuestion) {
@@ -587,7 +638,6 @@ class MainActivity : AppCompatActivity() {
                 )
                 mainViewModel.updateCrime(crimeUpdate)
             }
-            testMainActivity(10)
         }
     }
 
@@ -608,6 +658,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
+        log("onSaveInstanceState $codeMap")
         outState.run {
             putString("codeMap", codeMap)
             putString("codeAnswer", codeAnswer)
@@ -618,12 +669,30 @@ class MainActivity : AppCompatActivity() {
             putBoolean("isCheater", isCheater)
             putInt("cheatPoints", cheatPoints)
             putInt("leftAnswer", leftAnswer!!)
+            putInt("numQuestion", numQuestion!!)
+            putInt("numAnswer", numAnswer!!)
+            putBoolean("updateAnswer", updateAnswer)
+            putBoolean("insertCrime", insertCrime)
+            putBoolean("insertCrimeNewQuiz", insertCrimeNewQuiz)
+            putString("charMap", charMap)
+            putInt("i", i)
+            putInt("j", j)
+            putInt("idCrime", idCrime)
+            putString("userName", userName)
+            putString("idUser", idUser)
+            putBoolean("hardQuestion", hardQuestion)
+            putInt("updateFrontList", updateFrontList)
+            putInt("stars", stars)
+            putInt("persentAnswer", persentAnswer)
+            putInt("currentIndex", currentIndex)
+            putBoolean("checkTimer", checkTimer)
         }
         super.onSaveInstanceState(outState)
     }
 
     override fun onRestoreInstanceState(saveInstanceState: Bundle) {
         super.onRestoreInstanceState(saveInstanceState)
+        log("onRestoreInsatanceState $codeMap")
         codeMap = saveInstanceState.getString("codeMap")!!
         codeAnswer = saveInstanceState.getString("codeAnswer")!!
         currentIndexThis = saveInstanceState.getInt("currentIndex")
@@ -632,15 +701,36 @@ class MainActivity : AppCompatActivity() {
         isCheater = saveInstanceState.getBoolean("isCheater")
         cheatPoints = saveInstanceState.getInt("cheatPoints")
         leftAnswer = saveInstanceState.getInt("leftAnswer")
+        numQuestion = saveInstanceState.getInt("numQuestion")
+        numAnswer = saveInstanceState.getInt("numAnswer")
+        updateAnswer = saveInstanceState.getBoolean("updateAnswer")
+        insertCrime = saveInstanceState.getBoolean("insertCrime")
+        insertCrimeNewQuiz = saveInstanceState.getBoolean("insertCrimeNewQuiz")
+        charMap = saveInstanceState.getString("charMap")
+        i = saveInstanceState.getInt("i")
+        j = saveInstanceState.getInt("j")
+        idCrime = saveInstanceState.getInt("idCrime")
+        userName = saveInstanceState.getString("userName")
+        idUser = saveInstanceState.getString("idUser")!!
+        hardQuestion = saveInstanceState.getBoolean("hardQuestion")
+        updateFrontList = saveInstanceState.getInt("updateFrontList")
+        stars = saveInstanceState.getInt("stars")
+        persentAnswer = saveInstanceState.getInt("persentAnswer")
+        currentIndex = saveInstanceState.getInt("currentIndex")
+        checkTimer = saveInstanceState.getBoolean("checkTimer")
+        constCurrentIndex = saveInstanceState.getInt("constCurrentIndex")
+        log("onRestoreInsatanceState $codeMap")
 
         vAndroid.text =
             "vAndroid - ${android.os.Build.VERSION.SDK_INT}, vCode - ${android.os.Build.VERSION_CODES.M}"
         updatePersentView(leftAnswer!!, persentPoints)
         decoderBlockMap()
         checkBlock()
+        setCrimeVar(true, false)
     }
 
     private fun updateQuestion() {
+        log("updateQuestion")
         val questionTextResId = currentQuestionText
 
         if (updateAnswer) {
@@ -657,11 +747,78 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun moveToPref() {
-        currentIndex = (currentIndex - 1) % numQuestion!!
+        log("moveToPref")
+
+        var animPref1 = AnimationUtils.loadAnimation(this, R.anim.pref_question1)
+        var animPref2 = AnimationUtils.loadAnimation(this, R.anim.pref_question2)
+
+        animPref1.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(p0: Animation?) {
+            }
+
+            override fun onAnimationEnd(p0: Animation?) {
+                questionTextView.visibility = View.GONE
+                currentIndex = (currentIndex - 1) % numQuestion!!
+                updateQuestion()
+
+                questionTextView.startAnimation(animPref2)
+            }
+
+            override fun onAnimationRepeat(p0: Animation?) {
+            }
+        })
+
+        animPref2.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(p0: Animation?) {
+                questionTextView.visibility = View.VISIBLE
+            }
+
+            override fun onAnimationEnd(p0: Animation?) {
+                checkBlock()
+            }
+
+            override fun onAnimationRepeat(p0: Animation?) {
+            }
+        })
+        questionTextView.startAnimation(animPref1)
     }
 
+
     private fun moveToNext() {
-        currentIndex = (currentIndex + 1) % numQuestion!!
+        log("moveToNext")
+        var animNext1 = AnimationUtils.loadAnimation(this, R.anim.next_question1)
+        var animNext2 = AnimationUtils.loadAnimation(this, R.anim.next_question2)
+
+        animNext1.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(p0: Animation?) {
+            }
+
+            override fun onAnimationEnd(p0: Animation?) {
+                questionTextView.visibility = View.GONE
+                currentIndex = (currentIndex + 1) % numQuestion!!
+                updateQuestion()
+
+                questionTextView.startAnimation(animNext2)
+            }
+
+            override fun onAnimationRepeat(p0: Animation?) {
+            }
+        })
+        animNext2.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(p0: Animation?) {
+
+                questionTextView.visibility = View.VISIBLE
+            }
+
+            override fun onAnimationEnd(p0: Animation?) {
+                checkBlock()
+            }
+
+            override fun onAnimationRepeat(p0: Animation?) {
+            }
+        })
+        questionTextView.startAnimation(animNext1)
+
     }
 
     private val currentQuestionAnswer: Boolean
@@ -671,6 +828,7 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun checkAnswer(userAnswer: Boolean) {
+        log("checkAnswer")
         viewModel.updatePercentAnswer(leftAnswer!!, numAnswer!!)
 
         val correctAnswer = currentQuestionAnswer
@@ -731,6 +889,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createCodeUnswer() {
+        log("createCodeAnswer")
         codeAnswer = ""
         quizList.forEach {
             codeAnswer += '0'
@@ -738,6 +897,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun coderCodeAnswer(charAnswer: Int) {
+        log("coderCodeAnswer")
         var codeAnswerArray = codeAnswer
 
         when (charAnswer) {
@@ -764,6 +924,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun result(points: Int) {
+        log("result")
         persentPoints = if (hardQuestion) (points * 20 / numQuestion!!) + 100
         else points * 100 / numQuestion!!
         val toastPoints =
@@ -773,10 +934,12 @@ class MainActivity : AppCompatActivity() {
         setCrimeVar(getUpdateQuestion = false, insertCrime = false)
 
         loadFrontList()
-        testMainActivity(11)
+        checkTimer = false
+        loadTimer(false)
     }
 
     private fun checkBlock() {
+        log("checkBlock")
         if (mapAnswer[currentIndex] == false) {
             falseButton.isEnabled = false
             falseButton.isClickable = false
@@ -791,6 +954,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkBlockMap() {
+        log("checkBlockMap")
         mapAnswer[currentIndexThis] = false
         leftAnswer = leftAnswer!!.minus(1)
         updatePersentView(leftAnswer!!, persentPoints)
@@ -798,6 +962,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun coderBlockMap() {
+        log("coderBlockMap")
         codeMap = ""
         for (i in 0 until numAnswer!!) {
             if (mapAnswer[i] == false) {
@@ -812,6 +977,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun decoderBlockMap() {
+        log("decoderBlockMap")
         for (i in 0 until numAnswer!!) {
             mapAnswer[j] = codeMap!![j] == '1'
             j++
@@ -820,6 +986,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun useCheat() {
+        log("useCheat")
         cheatPoints -= 1
         cheatPointsLife.text = "Life = $cheatPoints"
         if (cheatPoints == 0) {
@@ -830,6 +997,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun resultTextView(points: Int) {
+        log("resultTextView")
         persentPoints = points * 100 / numAnswer!!
         updatePersentView(leftAnswer!!, persentPoints)
 
@@ -840,11 +1008,13 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun updatePersentView(leftAnswer: Int, persentPoints: Int) {
+        log("updatePercentView")
         if (hardQuestion) viewResult.text = "(I don`t no) % Осталось - $leftAnswer"
         else viewResult.text = "$persentPoints % Осталось - $leftAnswer"
     }
 
     private fun loadFrontList() {
+        log("laodFrontList")
         mainViewModel.getCrime()
 
         mainViewModel.allCrime.observe(this, { item ->
@@ -906,27 +1076,12 @@ class MainActivity : AppCompatActivity() {
                         mainViewModel.updateFrontList(frontList)
                     }
                 }
-
             }
         })
     }
 
     private fun loadStarsFun(question: String): Int {
-        var num = 0
-        var name = ""
-        listCrime.forEach {
-            if (it.listIdNameQuiz == question) {
-                if (it.listPoints > num) {
-                    num = it.listPoints
-                    name = it.userName
-                    loadStars(it.listPoints)
-                }
-            }
-        }
-        return num
-    }
-
-    private fun loadPoints(question: String): Int {
+        log("loadStarsFun")
         var num = 0
         var name = ""
         listCrime.forEach {
@@ -942,6 +1097,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadUserName(question: String): String {
+        log("loadUserName")
         var num = 0
         var name = ""
         listCrime.forEach {
@@ -959,8 +1115,6 @@ class MainActivity : AppCompatActivity() {
     private fun loadStars(points: Int): Int = points / 100
 
     companion object {
-        const val NAME_GEOQUIZ = "GeoQuiz"
-
         const val NAME_QUESTION = "name_question"
         const val NAME_USER = "name_user"
         const val STARS = "stars"
