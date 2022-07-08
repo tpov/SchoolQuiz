@@ -4,7 +4,10 @@ import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -17,6 +20,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationBuilderWithBuilderAccessor
 import androidx.core.app.NotificationCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.work.*
 import com.tpov.geoquiz.R
 import com.tpov.geoquiz.activity.workers.RefreshDataWorker
@@ -43,12 +47,24 @@ class SplashScreen : AppCompatActivity() {
     private var answerNotNetwork: String = ""
     private var questionNotNetworkDate: String = ""
     private var answerNotNetworkDate: String = ""
+    private var numQuestionInList = 0
 
     private var questionApiArray: Array<String>? = null
     private var answerApiArray: Array<String>? = null
 
     private val mainViewModel: MainViewModel by viewModels {
         MainViewModel.MainViewModelFactory((applicationContext as MainApp).database)
+    }
+    private val localBroadcastManager by lazy {
+        LocalBroadcastManager.getInstance(this)
+    }
+    val receiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == "loaded") {
+                val percent = intent.getIntExtra("percent", 0)
+                binding.tvQuestion.text = "$percent, %"
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +74,17 @@ class SplashScreen : AppCompatActivity() {
         Log.d("WorkManager", "Начало")
         visibleTPOV(false)
         mainViewModel.getGenerateQuestion()
+
+        val intentFilter = IntentFilter().apply {
+            addAction("loaded")
+        }
+        localBroadcastManager.registerReceiver(receiver, intentFilter)
         checkQuestionNotDate(loadDate())
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        localBroadcastManager.unregisterReceiver(receiver)
     }
 
     private fun visibleTPOV(visible: Boolean) = with(binding) {
@@ -210,7 +236,9 @@ class SplashScreen : AppCompatActivity() {
                             .show()
                         createAnimation()
                     }
+                    mainViewModel.getGenerateQuestion()
                 }
+
             })
         Log.d("WorkManager", "Передаем - $numQuestionNotDate")
         loadNotification("Загрузка", "Подключение к сети")
@@ -232,6 +260,7 @@ class SplashScreen : AppCompatActivity() {
             EntityGenerateQuestion(null, "", "", "", "", ""),
             EntityGenerateQuestion(null, "", "", "", "", "")
         )
+
         for (i in 0..9) {
             if (questionApiArray!![i] != "") {
                 Log.d("WorkManager", "Найдет не пустой квест, $i")
@@ -244,9 +273,10 @@ class SplashScreen : AppCompatActivity() {
                     answerApiArray!![i]
                 )
                 list[i] = entityGenerateQuestion
+                numQuestionInList++
             }
         }
-        loadNotification("Успех","Загружен: ${list.size} вопросов")
+        loadNotification("Успех","Загружено: $numQuestionInList вопросов")
         mainViewModel.insertGenerationQuestion(list)
         Log.d("WorkManager", "Закончилась загрузка квеста")
         Log.d("WorkManager", "ищем еще раз")
