@@ -7,15 +7,10 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.tpov.geoquiz.entities.Crime
 import com.tpov.geoquiz.entities.CrimeNewQuiz
-import com.tpov.geoquiz.entities.EntityGenerateQuestion
 import com.tpov.geoquiz.entities.FrontList
 import kotlinx.coroutines.InternalCoroutinesApi
 
-@Database(
-    entities = [Crime::class, CrimeNewQuiz::class, FrontList::class, EntityGenerateQuestion::class],
-    version = 3,
-    exportSchema = true, autoMigrations = [AutoMigration(from = 1, to = 3)]
-)
+@Database(entities = [Crime::class, CrimeNewQuiz::class, FrontList::class], version = 1, exportSchema = true)      //, autoMigrations = [AutoMigration(from = 1, to = 2)]
 abstract class CrimeDatabase : RoomDatabase() {
     abstract fun getCrimeDao(): CrimeDao
 

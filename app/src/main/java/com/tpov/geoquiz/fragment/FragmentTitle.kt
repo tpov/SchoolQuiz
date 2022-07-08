@@ -159,6 +159,14 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
         return binding.root
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        /*if (item.itemId == R.id.ListQuestion_Button) {
+            FragmentManager.currentFrag?.onClickNew("", stars)
+        }*/
+        return super.onOptionsItemSelected(item)
+    }
+
     @InternalCoroutinesApi
     fun insertFrontList(listNameQuestion: String, listUserName: String) {
         val frontList = FrontList(
