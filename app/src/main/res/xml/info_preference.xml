@@ -25,11 +25,6 @@
             android:icon="@drawable/ic_new"
             android:title="@string/start_massage_5" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="TIMER">
-        <Preference
-            android:icon="@drawable/ic_time"
-            android:title="@string/timer" />
-    </PreferenceCategory>
     <PreferenceCategory android:title="Fun game!">
         <Preference
             android:icon="@drawable/ic_help"

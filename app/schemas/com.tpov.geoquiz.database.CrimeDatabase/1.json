@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "f978f2a63da0799359ec44926d5991de",
+    "identityHash": "211d7e70058a315b842038d6f6138091",
     "entities": [
       {
         "tableName": "table_data",
@@ -243,62 +243,12 @@
         },
         "indices": [],
         "foreignKeys": []
-      },
-      {
-        "tableName": "table_generate_question",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` TEXT NOT NULL, `question` TEXT NOT NULL, `answer` TEXT NOT NULL, `questionTranslate` TEXT NOT NULL, `answerTranslate` TEXT NOT NULL)",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "date",
-            "columnName": "date",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "question",
-            "columnName": "question",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "answer",
-            "columnName": "answer",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "questionTranslate",
-            "columnName": "questionTranslate",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "answerTranslate",
-            "columnName": "answerTranslate",
-            "affinity": "TEXT",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "id"
-          ],
-          "autoGenerate": true
-        },
-        "indices": [],
-        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f978f2a63da0799359ec44926d5991de')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '211d7e70058a315b842038d6f6138091')"
     ]
   }
 }
