@@ -1,25 +1,28 @@
-package com.tpov.schoolquiz.data.workers
+package com.tpov.geoquiz.activity.workers
 
+import android.accounts.NetworkErrorException
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.work.*
-import com.tpov.schoolquiz.data.api.ApiFactory
+import com.tpov.geoquiz.activity.api.ApiFactory
 import kotlinx.coroutines.InternalCoroutinesApi
+import java.util.concurrent.TimeUnit
 
 @InternalCoroutinesApi
 class RefreshDataWorker(
     context: Context,
     workerParameters: WorkerParameters,
 ) : CoroutineWorker(context, workerParameters) {
-    private var apiService = ApiFactory.apiService
+    private val apiService = ApiFactory.apiService
     private lateinit var outputData: Data
-   private val localBroadcastManager by lazy {
+    private val localBroadcastManager by lazy {
         LocalBroadcastManager.getInstance(context)
     }
 
+    @SuppressLint("RestrictedApi")
     override suspend fun doWork(): Result {
 
         Log.d("WorkManager", "Запущен воркер.")
@@ -31,12 +34,12 @@ class RefreshDataWorker(
         var getAnswerApiArray = arrayOf("", "", "", "", "", "", "", "", "", "")
 
         try {
-            apiService.getFullPriceList("1")[0].getQuestion()
+            apiService.getFullPriceList("1")[0]
         } catch (e: Exception) {
             Result.success()
         }
 
-//        Дозагружаем вопросов столько, сколько нужно что-бы было 10шт
+        //Дозагружаем вопросов столько, сколько нужно что-бы было 10шт
         for (i in questionNum..9) {
 
             val apiList = apiService.getFullPriceList("1")[0]
