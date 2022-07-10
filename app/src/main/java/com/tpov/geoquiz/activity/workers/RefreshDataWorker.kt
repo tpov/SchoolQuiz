@@ -18,11 +18,10 @@ class RefreshDataWorker(
 ) : CoroutineWorker(context, workerParameters) {
     private val apiService = ApiFactory.apiService
     private lateinit var outputData: Data
-    private val localBroadcastManager by lazy {
+   /* private val localBroadcastManager by lazy {
         LocalBroadcastManager.getInstance(context)
-    }
+    }*/
 
-    @SuppressLint("RestrictedApi")
     override suspend fun doWork(): Result {
 
         Log.d("WorkManager", "Запущен воркер.")
@@ -35,11 +34,11 @@ class RefreshDataWorker(
 
         try {
             apiService.getFullPriceList("1")[0]
-        } catch (e: Exception) {
+        } catch (e: NetworkErrorException) {
             Result.success()
         }
 
-        //Дозагружаем вопросов столько, сколько нужно что-бы было 10шт
+//        Дозагружаем вопросов столько, сколько нужно что-бы было 10шт
         for (i in questionNum..9) {
 
             val apiList = apiService.getFullPriceList("1")[0]
@@ -50,7 +49,7 @@ class RefreshDataWorker(
             val intent = Intent("loaded").apply {
                 putExtra("percent", ((i + 1) * 10))
             }
-            localBroadcastManager.sendBroadcast(intent)
+//            localBroadcastManager.sendBroadcast(intent)
         }
 
         outputData = Data.Builder()

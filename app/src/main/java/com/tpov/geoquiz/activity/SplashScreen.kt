@@ -55,17 +55,17 @@ class SplashScreen : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModels {
         MainViewModel.MainViewModelFactory((applicationContext as MainApp).database)
     }
-    private val localBroadcastManager by lazy {
+    /*private val localBroadcastManager by lazy {
         LocalBroadcastManager.getInstance(this)
-    }
-    val receiver = object : BroadcastReceiver() {
+    }*/
+    /*val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == "loaded") {
                 val percent = intent.getIntExtra("percent", 0)
                 binding.tvQuestion.text = "$percent, %"
             }
         }
-    }
+    }*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,17 +75,17 @@ class SplashScreen : AppCompatActivity() {
         visibleTPOV(false)
         mainViewModel.getGenerateQuestion()
 
-        val intentFilter = IntentFilter().apply {
+        /*val intentFilter = IntentFilter().apply {
             addAction("loaded")
-        }
-        localBroadcastManager.registerReceiver(receiver, intentFilter)
+        }*/
+        /*localBroadcastManager.registerReceiver(receiver, intentFilter)*/
         checkQuestionNotDate(loadDate())
     }
 
-    override fun onDestroy() {
+   /* override fun onDestroy() {
         super.onDestroy()
         localBroadcastManager.unregisterReceiver(receiver)
-    }
+    }*/
 
     private fun visibleTPOV(visible: Boolean) = with(binding) {
         Log.d("WorkManager", "Видимость ТПОВ.")
@@ -236,9 +236,7 @@ class SplashScreen : AppCompatActivity() {
                             .show()
                         createAnimation()
                     }
-                    mainViewModel.getGenerateQuestion()
                 }
-
             })
         Log.d("WorkManager", "Передаем - $numQuestionNotDate")
         loadNotification("Загрузка", "Подключение к сети")
