@@ -5,7 +5,7 @@
     android:gravity="center"
     android:background="#3D8780"
     android:orientation="vertical"
-    tools:context="com.tpov.geoquiz.activity.CheatActivity">
+    tools:context="com.tpov.schoolquiz.activity.CheatActivity">
 
     <TextView
         android:layout_width="wrap_content"
