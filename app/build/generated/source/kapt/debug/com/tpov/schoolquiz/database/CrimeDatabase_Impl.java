@@ -11,6 +11,9 @@ import androidx.room.util.TableInfo;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
 
+import com.tpov.schoolquiz.data.database.CrimeDao;
+import com.tpov.schoolquiz.data.database.CrimeDatabase;
+
 import java.lang.Class;
 import java.lang.Override;
 import java.lang.String;

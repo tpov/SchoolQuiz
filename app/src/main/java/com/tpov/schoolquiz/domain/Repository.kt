@@ -1,32 +1,43 @@
 package com.tpov.schoolquiz.domain
 
-import com.tpov.schoolquiz.entities.ApiQuestion
-import com.tpov.schoolquiz.entities.Question
-import com.tpov.schoolquiz.entities.Quiz
-import com.tpov.schoolquiz.entities.QuizDetail
+import androidx.lifecycle.LiveData
+import com.tpov.schoolquiz.data.database.entities.ApiQuestion
+import com.tpov.schoolquiz.data.database.entities.Question
+import com.tpov.schoolquiz.data.database.entities.Quiz
+import com.tpov.schoolquiz.data.database.entities.QuizDetail
 
 interface Repository {
 
     //FrontActivity
-    fun deleteQuiz(quiz: Quiz)
+    suspend fun deleteQuiz(deleteAnswerQuestion: Boolean, nameQuiz: String)
 
-    fun shareQuiz(quiz: Quiz)
+    suspend fun resultQuiz(quiz: Quiz)
 
-    fun startQuiz(quiz: Quiz)
+    suspend fun getQuiz(): LiveData<List<Quiz>>
 
-    fun resultQuiz(quiz: Quiz)
-
-    fun newQuiz(quiz: Quiz, question: Question)
+    suspend fun newQuiz(quiz: Quiz, question: Question)
 
     //SplashScreenActivity
-    fun loadQuestionDay(systemDate: String): ApiQuestion
+    suspend fun getQuestionDay(): LiveData<List<ApiQuestion>>
+
+    suspend fun insertQuestionDay(list: List<ApiQuestion>)
+
+    suspend fun updateQuestionDay(question: ApiQuestion)
 
     //MainActivity
-    fun answerQuestion(quiz: Quiz, question: Question): Boolean
+    suspend fun getInfoQuestion(
+        updateAnswer: Boolean,
+        insertQuiz: QuizDetail,
+        idUser: String
+    ): LiveData<List<QuizDetail>>
 
-    fun getInfoQuestion(): QuizDetail
+    suspend fun insertInfoQuestion(
+        updateUnswer: Boolean,
+        insertQuiz: QuizDetail,
+        idUser: String
+    )
 
-    fun saveInfoQuestion(quizDetail: QuizDetail)
+    suspend fun updateInfoQuestion(quizDetail: QuizDetail)
 
-    fun getQuestion(questionId: Int): Question
+    suspend fun getQuestion(): LiveData<List<Question>>
 }

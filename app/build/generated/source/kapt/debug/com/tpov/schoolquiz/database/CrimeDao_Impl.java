@@ -11,10 +11,12 @@ import androidx.room.SharedSQLiteStatement;
 import androidx.room.util.CursorUtil;
 import androidx.room.util.DBUtil;
 import androidx.sqlite.db.SupportSQLiteStatement;
-import com.tpov.schoolquiz.entities.QuizDetail;
-import com.tpov.schoolquiz.entities.Question;
-import com.tpov.schoolquiz.entities.ApiQuestion;
-import com.tpov.schoolquiz.entities.Quiz;
+
+import com.tpov.schoolquiz.data.database.CrimeDao;
+import com.tpov.schoolquiz.data.database.entities.QuizDetail;
+import com.tpov.schoolquiz.data.database.entities.Question;
+import com.tpov.schoolquiz.data.database.entities.ApiQuestion;
+import com.tpov.schoolquiz.data.database.entities.Quiz;
 import java.lang.Class;
 import java.lang.Exception;
 import java.lang.Integer;

@@ -1,4 +1,4 @@
-package com.tpov.schoolquiz.entities
+package com.tpov.schoolquiz.data.database.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

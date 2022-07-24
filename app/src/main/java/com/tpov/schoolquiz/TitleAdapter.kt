@@ -1,16 +1,16 @@
-package com.tpov.schoolquiz.database
+package com.tpov.schoolquiz
 
 import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.tpov.schoolquiz.R
 import com.tpov.schoolquiz.databinding.MainTitleBinding
-import com.tpov.schoolquiz.entities.Quiz
+import com.tpov.schoolquiz.data.database.entities.Quiz
 
 class TitleAdapter(private val listener: Listener) :
     ListAdapter<Quiz, TitleAdapter.ItemHolder>(ItemComparater()) {

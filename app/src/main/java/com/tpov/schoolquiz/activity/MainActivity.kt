@@ -22,9 +22,9 @@ import androidx.dynamicanimation.animation.SpringForce
 import androidx.lifecycle.ViewModelProvider
 import com.tpov.schoolquiz.*
 import com.tpov.schoolquiz.Services.MyService
-import com.tpov.schoolquiz.database.MainViewModel
-import com.tpov.schoolquiz.entities.QuizDetail
-import com.tpov.schoolquiz.entities.Quiz
+import com.tpov.schoolquiz.MainViewModel
+import com.tpov.schoolquiz.data.database.entities.QuizDetail
+import com.tpov.schoolquiz.data.database.entities.Quiz
 import com.tpov.shoppinglist.utils.TimeManager
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlin.random.Random
@@ -491,12 +491,17 @@ class MainActivity : AppCompatActivity() {
                 it.forEach { item ->
                     if (item.idListNameQuestion == idUser) {
                         if (item.typeQuestion) quizListHardQuestion.add(
-                            Quiz(
+                            com.tpov.schoolquiz.data.model.Quiz(
                                 item.nameQuestion,
                                 item.answerQuestion
                             )
                         )
-                        else quizList.add(Quiz(item.nameQuestion, item.answerQuestion))
+                        else quizList.add(
+                            com.tpov.schoolquiz.data.model.Quiz(
+                                item.nameQuestion,
+                                item.answerQuestion
+                            )
+                        )
                     }
                 }
 
@@ -613,7 +618,7 @@ class MainActivity : AppCompatActivity() {
                     numQuestion,
                     numAnswer
                 )
-                mainViewModel.updateCrime(crimeUpdate)
+                mainViewModel.updateQuizDetal(crimeUpdate)
             } else {
                 var crimeUpdate = QuizDetail(
                     idCrime,
@@ -636,7 +641,7 @@ class MainActivity : AppCompatActivity() {
                     numQuestion,
                     numAnswer
                 )
-                mainViewModel.updateCrime(crimeUpdate)
+                mainViewModel.updateQuizDetal(crimeUpdate)
             }
         }
     }
@@ -1015,7 +1020,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadFrontList() {
         log("laodFrontList")
-        mainViewModel.getCrime()
+        mainViewModel.getQuiz()
 
         mainViewModel.allCrime.observe(this, { item ->
             listCrime.clear()

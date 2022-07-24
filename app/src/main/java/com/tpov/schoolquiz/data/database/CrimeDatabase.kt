@@ -1,14 +1,14 @@
-package com.tpov.schoolquiz.database
+package com.tpov.schoolquiz.data.database
 
 import android.content.Context
 import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.tpov.schoolquiz.entities.QuizDetail
-import com.tpov.schoolquiz.entities.Question
-import com.tpov.schoolquiz.entities.ApiQuestion
-import com.tpov.schoolquiz.entities.Quiz
+import com.tpov.schoolquiz.data.database.entities.QuizDetail
+import com.tpov.schoolquiz.data.database.entities.Question
+import com.tpov.schoolquiz.data.database.entities.ApiQuestion
+import com.tpov.schoolquiz.data.database.entities.Quiz
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @Database(

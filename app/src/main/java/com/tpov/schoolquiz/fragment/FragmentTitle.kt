@@ -10,16 +10,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.tpov.schoolquiz.activity.FrontActivity
 import com.tpov.schoolquiz.activity.MainActivity
 import com.tpov.schoolquiz.activity.MainApp
-import com.tpov.schoolquiz.database.MainViewModel
-import com.tpov.schoolquiz.database.TitleAdapter
+import com.tpov.schoolquiz.MainViewModel
+import com.tpov.schoolquiz.TitleAdapter
 import com.tpov.schoolquiz.databinding.TitleFragmentBinding
 import com.tpov.schoolquiz.databinding.TitleFragmentBinding.*
-import com.tpov.schoolquiz.entities.Question
+import com.tpov.schoolquiz.data.database.entities.Question
 import com.tpov.schoolquiz.fragment.BaseFragment
 import com.tpov.schoolquiz.fragment.FragmentManager
 import com.tpov.schoolquiz.dialog.CreateQuestionDialog
 import com.tpov.schoolquiz.dialog.CreateQuestionSecondDialog
-import com.tpov.schoolquiz.entities.Quiz
+import com.tpov.schoolquiz.data.database.entities.Quiz
 import com.tpov.shoppinglist.utils.ShareHelper
 import com.tpov.shoppinglist.utils.TimeManager
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -29,7 +29,7 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
 
     private lateinit var binding: TitleFragmentBinding
     //private lateinit var adapter: TitleAdapter
-
+    private var createQuiz = false
 
     private val mainViewModel: MainViewModel by activityViewModels {
         MainViewModel.MainViewModelFactory((context?.applicationContext as MainApp).database)
@@ -37,7 +37,7 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
 
 
     override fun onClickNew(name: String, stars: Int) {
-        //var closeDialog = mainViewModel.isGeoQuizFrontnoSuspend()
+
         var closeDialog = false
         CreateQuestionDialog.showDialog(
             activity as FrontActivity, name, closeDialog,
@@ -54,8 +54,8 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
                 ) {
                     when (nameQuiz) {
                         "" -> {
-                            insertFrontList(listUserName, listNameQuestion)
-                            startSecondDialog(listUserName)
+                            createQuiz = true
+                            startSecondDialog(listUserName, listNameQuestion)
                         }
                         "Delete quiz?" -> {
                             var nameQuiz = ""
@@ -104,7 +104,7 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
                     }
                 }
 
-                fun startSecondDialog(listNameQuestionSecond: String) {
+                fun startSecondDialog(listNameQuestionSecond: String, listNameQuestion: String) {
                     CreateQuestionSecondDialog.showDialog(
                         activity as AppCompatActivity,
                         object : CreateQuestionSecondDialog.Listener {
@@ -123,7 +123,7 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
                                     nameTypeQuestion,
                                     listNameQuestionSecond,
                                 )
-                                mainViewModel.insertCrimeNewQuiz(nameList)
+                                insertFrontList(listUserName, listNameQuestion, nameList)
                             }
                         },
                     )
@@ -132,9 +132,6 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
         )
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d("onViewCreated", "onViewCreated")
@@ -159,7 +156,7 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
     }
 
     @InternalCoroutinesApi
-    fun insertFrontList(listNameQuestion: String, listUserName: String) {
+    fun insertFrontList(listNameQuestion: String, listUserName: String, nameList: Question) {
         val frontList = Quiz(
             null,
             listNameQuestion,
@@ -171,7 +168,11 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
         0,
         0)
         mainViewModel.insertFrontList(frontList)
+        if (createQuiz) mainViewModel.insertCrimeNewQuiz(nameList)
+
+        createQuiz = false
     }
+    //Тег по которому диалог определяет что нужно именно сделать с квестом. И id самого квеста
     override fun deleteItem(id: Int) {
         FragmentManager.currentFrag?.onClickNew("deleteQuiz", id)
     }

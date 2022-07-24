@@ -2,7 +2,7 @@ package com.tpov.schoolquiz.fragment
 
 import androidx.fragment.app.activityViewModels
 import com.tpov.schoolquiz.activity.MainApp
-import com.tpov.schoolquiz.database.MainViewModel
+import com.tpov.schoolquiz.MainViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @InternalCoroutinesApi

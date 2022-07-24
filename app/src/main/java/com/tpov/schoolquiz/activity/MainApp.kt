@@ -1,7 +1,7 @@
 package com.tpov.schoolquiz.activity
 
 import android.app.Application
-import com.tpov.schoolquiz.database.CrimeDatabase
+import com.tpov.schoolquiz.data.database.CrimeDatabase
 import kotlinx.coroutines.InternalCoroutinesApi
 
 class MainApp: Application() {

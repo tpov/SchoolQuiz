@@ -1,4 +1,4 @@
-package com.tpov.schoolquiz.activity.api
+package com.tpov.schoolquiz.data.api
 
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -14,5 +14,5 @@ object ApiFactory {
         .baseUrl(BASE_URL)
         .build()
 
-    val apiService = retrofit.create(ApiService::class.java)
+    val apiService = retrofit.create(ApiServiceQuestion::class.java)
 }

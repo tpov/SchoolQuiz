@@ -14,9 +14,10 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.tpov.schoolquiz.R
-import com.tpov.schoolquiz.database.MainViewModel
+import com.tpov.schoolquiz.MainViewModel
 import com.tpov.schoolquiz.databinding.FrontActivityBinding
-import com.tpov.schoolquiz.entities.Quiz
+import com.tpov.schoolquiz.data.database.entities.Quiz
+import com.tpov.schoolquiz.data.model.Question
 import com.tpov.schoolquiz.fragment.FragmentManager
 import com.tpov.schoolquiz.settings.SettingsActivity
 import com.tpov.shoppinglist.utils.TimeManager
@@ -96,7 +97,6 @@ class FrontActivity : AppCompatActivity() {
 
         setButtonNavListener()
         insertFrontList("GeoQuiz", "")
-        insertNumQuestion()
         numQuestionNotDate = intent.getIntExtra(NUM_QUESTION_NOT_NUL, 0)
         FragmentManager.setFragment(FragmentTitle.newInstance(), this)
 
@@ -115,16 +115,6 @@ class FrontActivity : AppCompatActivity() {
         if (numQuestionNotDate > 7) textView3.setBackgroundResource(R.color.num_chack_norice_green)
         if (numQuestionNotDate > 8) textView2.setBackgroundResource(R.color.num_chack_norice_green)
         if (numQuestionNotDate > 9) textView.setBackgroundResource(R.color.num_chack_norice_green)
-    }
-
-
-
-
-
-
-
-    private fun insertNumQuestion() {
-
     }
 
     @InternalCoroutinesApi
@@ -149,7 +139,7 @@ class FrontActivity : AppCompatActivity() {
         questionBank.forEach {
             q++
             textQ = getString(it.textResId)
-            var name = com.tpov.schoolquiz.entities.Question(
+            var name = com.tpov.schoolquiz.data.database.entities.Question(
                 null,
                 getString(it.textResId),
                 it.answer,
