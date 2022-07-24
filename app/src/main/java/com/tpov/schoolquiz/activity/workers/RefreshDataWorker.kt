@@ -6,7 +6,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.work.*
-import com.tpov.schoolquiz.activity.api.ApiFactory
+import com.tpov.schoolquiz.data.api.ApiFactory
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @InternalCoroutinesApi

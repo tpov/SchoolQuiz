@@ -1,4 +1,4 @@
-package com.tpov.schoolquiz
+package com.tpov.schoolquiz.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -6,10 +6,9 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tpov.schoolquiz.activity.MainActivity
-import com.tpov.schoolquiz.activity.MainApp
-import com.tpov.schoolquiz.database.CustomRecyclerAdapter
-import com.tpov.schoolquiz.database.MainViewModel
+import com.tpov.schoolquiz.data.model.Quiz
+import com.tpov.schoolquiz.CustomRecyclerAdapter
+import com.tpov.schoolquiz.MainViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
 import android.content.Intent as Intent1
 

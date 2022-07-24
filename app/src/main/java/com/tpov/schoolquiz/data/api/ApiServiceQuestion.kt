@@ -1,16 +1,16 @@
-package com.tpov.schoolquiz.activity.api
+package com.tpov.schoolquiz.data.api
 
-import com.tpov.schoolquiz.pojo.Responce
+import com.tpov.schoolquiz.data.api.pojo.ResponceQuestion
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface ApiService {
+interface ApiServiceQuestion {
 
 //http://jservice.io/api/random1
     @GET("api/random")
     suspend fun getFullPriceList(
         @Query(QUERY_COUNT) count: String = COUNT
-    ): List<Responce>
+    ): List<ResponceQuestion>
 
     companion object {
         private const val COUNT = "1"

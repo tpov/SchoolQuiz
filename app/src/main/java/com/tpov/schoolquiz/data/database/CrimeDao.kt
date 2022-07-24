@@ -1,13 +1,13 @@
-package com.tpov.schoolquiz.database
+package com.tpov.schoolquiz.data.database
 
 import androidx.room.Dao
 import androidx.room.Insert
-import com.tpov.schoolquiz.entities.QuizDetail
+import com.tpov.schoolquiz.data.database.entities.QuizDetail
 import androidx.room.Query
 import androidx.room.Update
-import com.tpov.schoolquiz.entities.Question
-import com.tpov.schoolquiz.entities.ApiQuestion
-import com.tpov.schoolquiz.entities.Quiz
+import com.tpov.schoolquiz.data.database.entities.Question
+import com.tpov.schoolquiz.data.database.entities.ApiQuestion
+import com.tpov.schoolquiz.data.database.entities.Quiz
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -34,7 +34,7 @@ interface CrimeDao {
     fun getAllGenerateQuestion(): Flow<List<ApiQuestion>>
 
     @Query("SELECT * FROM table_data")
-    suspend fun getCrime() : List<QuizDetail>
+    suspend fun getQuiz() : List<QuizDetail>
     @Query("SELECT * FROM new_user_table")
     suspend fun getAllIdQuestion() : List<Question>
     @Query("SELECT * FROM front_list")

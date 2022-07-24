@@ -1,9 +1,9 @@
-package com.tpov.schoolquiz.pojo
+package com.tpov.schoolquiz.data.api.pojo
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class Responce (
+data class ResponceQuestion (
 
     @SerializedName("id")
     @Expose

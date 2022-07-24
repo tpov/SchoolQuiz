@@ -14,9 +14,10 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.tpov.schoolquiz.R
-import com.tpov.schoolquiz.database.MainViewModel
+import com.tpov.schoolquiz.MainViewModel
 import com.tpov.schoolquiz.databinding.FrontActivityBinding
-import com.tpov.schoolquiz.entities.Quiz
+import com.tpov.schoolquiz.data.database.entities.Quiz
+import com.tpov.schoolquiz.data.model.Question
 import com.tpov.schoolquiz.fragment.FragmentManager
 import com.tpov.schoolquiz.settings.SettingsActivity
 import com.tpov.shoppinglist.utils.TimeManager
@@ -25,6 +26,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 @InternalCoroutinesApi
 class FrontActivity : AppCompatActivity() {
     private lateinit var binding: FrontActivityBinding
+
     private var idNameQuiz = ""
     private var time = ""
     private var numQuestion = 0
@@ -32,6 +34,7 @@ class FrontActivity : AppCompatActivity() {
     private var quiz: Quiz? = null
     private var closeDialog: Boolean = false
     private var iAd: InterstitialAd? = null
+    private var numQuestionNotDate = 0
 
     private val questionBank = listOf(
         Question(R.string.question_light1, true, false),
@@ -51,6 +54,7 @@ class FrontActivity : AppCompatActivity() {
         Question(R.string.question_light14, true, false),
         Question(R.string.question_light15, false, false),
         Question(R.string.question_light16, true, false),
+
         Question(R.string.question_light17, true, false),
         Question(R.string.question_light18, true, false),
         Question(R.string.question_light19, false, false),
@@ -87,18 +91,30 @@ class FrontActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FrontActivityBinding.inflate(layoutInflater)
+
         insertCrimeNewQuiz("GeoQuiz")
-        //insertNameQuiz("GeoQuiz")
         setContentView(binding.root)
 
         setButtonNavListener()
         insertFrontList("GeoQuiz", "")
-
+        numQuestionNotDate = intent.getIntExtra(NUM_QUESTION_NOT_NUL, 0)
         FragmentManager.setFragment(FragmentTitle.newInstance(), this)
+
+        loadNumQuestionNotDate()
     }
 
-    companion object {
-        const val SHOP_LIST = "shop_list"
+
+    private fun loadNumQuestionNotDate() = with(binding) {
+        if (numQuestionNotDate > 0) textView10.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 1) textView9.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 2) textView8.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 3) textView7.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 4) textView6.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 5) textView5.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 6) textView4.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 7) textView3.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 8) textView2.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 9) textView.setBackgroundResource(R.color.num_chack_norice_green)
     }
 
     @InternalCoroutinesApi
@@ -123,7 +139,7 @@ class FrontActivity : AppCompatActivity() {
         questionBank.forEach {
             q++
             textQ = getString(it.textResId)
-            var name = com.tpov.schoolquiz.entities.Question(
+            var name = com.tpov.schoolquiz.data.database.entities.Question(
                 null,
                 getString(it.textResId),
                 it.answer,
@@ -140,32 +156,17 @@ class FrontActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.menu_home -> {
                 }
+
                 R.id.menu_new_quiz -> {
                     FragmentManager.currentFrag?.onClickNew("", 0)
-                   /* showInterAd(object: AdListener {
-                        override fun onFinish() {
-
-                        }
-                    })*/
-
                 }
+
                 R.id.menu_settings -> {
                     startActivity(Intent(this@FrontActivity, SettingsActivity::class.java))
-                    /*showInterAd(object: AdListener {
-                        override fun onFinish() {
-
-                        }
-                    })*/
                 }
+
                 R.id.menu_info -> {
                     startActivity(Intent(this@FrontActivity, InfoActivity::class.java))
-                   /* showInterAd(object: AdListener {
-                        override fun onFinish() {
-
-                        }
-                    })*/
-                }
-                R.id.main_title_button -> {
                 }
             }
             true
@@ -174,22 +175,27 @@ class FrontActivity : AppCompatActivity() {
 
     private fun loadInterAd() {
         val request = AdRequest.Builder().build()
-        InterstitialAd.load(this, "ca-app-pub-3940256099942544/1033173712", request, object : InterstitialAdLoadCallback() {
+        InterstitialAd.load(
+            this,
+            "ca-app-pub-3940256099942544/1033173712",
+            request,
+            object : InterstitialAdLoadCallback() {
 
-            override fun onAdLoaded(ad: InterstitialAd) {
-                Log.d("MainActivity_bNav", "onAdLoaded")
+                override fun onAdLoaded(ad: InterstitialAd) {
+                    Log.d("MainActivity_bNav", "onAdLoaded")
 
-                iAd = ad
-            }
-            override fun onAdFailedToLoad(ad: LoadAdError) {
-                Log.d("MainActivity_bNav", "onAdFailedToLoad")
+                    iAd = ad
+                }
 
-                iAd = null
-            }
-        } )
+                override fun onAdFailedToLoad(ad: LoadAdError) {
+                    Log.d("MainActivity_bNav", "onAdFailedToLoad")
+
+                    iAd = null
+                }
+            })
     }
 
-    private fun showInterAd(adListener :AdListener) {
+    private fun showInterAd(adListener: AdListener) {
         if (iAd != null) {
             Log.d("MainActivity_bNav", "iAd != null")
 
@@ -199,13 +205,16 @@ class FrontActivity : AppCompatActivity() {
                     loadInterAd()
                     adListener.onFinish()
                 }
+
                 override fun onAdFailedToShowFullScreenContent(p0: AdError) {
                     iAd = null
                     loadInterAd()
                 }
+
                 override fun onAdShowedFullScreenContent() {
                     iAd = null
-                    Toast.makeText(this@FrontActivity, R.string.massage_show_ads, Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@FrontActivity, R.string.massage_show_ads, Toast.LENGTH_LONG)
+                        .show()
                     Log.d("MainActivity_bNav", "onAdShowedFullScreenContent")
 
                     loadInterAd()
@@ -220,5 +229,11 @@ class FrontActivity : AppCompatActivity() {
 
     interface AdListener {
         fun onFinish()
+    }
+
+    companion object {
+        const val NUM_QUESTION_NOT_NUL = "num_question_not_nul"
+        const val SHOP_LIST = "shop_list"
+
     }
 }

@@ -20,9 +20,9 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.work.*
 import com.tpov.schoolquiz.R
 import com.tpov.schoolquiz.activity.workers.RefreshDataWorker
-import com.tpov.schoolquiz.database.MainViewModel
+import com.tpov.schoolquiz.MainViewModel
 import com.tpov.schoolquiz.databinding.ActivitySplashScreenBinding
-import com.tpov.schoolquiz.entities.ApiQuestion
+import com.tpov.schoolquiz.data.database.entities.ApiQuestion
 import kotlinx.coroutines.InternalCoroutinesApi
 import java.text.SimpleDateFormat
 import java.util.*

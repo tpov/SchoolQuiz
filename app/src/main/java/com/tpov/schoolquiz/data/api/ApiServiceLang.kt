@@ -1,5 +1,6 @@
-package com.tpov.schoolquiz.activity.api
+package com.tpov.schoolquiz.data.api
 
+import com.tpov.schoolquiz.data.api.pojo.ResponceLang
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Query
