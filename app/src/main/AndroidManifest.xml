@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GeoQuiz">
         <activity
-            android:name="com.tpov.schoolquiz.activity.FrontActivity"/>
+            android:name="com.tpov.schoolquiz.activity.MainActivity"/>
         <activity android:name="com.tpov.schoolquiz.QuestionActivity" />
         <activity android:name="com.tpov.schoolquiz.activity.CheatActivity" />
         <activity android:name="com.tpov.schoolquiz.activity.MainActivity" />

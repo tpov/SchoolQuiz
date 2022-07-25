@@ -7,14 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.tpov.schoolquiz.R
-import com.tpov.schoolquiz.activity.FrontActivity
+import com.tpov.schoolquiz.activity.MainActivity
 import com.tpov.schoolquiz.databinding.CreateQuestionDialogBinding
 import kotlinx.coroutines.InternalCoroutinesApi
 
 object CreateQuestionDialog {
     @InternalCoroutinesApi
     fun showDialog(
-        activity: FrontActivity,
+        activity: MainActivity,
         nameQuiz: String,
         closeDialog: Boolean,
         listener: Listener

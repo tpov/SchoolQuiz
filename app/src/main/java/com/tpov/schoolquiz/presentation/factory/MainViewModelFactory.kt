@@ -1,8 +1,9 @@
-package com.tpov.schoolquiz.activity
+package com.tpov.schoolquiz.presentation.factory
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.tpov.schoolquiz.activity.FrontViewModel
 
 class MainViewModelFactory(
     private val typeQuestion: Boolean,

@@ -10,8 +10,10 @@ import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -20,7 +22,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.work.*
 import com.tpov.schoolquiz.R
 import com.tpov.schoolquiz.activity.workers.RefreshDataWorker
-import com.tpov.schoolquiz.MainViewModel
+import com.tpov.schoolquiz.presentation.question.QuestionViewModel
 import com.tpov.schoolquiz.databinding.ActivitySplashScreenBinding
 import com.tpov.schoolquiz.data.database.entities.ApiQuestion
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -31,6 +33,7 @@ import java.util.concurrent.TimeUnit
 @SuppressLint("CustomSplashScreen")
 @InternalCoroutinesApi
 class SplashScreen : AppCompatActivity() {
+
 
     private lateinit var binding: ActivitySplashScreenBinding
     private var numQuestionNotDate = 0
@@ -47,8 +50,8 @@ class SplashScreen : AppCompatActivity() {
     private var questionApiArray: Array<String>? = null
     private var answerApiArray: Array<String>? = null
 
-    private val mainViewModel: MainViewModel by viewModels {
-        MainViewModel.MainViewModelFactory((applicationContext as MainApp).database)
+    private val questionViewModel: QuestionViewModel by viewModels {
+        QuestionViewModel.QuizModelFactory((applicationContext as MainApp).database)
     }
     private val localBroadcastManager by lazy {
         LocalBroadcastManager.getInstance(this)
@@ -68,7 +71,7 @@ class SplashScreen : AppCompatActivity() {
         setContentView(binding.root)
         Log.d("WorkManager", "Начало")
         visibleTPOV(false)
-        mainViewModel.getGenerateQuestion()
+        questionViewModel.getQuestionDay()
 
         val intentFilter = IntentFilter().apply {
             addAction("loaded")
@@ -105,7 +108,7 @@ class SplashScreen : AppCompatActivity() {
 
     private fun checkQuestionNotDate(systemDate: String) {
         numQuestionNotDate = 0
-        mainViewModel.allGenerateQuestion.observe(this, { item ->
+        questionViewModel.allGetQuestionDay.observe(this, { item ->
             Log.d("WorkManager", "Загрузка из бд.")
             item.forEach { it ->
                 generateQuestion = ApiQuestion(
@@ -126,7 +129,7 @@ class SplashScreen : AppCompatActivity() {
                 }
                 if (it.date == systemDate || numQuestionNotDate == 9 && !numSystemDate) {
                     Log.d("WorkManager", "Создаем 10 квиз с датой")
-                    mainViewModel.updateGenerationQuestion(
+                    questionViewModel.updateQuestionDay(
                         generateQuestion.copy(date = systemDate)
                     )        //Если из первых девяти вопросов не найдено который нужно отобразить, мы назначаем вопрос для отображения 10й
 
@@ -204,7 +207,7 @@ class SplashScreen : AppCompatActivity() {
                         loadNotification("Ошибка", "Вопросы не были загружены, ошибка сети.")
                         if (numQuestionNotDate in 1..9) {
                             Log.d("WorkManager", "Создаем последний свободный вопрос")
-                            mainViewModel.updateGenerationQuestion(
+                            questionViewModel.updateQuestionDay(
                                 generateQuestionNotNetwork.copy(date = loadDate())
                             )        //Если из первых девяти вопросов не найдено который нужно отобразить, мы назначаем вопрос для отображения 10й
 
@@ -272,11 +275,11 @@ class SplashScreen : AppCompatActivity() {
             }
         }
         loadNotification("Успех","Загружено: $numQuestionInList вопросов")
-        mainViewModel.insertGenerationQuestion(list)
+        questionViewModel.insertApiQuestion(list)
         Log.d("WorkManager", "Закончилась загрузка квеста")
         Log.d("WorkManager", "ищем еще раз")
         Thread.sleep(250)
-        mainViewModel.getGenerateQuestion()
+        questionViewModel.getQuestionDay()
     }
 
     private fun createAnimation() = with(binding) {
@@ -312,8 +315,8 @@ class SplashScreen : AppCompatActivity() {
     }
 
     private fun startActivity() {
-        var intent = Intent(this, FrontActivity::class.java)
-        intent.putExtra(FrontActivity.NUM_QUESTION_NOT_NUL, numQuestionNotDate)
+        var intent = Intent(this, MainActivity::class.java)
+        intent.putExtra(MainActivity.NUM_QUESTION_NOT_NUL, numQuestionNotDate)
         startActivity(intent)
         finish()
     }
