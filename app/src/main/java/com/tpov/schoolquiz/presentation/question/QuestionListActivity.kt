@@ -1,4 +1,4 @@
-package com.tpov.schoolquiz.activity
+package com.tpov.schoolquiz.presentation.question
 
 import android.os.Bundle
 import android.util.Log
@@ -8,7 +8,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tpov.schoolquiz.data.model.Quiz
 import com.tpov.schoolquiz.CustomRecyclerAdapter
-import com.tpov.schoolquiz.MainViewModel
+import com.tpov.schoolquiz.presentation.question.QuestionViewModel
+import com.tpov.schoolquiz.R
+import com.tpov.schoolquiz.activity.MainActivity
+import com.tpov.schoolquiz.activity.MainApp
 import kotlinx.coroutines.InternalCoroutinesApi
 import android.content.Intent as Intent1
 
@@ -17,10 +20,11 @@ const val EXTRA_CURRENT_INDEX = "com.tpov.geoquiz.current_index"
 const val EXTRA_CODE_ANSWER = "com.tpov.geoquiz.code_answer"
 const val EXTRA_CODE_ID_USER = "com.tpov.geoquiz.code_question_bank"
 
+// TODO: 25.07.2022 QuestionListActivity -> QuestionListFragment
 @InternalCoroutinesApi
-class QuestionActivity : AppCompatActivity(), CustomRecyclerAdapter.UpdateData {
-    private val mainViewModel: MainViewModel by viewModels {
-        MainViewModel.MainViewModelFactory((applicationContext as MainApp).database)
+class QuestionListActivity : AppCompatActivity(), CustomRecyclerAdapter.UpdateData {
+    private val questionViewModel: QuestionViewModel by viewModels {
+        QuestionViewModel.QuizModelFactory((applicationContext as MainApp).database)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,12 +46,12 @@ class QuestionActivity : AppCompatActivity(), CustomRecyclerAdapter.UpdateData {
         idUser = intent.getStringExtra(EXTRA_CODE_ID_USER)!!
         var codeAnswer2Array = codeAnswer2.toMutableList()
         QUESTION_BANK_ADAPTER.clear()
-        Log.d("QuestionActivity", "map1 = ${QUESTION_BANK_ADAPTER.map { (it.textResId) }}")
+        Log.d("QuestionListActivity", "map1 = ${QUESTION_BANK_ADAPTER.map { (it.textResId) }}")
 
-        mainViewModel.allCrimeNewQuiz.observe(this, {
+        questionViewModel.getQuestion.observe(this, {
             it.forEach { item ->
-                Log.d("QuestionActivity", "idUser ${idUser}")
-                Log.d("QuestionActivity", "item.idListNameQuestion ${item.idListNameQuestion}")
+                Log.d("QuestionListActivity", "idUser ${idUser}")
+                Log.d("QuestionListActivity", "item.idListNameQuestion ${item.idListNameQuestion}")
 
                 if (idUser == item.idListNameQuestion) {
                     if (!item.typeQuestion) QUESTION_BANK_ADAPTER.add(
@@ -67,10 +71,9 @@ class QuestionActivity : AppCompatActivity(), CustomRecyclerAdapter.UpdateData {
                 QUESTION_BANK_ADAPTER
             )
         })
-        mainViewModel.getQuestionCrimeNewQuiz()
     }
 
-    fun funIntent(
+    private fun funIntent(
         recyclerView: RecyclerView,
         currentIndex2: Int,
         codeAnswer2: String,
@@ -79,10 +82,10 @@ class QuestionActivity : AppCompatActivity(), CustomRecyclerAdapter.UpdateData {
         QUESTION_BANK_ADAPTER: MutableList<Quiz>,
     ) {
 
-        Log.d("QuestionActivity", "map1 = ${QUESTION_BANK_ADAPTER.map { (it.textResId) }}")
+        Log.d("QuestionListActivity", "map1 = ${QUESTION_BANK_ADAPTER.map { (it.textResId) }}")
 
         Log.d(
-            "QuestionActivity",
+            "QuestionListActivity",
             "adapter = ${QUESTION_BANK_ADAPTER.map { (it.textResId) }}, ${codeAnswer2Array}, ${currentIndex2}, ${QUESTION_BANK_ADAPTER}"
         )
         recyclerView.adapter = CustomRecyclerAdapter(

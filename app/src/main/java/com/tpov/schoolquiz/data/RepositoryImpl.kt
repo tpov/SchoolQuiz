@@ -24,22 +24,20 @@ class RepositoryImpl(
         }
     }
 
-    override suspend fun resultQuiz(quiz: Quiz) {
+    override suspend fun updateQuiz(quiz: Quiz) {
         dao.updateFrontList(quiz)
     }
 
-    override suspend fun getQuiz(): LiveData<List<Quiz>> {
-        val allFrontList = MutableLiveData<List<Quiz>>()
-        allFrontList.postValue(dao.getFrontList())
-        return allFrontList
-    }
+    override fun getQuiz() = dao.getFrontList()
 
 
-    override suspend fun newQuiz(quiz: Quiz, question: Question) {
+    override suspend fun insertQuiz(quiz: Quiz) {
         if (quiz.nameQuestion == "GeoQuiz") {
             if (dao.getFrontListGeoQuiz("GeoQuiz").isEmpty()) dao.insertAllFrontList(quiz)
         } else dao.insertAllFrontList(quiz)
+    }
 
+    override suspend fun insertQuestion(question: Question) {
         if (question.idListNameQuestion == "GeoQuiz") {
             if (dao.getIdUserQuestion("GeoQuiz").isEmpty()) {
                 dao.insertCrimeNewQuiz(question)
@@ -47,10 +45,10 @@ class RepositoryImpl(
         } else dao.insertCrimeNewQuiz(question)
     }
 
-    override suspend fun getQuestionDay(): LiveData<List<ApiQuestion>> {
+    override fun getQuestionDay(): List<ApiQuestion> {
         var allGenerateQuestion = MutableLiveData<List<ApiQuestion>>()
         allGenerateQuestion.postValue(dao.getGenerateQuestion())
-        return allGenerateQuestion
+        return dao.getGenerateQuestion()
     }
 
     override suspend fun insertQuestionDay(list: List<ApiQuestion>) {
@@ -62,13 +60,15 @@ class RepositoryImpl(
     }
 
 
-    override suspend fun getInfoQuestion(
+    override suspend fun getInfoQuestionParams(
         updateUnswer: Boolean,
         insertQuiz: QuizDetail,
         idQuizUser: String
     ): LiveData<List<QuizDetail>> {
+
         val updateUnswerMutableCrime = MutableLiveData<List<QuizDetail>>()
         updateUnswerMutableCrime.postValue(dao.getUpdateCrimeGeoQuiz(updateUnswer, idQuizUser))
+
         //Из-за плавающей ошибки(не всегда принимаются данные) вызываем еще пару раз :)
         updateUnswerMutableCrime.postValue(dao.getUpdateCrimeGeoQuiz(updateUnswer, idQuizUser))
         updateUnswerMutableCrime.postValue(dao.getUpdateCrimeGeoQuiz(updateUnswer, idQuizUser))
@@ -76,7 +76,7 @@ class RepositoryImpl(
     }
 
     override suspend fun insertInfoQuestion(
-        updateUnswer: Boolean,
+        updateAnswer: Boolean,
         insertQuiz: QuizDetail,
         idUser: String
     ) {
@@ -87,9 +87,8 @@ class RepositoryImpl(
         dao.updateCrime(quizDetail)
     }
 
-    override suspend fun getQuestion(): LiveData<List<Question>> {
-        val allQuestionsQuiz = MutableLiveData<List<Question>>()
-        allQuestionsQuiz.postValue(dao.getAllIdQuestion())
-        return allQuestionsQuiz
-    }
+    override fun getInfoQuestion(): LiveData<List<QuizDetail>> = dao.getAllCrime()
+
+    override fun getQuestion(): LiveData<List<Question>> = dao.getAllIdQuestion()
+
 }

@@ -13,8 +13,8 @@ import kotlinx.coroutines.InternalCoroutinesApi
 
 @Database(
     entities = [QuizDetail::class, Question::class, Quiz::class, ApiQuestion::class],
-    version = 3,
-    exportSchema = true, autoMigrations = [AutoMigration(from = 1, to = 3)]
+    version = 4,
+    exportSchema = true, autoMigrations = [AutoMigration(from = 3, to = 4)]
 )
 abstract class CrimeDatabase : RoomDatabase() {
     abstract fun getCrimeDao(): CrimeDao

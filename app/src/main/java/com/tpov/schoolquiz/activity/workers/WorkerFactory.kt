@@ -5,14 +5,14 @@ import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
-import com.tpov.geoquiz.database.MainViewModel
+import com.tpov.geoquiz.database.QuestionViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
 import java.security.Provider
 import javax.inject.Inject
 
 @InternalCoroutinesApi
 class WorkerFactory @Inject constructor(
-    private val workerProviders: @JvmSuppressWildcards MainViewModel
+    private val workerProviders: @JvmSuppressWildcards QuestionViewModel
 ) : WorkerFactory() {
 
 

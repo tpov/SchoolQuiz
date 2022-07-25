@@ -6,38 +6,43 @@ import com.tpov.schoolquiz.data.database.entities.Question
 import com.tpov.schoolquiz.data.database.entities.Quiz
 import com.tpov.schoolquiz.data.database.entities.QuizDetail
 
+// TODO: 25.07.2022 LiveData -> Flow
 interface Repository {
 
-    //FrontActivity
+    //MainActivity
     suspend fun deleteQuiz(deleteAnswerQuestion: Boolean, nameQuiz: String)
 
-    suspend fun resultQuiz(quiz: Quiz)
+    suspend fun insertQuiz(quiz: Quiz)
 
-    suspend fun getQuiz(): LiveData<List<Quiz>>
-
-    suspend fun newQuiz(quiz: Quiz, question: Question)
+    suspend fun insertQuestion(question: Question)
 
     //SplashScreenActivity
-    suspend fun getQuestionDay(): LiveData<List<ApiQuestion>>
+    fun getQuestionDay(): List<ApiQuestion>
 
     suspend fun insertQuestionDay(list: List<ApiQuestion>)
 
     suspend fun updateQuestionDay(question: ApiQuestion)
 
-    //MainActivity
-    suspend fun getInfoQuestion(
+    //QuizActivity
+    suspend fun getInfoQuestionParams(
         updateAnswer: Boolean,
         insertQuiz: QuizDetail,
         idUser: String
     ): LiveData<List<QuizDetail>>
 
     suspend fun insertInfoQuestion(
-        updateUnswer: Boolean,
+        updateAnswer: Boolean,
         insertQuiz: QuizDetail,
         idUser: String
     )
+    fun getQuiz(): LiveData<List<Quiz>>
 
     suspend fun updateInfoQuestion(quizDetail: QuizDetail)
 
-    suspend fun getQuestion(): LiveData<List<Question>>
+    fun getInfoQuestion(): LiveData<List<QuizDetail>>
+
+    fun getQuestion(): LiveData<List<Question>>
+
+    suspend fun updateQuiz(quiz: Quiz)
+
 }

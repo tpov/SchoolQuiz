@@ -7,10 +7,9 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.tpov.schoolquiz.activity.FrontActivity
 import com.tpov.schoolquiz.activity.MainActivity
 import com.tpov.schoolquiz.activity.MainApp
-import com.tpov.schoolquiz.MainViewModel
+import com.tpov.schoolquiz.presentation.question.QuestionViewModel
 import com.tpov.schoolquiz.TitleAdapter
 import com.tpov.schoolquiz.databinding.TitleFragmentBinding
 import com.tpov.schoolquiz.databinding.TitleFragmentBinding.*
@@ -31,8 +30,8 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
     //private lateinit var adapter: TitleAdapter
     private var createQuiz = false
 
-    private val mainViewModel: MainViewModel by activityViewModels {
-        MainViewModel.MainViewModelFactory((context?.applicationContext as MainApp).database)
+    private val questionViewModel: QuestionViewModel by activityViewModels {
+        QuestionViewModel.QuizModelFactory((context?.applicationContext as MainApp).database)
     }
 
 
@@ -40,7 +39,7 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
 
         var closeDialog = false
         CreateQuestionDialog.showDialog(
-            activity as FrontActivity, name, closeDialog,
+            activity as MainActivity, name, closeDialog,
             object : CreateQuestionDialog.Listener {
                 override fun onClick(
                     listNameQuestion: String,
@@ -61,8 +60,8 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
                             var nameQuiz = ""
                             var startObs = "delete"
                             Log.d("Delete quiz?", "1")
-                            mainViewModel.getFrontList()
-                            mainViewModel.allFrontList.observe(this@FragmentTitle, {
+                            questionViewModel.getFrontList()
+                            questionViewModel.allFrontList.observe(this@FragmentTitle, {
                                 if (startObs == "delete") {
                                     Log.d("Delete quiz?", "2")
                                     it.forEach { item ->
@@ -70,24 +69,24 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
                                         if (stars == item.id) nameQuiz = item.nameQuestion
                                     }
                                     Log.d("Delete quiz?", "$id, $nameTypeQuestion, $nameQuiz")
-                                    mainViewModel.deleteFrontList(id, nameTypeQuestion, nameQuiz)
+                                    questionViewModel.deleteFrontList(id, nameTypeQuestion, nameQuiz)
                                 }
                             })
                         }
                         "Share quiz" -> {
                             var nameQuiz = ""
                             var startObs = "Share"
-                            mainViewModel.getFrontList()
-                            mainViewModel.allFrontList.observe(this@FragmentTitle, {
+                            questionViewModel.getFrontList()
+                            questionViewModel.allFrontList.observe(this@FragmentTitle, {
                                 if (startObs == "Share") {
                                     it.forEach { item ->
                                         if (stars == item.id) nameQuiz = item.nameQuestion
                                     }
                                 }
 
-                                mainViewModel.getQuestionCrimeNewQuiz()
+                                questionViewModel.getQuestionCrimeNewQuiz()
                             })
-                            mainViewModel.allCrimeNewQuiz.observe(this@FragmentTitle, {
+                            questionViewModel.allCrimeNewQuiz.observe(this@FragmentTitle, {
 
                                 startActivity(Intent.createChooser(
                                     ShareHelper.shareShopList(nameQuiz, it, nameTypeQuestion),
@@ -136,7 +135,7 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
         super.onViewCreated(view, savedInstanceState)
         Log.d("onViewCreated", "onViewCreated")
 
-        mainViewModel.allQuizAdapter.observe(viewLifecycleOwner, {
+        questionViewModel.allQuizAdapter.observe(viewLifecycleOwner, {
             val adapter = TitleAdapter(this@FragmentTitle)
             adapter.submitList(it)
             binding.rcView.layoutManager = LinearLayoutManager(activity)
@@ -167,8 +166,8 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
         0,
         0,
         0)
-        mainViewModel.insertFrontList(frontList)
-        if (createQuiz) mainViewModel.insertCrimeNewQuiz(nameList)
+        questionViewModel.insertFrontList(frontList)
+        if (createQuiz) questionViewModel.insertCrimeNewQuiz(nameList)
 
         createQuiz = false
     }
