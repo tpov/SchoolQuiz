@@ -1,9 +1,8 @@
 package com.tpov.schoolquiz.data
 
-import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.tpov.schoolquiz.data.database.CrimeDatabase
+import com.tpov.schoolquiz.data.database.QuizDatabase
 import com.tpov.schoolquiz.data.database.entities.ApiQuestion
 import com.tpov.schoolquiz.data.database.entities.Question
 import com.tpov.schoolquiz.data.database.entities.Quiz
@@ -11,52 +10,56 @@ import com.tpov.schoolquiz.data.database.entities.QuizDetail
 import com.tpov.schoolquiz.domain.Repository
 
 class RepositoryImpl(
-    private val database: CrimeDatabase
+    private val database: QuizDatabase
 ) : Repository {
 
     private val dao = database.getCrimeDao()
 
-    override suspend fun deleteQuiz(deleteAnswerQuestion: Boolean, nameQuiz: String) {
-        dao.deleteFrontList(nameQuiz)
+    override suspend fun deleteQuiz(id: Int,
+                                    deleteAnswerQuestion: Boolean,
+                                    nameQuiz: String) {
+        dao.deleteQuizByNameQuestion(nameQuiz)
         if (deleteAnswerQuestion) {
-            dao.deleteCrimeName(nameQuiz)
-            dao.deleteCrimeNewQuizName(nameQuiz)
+            dao.deleteQuizDetailByIdNameQuiz(nameQuiz)
+            dao.deleteQuestionByNameQuiz(nameQuiz)
         }
     }
 
     override suspend fun updateQuiz(quiz: Quiz) {
-        dao.updateFrontList(quiz)
+        dao.updateQuiz(quiz)
     }
 
-    override fun getQuiz() = dao.getFrontList()
+    override fun getInfoQuestionList() = dao.getQuizDetailList()
+
+    override fun getQuiz() = dao.getQuiz()
 
 
     override suspend fun insertQuiz(quiz: Quiz) {
         if (quiz.nameQuestion == "GeoQuiz") {
-            if (dao.getFrontListGeoQuiz("GeoQuiz").isEmpty()) dao.insertAllFrontList(quiz)
-        } else dao.insertAllFrontList(quiz)
+            if (dao.getListQuizByNameQuestion("GeoQuiz").isEmpty()) dao.insertQuiz(quiz)
+        } else dao.insertQuiz(quiz)
     }
 
     override suspend fun insertQuestion(question: Question) {
         if (question.idListNameQuestion == "GeoQuiz") {
-            if (dao.getIdUserQuestion("GeoQuiz").isEmpty()) {
-                dao.insertCrimeNewQuiz(question)
+            if (dao.getListQuestionByIdUser("GeoQuiz").isEmpty()) {
+                dao.insertQuestion(question)
             }
-        } else dao.insertCrimeNewQuiz(question)
+        } else dao.insertQuestion(question)
     }
 
     override fun getQuestionDay(): List<ApiQuestion> {
         var allGenerateQuestion = MutableLiveData<List<ApiQuestion>>()
-        allGenerateQuestion.postValue(dao.getGenerateQuestion())
-        return dao.getGenerateQuestion()
+        allGenerateQuestion.postValue(dao.getListApiQuestion())
+        return dao.getListApiQuestion()
     }
 
     override suspend fun insertQuestionDay(list: List<ApiQuestion>) {
-        dao.insertGenerateQuestion(list)
+        dao.insertListApiQuestion(list)
     }
 
     override suspend fun updateQuestionDay(question: ApiQuestion) {
-        dao.updateGenerationQuestion(question)
+        dao.updateApiQuestion(question)
     }
 
 
@@ -67,11 +70,11 @@ class RepositoryImpl(
     ): LiveData<List<QuizDetail>> {
 
         val updateUnswerMutableCrime = MutableLiveData<List<QuizDetail>>()
-        updateUnswerMutableCrime.postValue(dao.getUpdateCrimeGeoQuiz(updateUnswer, idQuizUser))
+        updateUnswerMutableCrime.postValue(dao.getListQuizDetailByUpdateANDIdUser(updateUnswer, idQuizUser))
 
         //Из-за плавающей ошибки(не всегда принимаются данные) вызываем еще пару раз :)
-        updateUnswerMutableCrime.postValue(dao.getUpdateCrimeGeoQuiz(updateUnswer, idQuizUser))
-        updateUnswerMutableCrime.postValue(dao.getUpdateCrimeGeoQuiz(updateUnswer, idQuizUser))
+        updateUnswerMutableCrime.postValue(dao.getListQuizDetailByUpdateANDIdUser(updateUnswer, idQuizUser))
+        updateUnswerMutableCrime.postValue(dao.getListQuizDetailByUpdateANDIdUser(updateUnswer, idQuizUser))
         return updateUnswerMutableCrime
     }
 
@@ -80,15 +83,15 @@ class RepositoryImpl(
         insertQuiz: QuizDetail,
         idUser: String
     ) {
-        if (dao.getUpdateCrimeGeoQuiz(true, idUser).isEmpty()) dao.insertAll(insertQuiz)
+        if (dao.getListQuizDetailByUpdateANDIdUser(true, idUser).isEmpty()) dao.insertQuizDetail(insertQuiz)
     }
 
     override suspend fun updateInfoQuestion(quizDetail: QuizDetail) {
-        dao.updateCrime(quizDetail)
+        dao.updateQuizDetail(quizDetail)
     }
 
-    override fun getInfoQuestion(): LiveData<List<QuizDetail>> = dao.getAllCrime()
+    override fun getInfoQuestion(): LiveData<List<QuizDetail>> = dao.getQuizDetail()
 
-    override fun getQuestion(): LiveData<List<Question>> = dao.getAllIdQuestion()
+    override fun getQuestion(): LiveData<List<Question>> = dao.getQuestion()
 
 }

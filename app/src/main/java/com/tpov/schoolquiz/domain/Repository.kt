@@ -10,7 +10,9 @@ import com.tpov.schoolquiz.data.database.entities.QuizDetail
 interface Repository {
 
     //MainActivity
-    suspend fun deleteQuiz(deleteAnswerQuestion: Boolean, nameQuiz: String)
+    suspend fun deleteQuiz(id: Int,
+                           deleteAnswerQuestion: Boolean,
+                           nameQuiz: String)
 
     suspend fun insertQuiz(quiz: Quiz)
 
@@ -44,5 +46,7 @@ interface Repository {
     fun getQuestion(): LiveData<List<Question>>
 
     suspend fun updateQuiz(quiz: Quiz)
+
+    fun getInfoQuestionList(): List<QuizDetail>
 
 }
