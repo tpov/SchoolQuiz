@@ -22,9 +22,9 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.work.*
 import com.tpov.schoolquiz.R
 import com.tpov.schoolquiz.activity.workers.RefreshDataWorker
-import com.tpov.schoolquiz.presentation.question.QuestionViewModel
-import com.tpov.schoolquiz.databinding.ActivitySplashScreenBinding
 import com.tpov.schoolquiz.data.database.entities.ApiQuestion
+import com.tpov.schoolquiz.databinding.ActivitySplashScreenBinding
+import com.tpov.schoolquiz.presentation.question.QuestionViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
 import java.text.SimpleDateFormat
 import java.util.*
@@ -159,6 +159,7 @@ class SplashScreen : AppCompatActivity() {
         })
 
     }
+
     private fun loadNotification(title: String, name: String) {
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -183,7 +184,12 @@ class SplashScreen : AppCompatActivity() {
         val workManager = WorkManager.getInstance(application)
 
         val requeust2 = RefreshDataWorker.makeRequest(numQuestionNotDate)
-        val request3 = PeriodicWorkRequestBuilder<RefreshDataWorker>(15, TimeUnit.MINUTES).build()
+        val request3 = PeriodicWorkRequestBuilder<RefreshDataWorker>(
+            20,
+            TimeUnit.HOURS,
+            28,
+            TimeUnit.HOURS
+        ).build()
 
         workManager.getWorkInfoByIdLiveData(requeust2.id)
             .observe(this, {
@@ -274,7 +280,7 @@ class SplashScreen : AppCompatActivity() {
                 numQuestionInList++
             }
         }
-        loadNotification("Успех","Загружено: $numQuestionInList вопросов")
+        loadNotification("Успех", "Загружено: $numQuestionInList вопросов")
         questionViewModel.insertApiQuestion(list)
         Log.d("WorkManager", "Закончилась загрузка квеста")
         Log.d("WorkManager", "ищем еще раз")

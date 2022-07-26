@@ -13,23 +13,23 @@ import kotlinx.coroutines.InternalCoroutinesApi
 
 @Database(
     entities = [QuizDetail::class, Question::class, Quiz::class, ApiQuestion::class],
-    version = 4,
-    exportSchema = true, autoMigrations = [AutoMigration(from = 3, to = 4)]
+    version = 5,
+    exportSchema = true, autoMigrations = [AutoMigration(from = 4, to = 5)]
 )
-abstract class CrimeDatabase : RoomDatabase() {
-    abstract fun getCrimeDao(): CrimeDao
+abstract class QuizDatabase : RoomDatabase() {
+    abstract fun getCrimeDao(): QuizDao
 
     companion object {
         @Volatile                                                 //Дает доступ к остальным потокам
-        var INSTANCE: CrimeDatabase? = null
+        var INSTANCE: QuizDatabase? = null
 
         @InternalCoroutinesApi
-        fun getDatabase(context: Context): CrimeDatabase {        //Создаем файл базы данных
+        fun getDatabase(context: Context): QuizDatabase {        //Создаем файл базы данных
             return INSTANCE
                 ?: synchronized(this) {          //synchronized - Обеспечивает запуск только в одном потоке
                     val instance = Room.databaseBuilder(
                         context.applicationContext,               //applicationContext - Так как мы используем во всех активити
-                        CrimeDatabase::class.java,
+                        QuizDatabase::class.java,
                         "GeoQuiz_list.db"
                     ).fallbackToDestructiveMigration().build()
                     instance
