@@ -21,12 +21,10 @@ import androidx.lifecycle.observe
 import com.tpov.schoolquiz.*
 import com.tpov.schoolquiz.Services.MyService
 import com.tpov.schoolquiz.activity.*
-import com.tpov.schoolquiz.databinding.ActivityMainBinding
+import com.tpov.schoolquiz.databinding.ActivityQuestionBinding
 import kotlinx.coroutines.InternalCoroutinesApi
 
 private const val REQUEST_CODE_CHEAT = 0
-private const val UPDATE_CURRENT_INDEX = 1
-
 @InternalCoroutinesApi
 class QuestionActivity : AppCompatActivity() {
 
@@ -34,12 +32,11 @@ class QuestionActivity : AppCompatActivity() {
         QuestionViewModel.QuizModelFactory((applicationContext as MainApp).database)
     }
 
-    private lateinit var binding: ActivityMainBinding
-
+    private lateinit var binding: ActivityQuestionBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityQuestionBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -50,7 +47,7 @@ class QuestionActivity : AppCompatActivity() {
         viewModel.idUser = nameQuestionUser!!
         viewModel.hardQuestion = viewModel.getHardQuestion(viewModel.stars)
 
-        viewModel.getUpdateCrime(true, viewModel.idUser)
+        viewModel.getUpdateCrime(viewModel.idUser)
         viewModel.getQuizList()
 
         binding.apply {
@@ -59,92 +56,10 @@ class QuestionActivity : AppCompatActivity() {
                 cheatButton.visibility = View.GONE
             }
             trueButton.setOnClickListener {
-
-                if (!viewModel.updateAnswer) {
-                    viewModel.checkBlockMap()
-                    viewModel.checkBlock()
-                    viewModel.coderBlockMap()
-                    viewModel.checkAnswer(true)
-                    viewModel.constCurrentIndex += 1
-                    viewModel.resultTextView(viewModel.points)
-                    if (viewModel.constCurrentIndex == viewModel.numAnswer) {
-                        viewModel.result(viewModel.points)
-                    } else {
-                        viewModel.setCrimeVar(true, false)
-                    }
-                } else {
-                    viewModel.checkBlockMap()
-                    viewModel.checkBlock()
-                    viewModel.coderBlockMap()
-                    viewModel.checkAnswer(true)
-                    viewModel.constCurrentIndex += 1
-                    viewModel.resultTextView(viewModel.points)
-
-                    if (viewModel.currentIndex == viewModel.numAnswer!! - 1) {
-                        val toastNull = Toast.makeText(
-                            this@QuestionActivity,
-                            R.string.null_toast,
-                            Toast.LENGTH_SHORT
-                        )
-                        toastNull.show()
-                        springAnim(true)
-                    } else {
-                        moveToNext()
-                    }
-                    viewModel.checkBlock()
-                    if (viewModel.constCurrentIndex == viewModel.numAnswer) {
-                        viewModel.result(viewModel.points)
-                    } else {
-                        viewModel.setCrimeVar(true, false)
-                    }
-                }
-                if (viewModel.constCurrentIndex != viewModel.numAnswer) {
-                    viewModel.updatePersentView(viewModel.leftAnswer!!, viewModel.persentPoints)
-                }
+                viewModel.trueButton()
             }
             falseButton.setOnClickListener { _: View ->
-
-                if (!viewModel.updateAnswer) {
-                    viewModel.checkBlockMap()
-                    viewModel.checkBlock()
-                    viewModel.coderBlockMap()
-                    viewModel.checkAnswer(false)
-                    viewModel.constCurrentIndex += 1
-                    viewModel.resultTextView(viewModel.points)
-                    if (viewModel.constCurrentIndex == viewModel.numAnswer) {
-                        viewModel.result(viewModel.points)
-                    } else {
-                        viewModel.setCrimeVar(true, false)
-                    }
-                } else {
-                    viewModel.checkBlockMap()
-                    viewModel.checkBlock()
-                    viewModel.coderBlockMap()
-                    viewModel.checkAnswer(false)
-                    viewModel.constCurrentIndex += 1
-                    viewModel.resultTextView(viewModel.points)
-
-                    if (viewModel.currentIndex == viewModel.numAnswer!! - 1) {
-                        val toastNull = Toast.makeText(
-                            this@QuestionActivity,
-                            R.string.null_toast,
-                            Toast.LENGTH_SHORT
-                        )
-                        toastNull.show()
-                        springAnim(true)
-                    } else {
-                        moveToNext()
-                    }
-                    viewModel.checkBlock()
-                }
-                if (viewModel.constCurrentIndex == viewModel.numAnswer) {
-                    viewModel.result(viewModel.points)
-                } else {
-                    viewModel.setCrimeVar(getUpdateQuestion = true, insertCrime = false)
-                }
-                if (viewModel.constCurrentIndex != viewModel.numAnswer) {
-                    viewModel.updatePersentView(viewModel.leftAnswer!!, viewModel.persentPoints)
-                }
+                viewModel.falseButton()
             }
 
             cheatButton.setOnClickListener { view ->
@@ -161,29 +76,10 @@ class QuestionActivity : AppCompatActivity() {
             }
 
             nextButton.setOnClickListener {
-                if (viewModel.currentIndex == viewModel.numAnswer!! - 1) {
-                    val toastNull = Toast.makeText(
-                        this@QuestionActivity,
-                        R.string.null_toast,
-                        Toast.LENGTH_SHORT
-                    )
-                    toastNull.show()
-                    springAnim(true)
-                } else {
-                    moveToNext()
-                }
-                viewModel.checkBlock()
-
+                viewModel.nextButton()
             }
             prefButton.setOnClickListener {
-                if (viewModel.currentIndex == 0) {
-                    Toast.makeText(this@QuestionActivity, R.string.null_toast, Toast.LENGTH_SHORT)
-                        .show()
-                    springAnim(false)
-                } else {
-                    moveToPref()
-                }
-                viewModel.checkBlock()
+                viewModel.prefButton()
             }
         }
         actionBarSettings()
@@ -194,11 +90,54 @@ class QuestionActivity : AppCompatActivity() {
     private fun startObserve() {
         getInfoQuestion()
         checkBlock()
+        loadBPAnswer()
+        getQuizlist()
+        showToast()
+        loadFrontList()
+        springAnimLiveData()
+        moveToPref()
+        moveToNext()
+
+        cheatPointLife()
+        cheatButtonLiveData()
+        questionText()
+        viewResult()
+
+    }
+
+    private fun springAnimLiveData() {
+        viewModel.springAnim.observe(this, {
+            springAnim(it)
+        })
+    }
+
+    private fun viewResult() {
+        viewModel.viewResultLiveData.observe(this, {
+            binding.viewResult.text = it
+        })
+    }
+
+    private fun questionText() {
+        viewModel.questionTextViewLiveData.observe(this, {
+            binding.questionTextView.text = it
+        })
+    }
+
+    private fun cheatButtonLiveData() {
+        viewModel.cheatButtonLiveData.observe(this, {
+                binding.cheatButton.isClickable = it
+            binding.cheatButton.isEnabled = it
+        })
     }
 
     override fun onDestroy() {
         super.onDestroy()
         stopService(Intent(this, MyService::class.java))
+    }
+    private fun cheatPointLife() {
+        viewModel.cheatPointsLiveData.observe(this, {
+            binding.cheatPointsLife.text = it
+        })
     }
 
     private fun getInfoQuestion() {
@@ -342,7 +281,7 @@ class QuestionActivity : AppCompatActivity() {
         }
         viewModel.updateQuestion()
         viewModel.checkBlock()
-        loadTimer()
+        viewModel.loadTimer()
     }
 
     // TODO: 26.07.2022 Delete!
@@ -421,6 +360,7 @@ class QuestionActivity : AppCompatActivity() {
                 if (!it) viewModel.endTimer()
             })
         })
+        viewModel.loadResultTimer()
     }
 
     private fun loadBPAnswer() = with(binding){
@@ -429,7 +369,7 @@ class QuestionActivity : AppCompatActivity() {
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                     pbAnswer.setProgress(it, true)
                 } else {
-                   pbAnswer.progress = it
+                    pbAnswer.progress = it
                 }
             })
         })
@@ -477,7 +417,7 @@ class QuestionActivity : AppCompatActivity() {
                     }
                     viewModel.updatePersentView(viewModel.leftAnswer!!, viewModel.persentPoints)
                     viewModel.decoderBlockMap()
-                    checkBlock()
+                    viewModel.checkBlock()
                     viewModel.insertCrimeNewQuiz = false
                     viewModel.setCrimeVar(true, false)
 
@@ -491,14 +431,27 @@ class QuestionActivity : AppCompatActivity() {
         })
     }
 
+    private fun showToast() {
+        viewModel.loadToastLiveData.observe(this, {
+            Toast.makeText(this, it, Toast.LENGTH_LONG)
+        })
+        viewModel.lastToastLiveData.observe(this, {
+            Toast.makeText(this, it, Toast.LENGTH_LONG)
+        })
+        viewModel.toastShowLiveData.observe(this, {
+            Toast.makeText(this, it, Toast.LENGTH_LONG)
+        })
+    }
+
+
     private fun loadFrontList() {
         viewModel.loadFrontListLiveData.observe(this, {
 
             viewModel.getInfoQuestion.observe(this, { item ->
-                viewModel.listCrime.clear()
+                viewModel.listQuestion.clear()
                 item.forEach {
-                    viewModel.listCrime.add(
-                        ListCrime(
+                    viewModel.listQuestion.add(
+                        ListQuestion(
                             it.id!!,
                             it.userName!!,
                             it.idNameQuiz,
@@ -510,10 +463,10 @@ class QuestionActivity : AppCompatActivity() {
                 }
             })
             viewModel.getQuestion.observe(this, { it ->
-                viewModel.listCrimeNewQuiz.clear()
+                viewModel.listQuestionInfo.clear()
                 it.forEach {
-                    viewModel.listCrimeNewQuiz.add(
-                        ListCrimeNewQuiz(
+                    viewModel.listQuestionInfo.add(
+                        ListQuestionInfo(
                             it.id!!,
                             it.nameQuestion,
                             it.answerQuestion,
@@ -524,7 +477,7 @@ class QuestionActivity : AppCompatActivity() {
                 }
             })
             viewModel.getQuiz.observe(this, { it ->
-                viewModel.listFrontList.clear()
+                viewModel.listQuiz.clear()
                 it.forEach {
                     if (it.nameQuestion == viewModel.idUser) {
                         viewModel.updateFrontList++              //Костыль, потому что эта фн-я почему-то выполняется 2 раза
@@ -560,6 +513,8 @@ class QuestionActivity : AppCompatActivity() {
 
 
     private fun moveToPref() = with(binding) {
+        viewModel.moveToPrevLiveData.observe(this@QuestionActivity, {
+
 
         var animPref1 = AnimationUtils.loadAnimation(this@QuestionActivity, R.anim.pref_question1)
         var animPref2 = AnimationUtils.loadAnimation(this@QuestionActivity, R.anim.pref_question2)
@@ -593,10 +548,13 @@ class QuestionActivity : AppCompatActivity() {
             }
         })
         questionTextView.startAnimation(animPref1)
+
+        })
     }
 
 
     private fun moveToNext() {
+        viewModel.moveToNextLiveData.observe(this, {
         var animNext1 = AnimationUtils.loadAnimation(this, R.anim.next_question1)
         var animNext2 = AnimationUtils.loadAnimation(this, R.anim.next_question2)
 
@@ -629,6 +587,7 @@ class QuestionActivity : AppCompatActivity() {
             }
         })
         binding.questionTextView.startAnimation(animNext1)
+        })
 
     }
 
@@ -638,3 +597,5 @@ class QuestionActivity : AppCompatActivity() {
         const val STARS = "stars"
     }
 }
+private const val UPDATE_CURRENT_INDEX = 1
+

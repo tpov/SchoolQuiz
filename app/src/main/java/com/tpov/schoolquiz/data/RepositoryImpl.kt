@@ -29,7 +29,7 @@ class RepositoryImpl(
         dao.updateQuiz(quiz)
     }
 
-    override fun getInfoQuestionList() = dao.getQuizDetailList()
+    override suspend fun getInfoQuestionList() = dao.getQuizDetailList()
 
     override fun getQuiz() = dao.getQuiz()
 
@@ -48,11 +48,7 @@ class RepositoryImpl(
         } else dao.insertQuestion(question)
     }
 
-    override fun getQuestionDay(): List<ApiQuestion> {
-        var allGenerateQuestion = MutableLiveData<List<ApiQuestion>>()
-        allGenerateQuestion.postValue(dao.getListApiQuestion())
-        return dao.getListApiQuestion()
-    }
+    override suspend fun getQuestionDay() = dao.getListApiQuestion()
 
     override suspend fun insertQuestionDay(list: List<ApiQuestion>) {
         dao.insertListApiQuestion(list)

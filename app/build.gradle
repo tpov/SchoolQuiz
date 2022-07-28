@@ -51,6 +51,8 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+
 }
 
 // TODO Очистить то, что дублируется
@@ -75,7 +77,6 @@ dependencies {
     implementation 'com.google.android.gms:play-services-ads:20.6.0'
     implementation 'com.android.databinding:viewbinding:4.0.1'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0'
 
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.9'

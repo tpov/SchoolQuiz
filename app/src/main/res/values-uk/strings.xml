@@ -18,9 +18,9 @@
     <string name="question_light15">Піраміди майя міста Чичен-Іца знаходяться в Перу.</string>
     <string name="question_light16">Рейк`явік - столиця Ісландії.</string>
     <string name="question_light17">Найхолодніша точка світу, де постійно проживають люди, — російське село Ойм`якон.</string>
-    <string name="question_light18">Україна - сама велика країна, яка повністю розташована в Європі.</string>
+    <string name="question_light18">Україна - найбільша країна, яка повністю розташована в Європі.</string>
     <string name="question_light19">Німецька імперія - це теж саме, що й Третій Рейх.</string>
-    <string name="question_light20">Каспійське море - саме солоне озеро в світі.</string>
+    <string name="question_light20">Каспійське море - найсолоніше озеро в світі.</string>
 
     <string name="question_hard1">Більшість бельгейців живуть у сільській місцевості.</string>
     <string name="question_hard2">У прибалтійських країнах жодна жінка не обиралася на пост президента.</string>
@@ -38,8 +38,7 @@
     <string name="question_hard14">Неаполь – найбільше місто в Італії.</string>
     <string name="question_hard15">В Англії є місто, в назві якого присутній знак оклику (!).</string>
     <string name="question_hard16">Швеція – найменша скандинавська країна.</string>
-
-    <string name="question_hard17">Швейцарія не брала долі у другій світовій війні</string>
+    <string name="question_hard17">Швейцарія не брала участі у другій світовій війні</string>
     <string name="question_hard18">Раніше корейський півострів був під контролем Японії.</string>
     <string name="question_hard19">США забрала Аляску війною.</string>
     <string name="question_hard20">В`єтнам переміг у війні зі США завдяки чисельності населення</string>
@@ -56,18 +55,18 @@
 
     <string name="warning_text">Ви впевнені що хочете це зробити?</string>
     <string name="show_answer_button">Переглянути відповідь</string>
-    <string name="cheat_button">Чіт!</string>
-    <string name="judgment_toast">Обман - це неправильно.</string>
+    <string name="cheat_button">Чит!</string>
+    <string name="judgment_toast">Більше так не роби.</string>
 
     <string name="title_text">Quiz</string>
-    <string name="menu_home_text">Home</string>
-    <string name="menu_new">New quiz</string>
-    <string name="menu_info">Info</string>
-    <string name="menu_settings">Settings</string>
-    <string name="main_title_name">Home</string>
+    <string name="menu_home_text">Додому</string>
+    <string name="menu_new">Нові питання</string>
+    <string name="menu_info">Інфо</string>
+    <string name="menu_settings">Налаштування</string>
+    <string name="main_title_name">Додому</string>
     <string name="vandroid">vandroid</string>
-    <string name="name">Ім`я...</string>
-    <string name="question">Питання...</string>
+    <string name="name">Ім`я…</string>
+    <string name="question">Питання…</string>
     <string name="new_question">Назва квесту</string>
     <string name="end_button">Закінчити</string>
     <string name="hard_question">Важкі питання</string>
@@ -84,7 +83,7 @@
     <string name="inter_ad_id">ca-app-pub-6279944059986833/5924755266</string>
     <string name="massage_show_ads">Реклама</string>
     <string name="time_format_key">time_format_key</string>
-    <string name="chose_time_format">Chose time format</string>
+    <string name="chose_time_format">Виберіть формат часу</string>
     <string name="remove_ads">Вилучити рекламу</string>
     <string name="remove_summary">Вилучити рекламу</string>
     <string name="load_api_question">Load api question</string>

@@ -34,19 +34,19 @@ interface QuizDao {
     @Query("SELECT * FROM table_generate_question")
     fun getApiQuestion(): LiveData<List<ApiQuestion>>
     @Query("SELECT * FROM table_data")
-    fun getQuizDetailList(): List<QuizDetail>
+    suspend fun getQuizDetailList(): List<QuizDetail>
     @Query("SELECT * FROM table_generate_question")
-    fun getListApiQuestion(): List<ApiQuestion>
+    suspend fun getListApiQuestion(): List<ApiQuestion>
     @Query("SELECT * FROM new_user_table WHERE idListNameQuestion LIKE :idGeoQuiz")
     fun getQuestionByIdGeoQuiz(idGeoQuiz: String): LiveData<List<Question>>
     @Query("SELECT * FROM new_user_table WHERE idListNameQuestion LIKE :idUser" )
-    fun getListQuestionByIdUser(idUser: String) : List<Question>
+    suspend fun getListQuestionByIdUser(idUser: String) : List<Question>
     @Query("SELECT * FROM table_data WHERE updateAnswer LIKE :updateUnswer AND idNameQuiz LIKE :idUser" )
-    fun getListQuizDetailByUpdateANDIdUser(updateUnswer: Boolean, idUser: String) : List<QuizDetail>
+    suspend fun getListQuizDetailByUpdateANDIdUser(updateUnswer: Boolean, idUser: String) : List<QuizDetail>
     @Query("SELECT * FROM front_list WHERE nameQuestion LIKE :nameQuestion")
-    fun getListQuizByNameQuestion(nameQuestion: String) : List<Quiz>
+    suspend fun getListQuizByNameQuestion(nameQuestion: String) : List<Quiz>
     @Query("SELECT * FROM table_generate_question WHERE date LIKE :systemDate")
-    fun getListApiQuestionBySystemDate(systemDate: String): List<ApiQuestion>
+    suspend fun getListApiQuestionBySystemDate(systemDate: String): List<ApiQuestion>
 
     @Query("DELETE FROM front_list WHERE nameQuestion IS :id")
     suspend fun deleteQuizByNameQuestion(id: String)
