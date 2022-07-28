@@ -19,7 +19,7 @@ interface Repository {
     suspend fun insertQuestion(question: Question)
 
     //SplashScreenActivity
-    fun getQuestionDay(): List<ApiQuestion>
+    suspend fun getQuestionDay(): List<ApiQuestion>
 
     suspend fun insertQuestionDay(list: List<ApiQuestion>)
 
@@ -47,6 +47,6 @@ interface Repository {
 
     suspend fun updateQuiz(quiz: Quiz)
 
-    fun getInfoQuestionList(): List<QuizDetail>
+    suspend fun getInfoQuestionList(): List<QuizDetail>
 
 }

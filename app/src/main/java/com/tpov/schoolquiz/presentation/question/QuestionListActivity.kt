@@ -1,14 +1,12 @@
 package com.tpov.schoolquiz.presentation.question
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tpov.schoolquiz.data.model.Quiz
-import com.tpov.schoolquiz.CustomRecyclerAdapter
-import com.tpov.schoolquiz.presentation.question.QuestionViewModel
 import com.tpov.schoolquiz.R
 import com.tpov.schoolquiz.activity.MainActivity
 import com.tpov.schoolquiz.activity.MainApp
@@ -22,63 +20,57 @@ const val EXTRA_CODE_ID_USER = "com.tpov.geoquiz.code_question_bank"
 
 // TODO: 25.07.2022 QuestionListActivity -> QuestionListFragment
 @InternalCoroutinesApi
-class QuestionListActivity : AppCompatActivity(), CustomRecyclerAdapter.UpdateData {
+class QuestionListActivity : AppCompatActivity(), QuestionListRecyclerAdapter.UpdateData {
     private val questionViewModel: QuestionViewModel by viewModels {
         QuestionViewModel.QuizModelFactory((applicationContext as MainApp).database)
     }
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_question)
+        setContentView(R.layout.activity_list_question)
 
-        var QUESTION_BANK_ADAPTER = mutableListOf<Quiz>()
-        var idUser = ""
-        var codeAnswer2 = "00000000000000000"
-        var currentIndex2: Int = 0
+        var questionBankAdapter = mutableListOf<Quiz>()
 
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.setHasFixedSize(true)
 
         intent
-        currentIndex2 = intent.getIntExtra(EXTRA_CURRENT_INDEX, 0).toInt()
-        codeAnswer2 = intent.getStringExtra(EXTRA_CODE_ANSWER)!!
-        idUser = intent.getStringExtra(EXTRA_CODE_ID_USER)!!
-        var codeAnswer2Array = codeAnswer2.toMutableList()
-        QUESTION_BANK_ADAPTER.clear()
-        Log.d("QuestionListActivity", "map1 = ${QUESTION_BANK_ADAPTER.map { (it.textResId) }}")
+        var currentIndex: Int = intent.getIntExtra(EXTRA_CURRENT_INDEX, 0).toInt()
+        var codeAnswer: String = intent.getStringExtra(EXTRA_CODE_ANSWER)!!
+        var idUser: String = intent.getStringExtra(EXTRA_CODE_ID_USER)!!
+        var codeAnswerArray = codeAnswer.toMutableList()
+        questionBankAdapter.clear()
+        Log.d("QuestionListActivity", "map1 = ${questionBankAdapter.map { (it.textResId) }}")
 
         questionViewModel.getQuestion.observe(this, {
             it.forEach { item ->
-                Log.d("QuestionListActivity", "idUser ${idUser}")
-                Log.d("QuestionListActivity", "item.idListNameQuestion ${item.idListNameQuestion}")
 
-                if (idUser == item.idListNameQuestion){
-                    if (!item.typeQuestion) QUESTION_BANK_ADAPTER.add(Quiz(item.nameQuestion, item.answerQuestion))
+                if (idUser == item.idListNameQuestion) {
+                    if (!item.typeQuestion) questionBankAdapter.add(
+                        Quiz(
+                            item.nameQuestion,
+                            item.answerQuestion
+                        )
+                    )
                 }
             }
-            funIntent(recyclerView, currentIndex2, codeAnswer2, idUser, codeAnswer2Array, QUESTION_BANK_ADAPTER)
+            funIntent(
+                recyclerView,
+                currentIndex,
+                codeAnswerArray,
+                questionBankAdapter
+            )
         })
     }
 
     private fun funIntent(
         recyclerView: RecyclerView,
         currentIndex2: Int,
-        codeAnswer2: String,
-        idUser: String,
         codeAnswer2Array: MutableList<Char>,
         QUESTION_BANK_ADAPTER: MutableList<Quiz>,
-        ) {
-
-        Log.d("QuestionListActivity", "map1 = ${QUESTION_BANK_ADAPTER.map { (it.textResId) }}")
-
-        Log.d(
-            "QuestionListActivity",
-            "adapter = ${QUESTION_BANK_ADAPTER.map { (it.textResId) }}, ${codeAnswer2Array}, ${currentIndex2}, ${QUESTION_BANK_ADAPTER}"
-        )
-        recyclerView.adapter = CustomRecyclerAdapter(
+    ) {
+        recyclerView.adapter = QuestionListRecyclerAdapter(
             QUESTION_BANK_ADAPTER.map { (it.textResId) },
             this,
             codeAnswer2Array,

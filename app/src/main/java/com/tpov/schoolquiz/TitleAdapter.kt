@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -107,7 +106,7 @@ class TitleAdapter(private val listener: Listener) :
                 Log.d("ShopingListAdapter", "create ")
                 return ItemHolder(
                     LayoutInflater.from(parent.context)
-                        .inflate(R.layout.main_title, parent, false)
+                        .inflate(R.layout.activity_main_item, parent, false)
                 )
             }
         }
