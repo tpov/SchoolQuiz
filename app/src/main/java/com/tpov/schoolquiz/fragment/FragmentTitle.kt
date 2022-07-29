@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.tpov.schoolquiz.activity.MainActivity
-import com.tpov.schoolquiz.activity.MainApp
+import com.tpov.schoolquiz.presentation.mainactivity.MainActivity
+import com.tpov.schoolquiz.presentation.MainApp
 import com.tpov.schoolquiz.presentation.question.QuestionViewModel
 import com.tpov.schoolquiz.TitleAdapter
 import com.tpov.schoolquiz.databinding.TitleFragmentBinding
@@ -28,7 +28,6 @@ import kotlinx.coroutines.InternalCoroutinesApi
 class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
 
     private lateinit var binding: TitleFragmentBinding
-    //private lateinit var adapter: TitleAdapter
     private var createQuiz = false
 
     private val questionViewModel: QuestionViewModel by activityViewModels {
@@ -38,7 +37,7 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
 
     override fun onClickNew(name: String, stars: Int) {
 
-        var closeDialog = false
+        val closeDialog = false
         CreateQuestionDialog.showDialog(
             activity as MainActivity, name, closeDialog,
             object : CreateQuestionDialog.Listener {
@@ -46,20 +45,20 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
                     listNameQuestion: String,
                     listUserName: String,
                     nameAnswerQuestion: Boolean,
-                    deleteQuestion: Boolean,
+                    nameTypeQuestion: Boolean,
                     numQuestion: Int,
                     closeDialog: Boolean,
-                    nameQuiz: String,
+                    name: String,
 
                     ) {
-                    when (nameQuiz) {
+                    when (name) {
                         "" -> {
                             createQuiz = true
                             startSecondDialog(listUserName, listNameQuestion)
                         }
                         "Delete quiz?" -> {
                             var nameQuiz = ""
-                            var startObs = "delete"
+                            val startObs = "delete"
                             Log.d("Delete quiz?", "1")
                             questionViewModel.getQuiz.observe(this@FragmentTitle, {
                                 if (startObs == "delete") {
@@ -68,14 +67,14 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
                                         Log.d("Delete quiz?", "3")
                                         if (stars == item.id) nameQuiz = item.nameQuestion
                                     }
-                                    Log.d("Delete quiz?", "$id, $deleteQuestion, $nameQuiz")
-                                    questionViewModel.deleteQuiz(id, deleteQuestion, nameQuiz)
+                                    Log.d("Delete quiz?", "$id, $nameTypeQuestion, $nameQuiz")
+                                    questionViewModel.deleteQuiz(id, nameTypeQuestion, nameQuiz)
                                 }
                             })
                         }
                         "Share quiz" -> {
                             var nameQuiz = ""
-                            var startObs = "Share"
+                            val startObs = "Share"
                             questionViewModel.getQuiz.observe(this@FragmentTitle, {
                                 if (startObs == "Share") {
                                     it.forEach { item ->
@@ -87,13 +86,13 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
                             questionViewModel.getQuestion.observe(this@FragmentTitle, {
 
                                 startActivity(Intent.createChooser(
-                                    ShareHelper.shareShopList(nameQuiz, it, deleteQuestion),
+                                    ShareHelper.shareShopList(nameQuiz, it, nameTypeQuestion),
                                     "Share by"))
                             })
                         }
                         else -> {
                             val intent = Intent(activity, QuestionActivity::class.java)
-                            intent.putExtra(QuestionActivity.NAME_QUESTION, nameQuiz)
+                            intent.putExtra(QuestionActivity.NAME_QUESTION, name)
                             intent.putExtra(QuestionActivity.NAME_USER, listUserName)
                             intent.putExtra(QuestionActivity.STARS, stars.toString())
                             startActivity(intent)
@@ -106,7 +105,7 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
                         activity as AppCompatActivity,
                         object : CreateQuestionSecondDialog.Listener {
                             override fun onClick(
-                                nameQuestion: String,
+                                listNameQuestion: String,
                                 listUserName: String,
                                 nameAnswerQuestion: Boolean,
                                 nameTypeQuestion: Boolean,
@@ -115,7 +114,7 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
                             ) {
                                 val nameList = Question(
                                     null,
-                                    nameQuestion,
+                                    listNameQuestion,
                                     nameAnswerQuestion,
                                     nameTypeQuestion,
                                     listNameQuestionSecond,
@@ -139,7 +138,7 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
             binding.rcView.layoutManager = LinearLayoutManager(activity)
             binding.rcView.adapter = adapter
 
-            Log.d("onViewCreated", "${it.toString()}")
+            Log.d("onViewCreated", "$it")
         })
     }
 
@@ -147,7 +146,7 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = inflate(inflater, container, false)
         return binding.root
     }
@@ -182,12 +181,12 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
         FragmentManager.currentFrag?.onClickNew("deleteQuiz", id)
     }
 
-    override fun onClick(nameQuiz: String, stars: Int) {
-        FragmentManager.currentFrag?.onClickNew(nameQuiz, stars)
+    override fun onClick(name: String, stars: Int) {
+        FragmentManager.currentFrag?.onClickNew(name, stars)
     }
 
-    override fun shareItem(name: String, id: Int) {
-        FragmentManager.currentFrag?.onClickNew("shareQuiz", id)
+    override fun shareItem(name: String, stars: Int) {
+        FragmentManager.currentFrag?.onClickNew("shareQuiz", stars)
     }
 
     companion object {

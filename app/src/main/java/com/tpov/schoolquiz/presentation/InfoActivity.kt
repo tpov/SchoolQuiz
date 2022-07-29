@@ -1,4 +1,4 @@
-package com.tpov.schoolquiz.activity
+package com.tpov.schoolquiz.presentation
 
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.tpov.schoolquiz.R
+import com.tpov.schoolquiz.presentation.factory.InfoManager
 
 class InfoActivity: AppCompatActivity() {
     private lateinit var defPref: SharedPreferences

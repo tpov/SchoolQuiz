@@ -1,4 +1,4 @@
-package com.tpov.schoolquiz.activity
+package com.tpov.schoolquiz.data.model
 
 data class ListQuestionInfo(var id: Int?,
                             var nameQuestion: String,

@@ -60,17 +60,17 @@ class RepositoryImpl(
 
 
     override suspend fun getInfoQuestionParams(
-        updateUnswer: Boolean,
+        updateAnswer: Boolean,
         insertQuiz: QuizDetail,
-        idQuizUser: String
+        idUser: String
     ): LiveData<List<QuizDetail>> {
 
         val updateUnswerMutableCrime = MutableLiveData<List<QuizDetail>>()
-        updateUnswerMutableCrime.postValue(dao.getListQuizDetailByUpdateANDIdUser(updateUnswer, idQuizUser))
+        updateUnswerMutableCrime.postValue(dao.getListQuizDetailByUpdateANDIdUser(updateAnswer, idUser))
 
         //Из-за плавающей ошибки(не всегда принимаются данные) вызываем еще пару раз :)
-        updateUnswerMutableCrime.postValue(dao.getListQuizDetailByUpdateANDIdUser(updateUnswer, idQuizUser))
-        updateUnswerMutableCrime.postValue(dao.getListQuizDetailByUpdateANDIdUser(updateUnswer, idQuizUser))
+        updateUnswerMutableCrime.postValue(dao.getListQuizDetailByUpdateANDIdUser(updateAnswer, idUser))
+        updateUnswerMutableCrime.postValue(dao.getListQuizDetailByUpdateANDIdUser(updateAnswer, idUser))
         return updateUnswerMutableCrime
     }
 

@@ -1,4 +1,4 @@
-package com.tpov.schoolquiz.activity
+package com.tpov.schoolquiz.presentation.question
 
 import androidx.appcompat.app.AppCompatActivity
 import android.app.Activity
@@ -14,6 +14,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 const val EXTRA_ANSWER_SHOW = "com.tpov.geoquiz.answer_show"
 private const val EXTRA_ANSWER_IS_TRUE = "com.tpov.geoquiz.answer_is_true"
 
+// TODO: 29.07.2022 Activity -> Fragment
 @InternalCoroutinesApi
 class CheatActivity : AppCompatActivity() {
     private lateinit var answerTextView: TextView

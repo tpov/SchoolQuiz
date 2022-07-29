@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tpov.schoolquiz.data.model.Quiz
 import com.tpov.schoolquiz.R
-import com.tpov.schoolquiz.activity.MainActivity
-import com.tpov.schoolquiz.activity.MainApp
+import com.tpov.schoolquiz.presentation.mainactivity.MainActivity
+import com.tpov.schoolquiz.presentation.MainApp
 import kotlinx.coroutines.InternalCoroutinesApi
 import android.content.Intent as Intent1
 
@@ -36,10 +36,10 @@ class QuestionListActivity : AppCompatActivity(), QuestionListRecyclerAdapter.Up
         recyclerView.setHasFixedSize(true)
 
         intent
-        var currentIndex: Int = intent.getIntExtra(EXTRA_CURRENT_INDEX, 0).toInt()
-        var codeAnswer: String = intent.getStringExtra(EXTRA_CODE_ANSWER)!!
-        var idUser: String = intent.getStringExtra(EXTRA_CODE_ID_USER)!!
-        var codeAnswerArray = codeAnswer.toMutableList()
+        val currentIndex: Int = intent.getIntExtra(EXTRA_CURRENT_INDEX, 0).toInt()
+        val codeAnswer: String = intent.getStringExtra(EXTRA_CODE_ANSWER)!!
+        val idUser: String = intent.getStringExtra(EXTRA_CODE_ID_USER)!!
+        val codeAnswerArray = codeAnswer.toMutableList()
         questionBankAdapter.clear()
         Log.d("QuestionListActivity", "map1 = ${questionBankAdapter.map { (it.textResId) }}")
 

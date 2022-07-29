@@ -1,4 +1,4 @@
-package com.tpov.schoolquiz.activity
+package com.tpov.schoolquiz.presentation
 
 import android.app.Application
 import com.tpov.schoolquiz.data.database.QuizDatabase

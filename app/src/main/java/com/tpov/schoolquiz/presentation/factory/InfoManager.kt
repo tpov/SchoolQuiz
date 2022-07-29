@@ -1,4 +1,4 @@
-package com.tpov.schoolquiz.activity
+package com.tpov.schoolquiz.presentation.factory
 
 import android.os.Bundle
 import androidx.preference.PreferenceFragmentCompat

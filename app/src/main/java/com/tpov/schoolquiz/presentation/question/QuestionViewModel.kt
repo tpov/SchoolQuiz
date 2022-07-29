@@ -5,12 +5,11 @@ import android.os.CountDownTimer
 import android.util.Log
 import androidx.lifecycle.*
 import com.tpov.schoolquiz.R
-import com.tpov.schoolquiz.activity.ListQuestion
-import com.tpov.schoolquiz.activity.ListQuestionInfo
-import com.tpov.schoolquiz.activity.ListQuiz
+import com.tpov.schoolquiz.data.model.ListQuestion
+import com.tpov.schoolquiz.data.model.ListQuestionInfo
+import com.tpov.schoolquiz.data.model.ListQuiz
 import com.tpov.schoolquiz.data.RepositoryImpl
 import com.tpov.schoolquiz.data.database.QuizDatabase
-import com.tpov.schoolquiz.data.database.entities.ApiQuestion
 import com.tpov.schoolquiz.data.database.entities.Question
 import com.tpov.schoolquiz.data.database.entities.Quiz
 import com.tpov.schoolquiz.data.database.entities.QuizDetail
@@ -73,6 +72,12 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
     var currentIndex = 0
     var checkTimer = false
 
+    private var s = 0
+    private var d = 0
+    private var f = 0
+    private var h = 0
+    private var l = 0
+
     private val repository = RepositoryImpl(database)
 
     private val insertInfoQuestionUseCase = InsertInfoQuestionUseCase(repository)
@@ -90,32 +95,10 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
     fun insertQuestion(question: Question) =
         viewModelScope.launch { insertQuestionUseCase(question) }
 
-    private val insertApiQuestionUseCase = InsertApiQuestionUseCase(repository)
-    private val getQuestionDayUseCase = GetQuestionDayUseCase(repository)
-    private val updateApiQuestionUseCase = UpdateQuestionDayUseCase(repository)
-    private var _allGetQuestionDay = MutableLiveData<List<ApiQuestion>>()
-    var allGetQuestionDay: LiveData<List<ApiQuestion>> = _allGetQuestionDay
-
-    @SuppressLint("NullSafeMutableLiveData")
-    fun getQuestionDay() =
-        viewModelScope.launch {
-            _allGetQuestionDay.postValue(getQuestionDayUseCase())
-        }
-
-    fun updateQuestionDay(apiQuestion: ApiQuestion) =
-        viewModelScope.launch {
-            updateApiQuestionUseCase(apiQuestion)
-        }
-
-    fun insertApiQuestion(list: List<ApiQuestion>) = viewModelScope.launch {
-        insertApiQuestionUseCase(list)
-    }
-
     private val deleteQuizUseCase = DeleteQuizUseCase(repository)
     fun deleteQuiz(id: Int, deleteQuestion: Boolean, nameQuiz: String) = viewModelScope.launch {
         deleteQuizUseCase(id, deleteQuestion, nameQuiz)
     }
-
 
     private fun insertQuestion(updateAnswer: Boolean, insertQuiz: QuizDetail, idUser: String) =
         viewModelScope.launch {
@@ -392,6 +375,7 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
         i = 0
     }
 
+    //Переобразовываем из строки в данные маппера
     fun decoderBlockMap() {
         for (i in 0 until numAnswer!!) {
             mapAnswer[j] = codeMap!![j] == '1'
@@ -406,10 +390,11 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
         updatePersentView(leftAnswer!!, persentPoints)
 
         checkTimer = false
-
         loadPBAnswer()
     }
 
+    //Создаем строку из символов 0,1,2 в зависимости правильный, не правильный ответ или вопрос был не отвечен.
+    //Номер вопроса = номер символу в строке
     private fun coderCodeAnswer(charAnswer: Int) {
         var codeAnswerArray = codeAnswer
 
@@ -510,12 +495,6 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
 
         loadTimer()
     }
-
-    private var s = 0
-    private var d = 0
-    private var f = 0
-    private var h = 0
-    private var l = 0
 
     private var _loadTimerLiveData = MutableLiveData<Int>()
     var loadTimerLiveData: LiveData<Int> = _loadTimerLiveData
@@ -683,5 +662,4 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
         private const val TIME_HARD_QUESTION = 10
         private const val TIME_LIGHT_QUESTION = 20
     }
-
 }

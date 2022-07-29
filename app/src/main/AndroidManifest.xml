@@ -7,7 +7,7 @@
 
     <application
 
-        android:name="com.tpov.schoolquiz.activity.MainApp"
+        android:name="com.tpov.schoolquiz.presentation.MainApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -15,14 +15,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GeoQuiz">
         <activity
-            android:name="com.tpov.schoolquiz.activity.MainActivity"/>
+            android:name="com.tpov.schoolquiz.presentation.mainactivity.MainActivity"/>
         <activity android:name="com.tpov.schoolquiz.QuestionActivity" />
         <activity android:name="com.tpov.schoolquiz.activity.CheatActivity" />
-        <activity android:name="com.tpov.schoolquiz.activity.MainActivity" />
+        <activity android:name="com.tpov.schoolquiz.presentation.mainactivity.MainActivity" />
         <activity android:name="com.tpov.schoolquiz.settings.SettingsActivity" />
-        <activity android:name="com.tpov.schoolquiz.activity.InfoActivity" />
+        <activity android:name="com.tpov.schoolquiz.presentation.InfoActivity" />
         <activity
-            android:name="com.tpov.schoolquiz.activity.SplashScreen"
+            android:name="com.tpov.schoolquiz.presentation.splashscreen.SplashScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
