@@ -1,18 +1,21 @@
-package com.tpov.schoolquiz
+package com.tpov.schoolquiz.presentation.mainactivity
 
 import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.tpov.schoolquiz.databinding.MainTitleBinding
+import com.tpov.schoolquiz.R
 import com.tpov.schoolquiz.data.database.entities.Quiz
+import com.tpov.schoolquiz.databinding.ActivityMainBinding
+import com.tpov.schoolquiz.databinding.ActivityMainItemBinding
 
-class TitleAdapter(private val listener: Listener) :
-    ListAdapter<Quiz, TitleAdapter.ItemHolder>(ItemComparater()) {
+class MainActivityAdapter(private val listener: Listener) :
+    ListAdapter<Quiz, MainActivityAdapter.ItemHolder>(ItemComparator()) {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
         return ItemHolder.create(parent)
@@ -22,7 +25,7 @@ class TitleAdapter(private val listener: Listener) :
         holder.setData(getItem(position), listener)
     }
 
-    class ItemComparater : DiffUtil.ItemCallback<Quiz>() {
+    class ItemComparator : DiffUtil.ItemCallback<Quiz>() {
         override fun areItemsTheSame(oldItem: Quiz, newItem: Quiz): Boolean {
             return oldItem.id == newItem.id
         }
@@ -33,7 +36,7 @@ class TitleAdapter(private val listener: Listener) :
     }
 
     class ItemHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val binding = MainTitleBinding.bind(view)
+        private val binding = ActivityMainItemBinding.bind(view)
 
         @SuppressLint("ResourceAsColor", "ResourceType")
         fun setData(quiz: Quiz, listener: Listener) = with(binding) {
@@ -42,9 +45,9 @@ class TitleAdapter(private val listener: Listener) :
             tvNumHardQuiz.text = quiz.numHQ.toString()
 
             tvAllStars.text =
-                String.format("%.2f", (quiz.starsAll.toFloat() * 0.83333) / quiz.numA)
+                String.format("%.2f", (quiz.starsAll.toFloat() * PERCENT_TWO_STARS) / quiz.numA)
 
-            if (quiz.stars >= 100) {
+            if (quiz.stars >= MAX_PERCENT) {
                 mainTitleButton.setBackgroundResource(R.color.num_chack_norice_red)
             } else mainTitleButton.setBackgroundResource(R.color.num_chack_norice_green)
             imDeleteQuiz.setOnClickListener {
@@ -54,11 +57,11 @@ class TitleAdapter(private val listener: Listener) :
             var goHardQuiz =
                 "${this.root.context.getString(R.string.go_hard_question)} - ${quiz.nameQuestion}"
 
-            if (quiz.stars == 100) {
+            if (quiz.stars == MAX_PERCENT) {
                 Toast.makeText(binding.root.context, goHardQuiz, Toast.LENGTH_SHORT).show()
             }
 
-            if (quiz.stars >= 100) {
+            if (quiz.stars >= MAX_PERCENT) {
                 tvHardQuiz.text = "Hard quiz!"
                 tvHardQuiz.setBackgroundResource(R.color.num_chack_norice_red)
             } else {
@@ -66,7 +69,7 @@ class TitleAdapter(private val listener: Listener) :
                 tvHardQuiz.setBackgroundResource(R.color.num_chack_norice_green)
             }
 
-            if (quiz.stars <= 100) ratingBar.rating = (quiz.stars.toFloat() / 50)
+            if (quiz.stars <= MAX_PERCENT) ratingBar.rating = (quiz.stars.toFloat() / 50)
             else ratingBar.rating = (((quiz.stars.toFloat() - 100) / 20) + 2)
 
             tvStars.text = String.format("%.2f", (quiz.stars.toFloat() * 0.83333))
@@ -83,7 +86,7 @@ class TitleAdapter(private val listener: Listener) :
             tvVisibleOrGone()
         }
 
-        private fun MainTitleBinding.tvVisibleOrGone() {
+        private fun ActivityMainItemBinding.tvVisibleOrGone() {
             if (tvAllStars.text == "0,00" || tvAllStars == null) tvAllStars.visibility = View.GONE
             else tvAllStars.visibility = View.VISIBLE
 
@@ -102,6 +105,9 @@ class TitleAdapter(private val listener: Listener) :
 
 
         companion object {
+            const val PERCENT_TWO_STARS = 0.83333
+            const val MAX_PERCENT = 100
+
             fun create(parent: ViewGroup): ItemHolder {
                 Log.d("ShopingListAdapter", "create ")
                 return ItemHolder(

@@ -1,4 +1,4 @@
-package com.tpov.schoolquiz.Services
+package com.tpov.schoolquiz.data.Services
 
 import android.app.Service
 import android.content.Intent

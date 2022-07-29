@@ -1,4 +1,4 @@
-package com.tpov.schoolquiz.settings
+package com.tpov.schoolquiz.presentation.settings
 
 import android.content.SharedPreferences
 import android.os.Bundle

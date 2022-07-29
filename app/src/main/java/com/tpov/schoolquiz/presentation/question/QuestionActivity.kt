@@ -19,7 +19,7 @@ import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.dynamicanimation.animation.SpringForce
 import androidx.lifecycle.observe
 import com.tpov.schoolquiz.*
-import com.tpov.schoolquiz.Services.MyService
+import com.tpov.schoolquiz.data.Services.MyService
 import com.tpov.schoolquiz.activity.*
 import com.tpov.schoolquiz.databinding.ActivityQuestionBinding
 import com.tpov.schoolquiz.presentation.MainApp

@@ -22,7 +22,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.work.*
 import com.tpov.schoolquiz.R
 import com.tpov.schoolquiz.presentation.mainactivity.MainActivity
-import com.tpov.schoolquiz.activity.workers.RefreshDataWorker
+import com.tpov.schoolquiz.data.workers.RefreshDataWorker
 import com.tpov.schoolquiz.databinding.ActivitySplashScreenBinding
 import kotlinx.coroutines.InternalCoroutinesApi
 import java.util.*

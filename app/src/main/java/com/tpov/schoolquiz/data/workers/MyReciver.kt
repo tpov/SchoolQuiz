@@ -1,4 +1,4 @@
-package com.tpov.schoolquiz.activity.workers
+package com.tpov.schoolquiz.data.workers
 
 import android.content.BroadcastReceiver
 import android.content.Context

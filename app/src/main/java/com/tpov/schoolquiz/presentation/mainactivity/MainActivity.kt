@@ -1,6 +1,5 @@
 package com.tpov.schoolquiz.presentation.mainactivity
 
-import FragmentTitle
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -16,8 +15,8 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.tpov.schoolquiz.R
 import com.tpov.schoolquiz.presentation.InfoActivity
 import com.tpov.schoolquiz.databinding.ActivityMainBinding
-import com.tpov.schoolquiz.fragment.FragmentManager
-import com.tpov.schoolquiz.settings.SettingsActivity
+import com.tpov.schoolquiz.presentation.fragment.FragmentManager
+import com.tpov.schoolquiz.presentation.settings.SettingsActivity
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @InternalCoroutinesApi
@@ -40,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         setButtonNavListener()
         insertFrontList("GeoQuiz", "")
         numQuestionNotDate = intent.getIntExtra(NUM_QUESTION_NOT_NUL, 0)
-        FragmentManager.setFragment(FragmentTitle.newInstance(), this)
+        FragmentManager.setFragment(FragmentMain.newInstance(), this)
 
         loadNumQuestionNotDate()
     }

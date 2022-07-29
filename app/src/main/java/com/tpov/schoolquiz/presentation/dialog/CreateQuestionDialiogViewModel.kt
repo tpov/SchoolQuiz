@@ -1,4 +1,4 @@
-package com.tpov.schoolquiz.dialog
+package com.tpov.schoolquiz.presentation.dialog
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
