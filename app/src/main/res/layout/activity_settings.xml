@@ -4,6 +4,6 @@
     android:layout_height="match_parent"
     android:id="@+id/placeHolder"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".settings.SettingsActivity">
+    tools:context=".presentation.settings.SettingsActivity">
 
 </FrameLayout>
