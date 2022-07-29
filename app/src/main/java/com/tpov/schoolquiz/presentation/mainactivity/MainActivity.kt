@@ -1,12 +1,12 @@
-package com.tpov.schoolquiz.activity
+package com.tpov.schoolquiz.presentation.mainactivity
 
 import FragmentTitle
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -14,83 +14,25 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.tpov.schoolquiz.R
-import com.tpov.schoolquiz.presentation.question.QuestionViewModel
-import com.tpov.schoolquiz.databinding.FrontActivityBinding
-import com.tpov.schoolquiz.data.database.entities.Quiz
-import com.tpov.schoolquiz.data.model.Question
+import com.tpov.schoolquiz.presentation.InfoActivity
+import com.tpov.schoolquiz.databinding.ActivityMainBinding
 import com.tpov.schoolquiz.fragment.FragmentManager
 import com.tpov.schoolquiz.settings.SettingsActivity
-import com.tpov.shoppinglist.utils.TimeManager
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @InternalCoroutinesApi
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding: FrontActivityBinding
+    private lateinit var binding: ActivityMainBinding
 
-    private var idNameQuiz = ""
-    private var time = ""
-    private var numQuestion = 0
-    private var points = 0
-    private var quiz: Quiz? = null
-    private var closeDialog: Boolean = false
     private var iAd: InterstitialAd? = null
     private var numQuestionNotDate = 0
 
-    private val questionBank = listOf(
-        Question(R.string.question_light1, true, false),
-        Question(R.string.question_light2, true, false),
-        Question(R.string.question_light3, false, false),
-        Question(R.string.question_light4, false, false),
-        Question(R.string.question_light5, true, false),
-        Question(R.string.question_light6, true, false),
-
-        Question(R.string.question_light7, true, false),
-        Question(R.string.question_light8, true, false),
-        Question(R.string.question_light9, false, false),
-        Question(R.string.question_light10, true, false),
-        Question(R.string.question_light11, true, false),
-        Question(R.string.question_light12, true, false),
-        Question(R.string.question_light13, false, false),
-        Question(R.string.question_light14, true, false),
-        Question(R.string.question_light15, false, false),
-        Question(R.string.question_light16, true, false),
-
-        Question(R.string.question_light17, true, false),
-        Question(R.string.question_light18, true, false),
-        Question(R.string.question_light19, false, false),
-        Question(R.string.question_light20, false, false),
-
-        Question(R.string.question_hard1, false, true),
-        Question(R.string.question_hard2, false, true),
-        Question(R.string.question_hard3, false, true),
-        Question(R.string.question_hard4, true, true),
-        Question(R.string.question_hard5, true, true),
-        Question(R.string.question_hard6, false, true),
-        Question(R.string.question_hard7, false, true),
-        Question(R.string.question_hard8, true, true),
-        Question(R.string.question_hard9, false, true),
-        Question(R.string.question_hard10, false, true),
-        Question(R.string.question_hard11, true, true),
-        Question(R.string.question_hard12, false, true),
-        Question(R.string.question_hard13, false, true),
-        Question(R.string.question_hard14, false, true),
-        Question(R.string.question_hard15, true, true),
-        Question(R.string.question_hard16, false, true),
-
-        Question(R.string.question_hard17, true, true),
-        Question(R.string.question_hard18, true, true),
-        Question(R.string.question_hard19, false, true),
-        Question(R.string.question_hard20, false, true)
-    )
-
     @InternalCoroutinesApi
-    private val questionViewModel: QuestionViewModel by viewModels {
-        QuestionViewModel.QuizModelFactory((applicationContext as MainApp).database)
-    }
+    private val viewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = FrontActivityBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
 
         insertCrimeNewQuiz("GeoQuiz")
         setContentView(binding.root)
@@ -102,7 +44,6 @@ class MainActivity : AppCompatActivity() {
 
         loadNumQuestionNotDate()
     }
-
 
     private fun loadNumQuestionNotDate() = with(binding) {
         if (numQuestionNotDate > 0) textView10.setBackgroundResource(R.color.num_chack_norice_green)
@@ -119,24 +60,14 @@ class MainActivity : AppCompatActivity() {
 
     @InternalCoroutinesApi
     fun insertFrontList(listNameQuestion: String, listUserName: String) {
-        val frontList = Quiz(
-            null,
-            listNameQuestion,
-            listUserName,
-            TimeManager.getCurrentTime(),
-            0,
-            0,
-            0,
-            0,
-            0
-        )
-        questionViewModel.insertQuiz(frontList)
+        val frontList = quiz(listNameQuestion, listUserName)
+        viewModel.insertQuiz(frontList)
     }
 
     private fun insertCrimeNewQuiz(idQuiz: String) {
         var q = 0
         var textQ = ""
-        questionBank.forEach {
+        viewModel.questionBank().forEach {
             q++
             textQ = getString(it.textResId)
             var name = com.tpov.schoolquiz.data.database.entities.Question(
@@ -146,7 +77,7 @@ class MainActivity : AppCompatActivity() {
                 it.typeQuestion,
                 idQuiz
             )
-            questionViewModel.insertQuestion(name)
+            viewModel.insertQuestion(name)
         }
     }
 

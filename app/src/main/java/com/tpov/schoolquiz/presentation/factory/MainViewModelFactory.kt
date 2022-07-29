@@ -2,7 +2,6 @@ package com.tpov.schoolquiz.presentation.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.tpov.schoolquiz.activity.MainViewModel
 
 class MainViewModelFactory(
 ): ViewModelProvider.Factory {

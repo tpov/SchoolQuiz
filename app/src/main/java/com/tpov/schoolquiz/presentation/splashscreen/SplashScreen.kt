@@ -1,4 +1,4 @@
-package com.tpov.schoolquiz.activity
+package com.tpov.schoolquiz.presentation.splashscreen
 
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
@@ -15,18 +15,16 @@ import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.work.*
 import com.tpov.schoolquiz.R
+import com.tpov.schoolquiz.presentation.mainactivity.MainActivity
 import com.tpov.schoolquiz.activity.workers.RefreshDataWorker
-import com.tpov.schoolquiz.data.database.entities.ApiQuestion
 import com.tpov.schoolquiz.databinding.ActivitySplashScreenBinding
-import com.tpov.schoolquiz.presentation.question.QuestionViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
-import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -34,29 +32,14 @@ import java.util.concurrent.TimeUnit
 @InternalCoroutinesApi
 class SplashScreen : AppCompatActivity() {
 
-
     private lateinit var binding: ActivitySplashScreenBinding
-    private var numQuestionNotDate = 0
-    private var numSystemDate = false
-    private var ckeckLoadApi = false
-    private lateinit var generateQuestion: ApiQuestion
-    private lateinit var generateQuestionNotNetwork: ApiQuestion
-    private var questionNotNetwork: String = ""
-    private var answerNotNetwork: String = ""
-    private var questionNotNetworkDate: String = ""
-    private var answerNotNetworkDate: String = ""
-    private var numQuestionInList = 0
 
-    private var questionApiArray: Array<String>? = null
-    private var answerApiArray: Array<String>? = null
-
-    private val questionViewModel: QuestionViewModel by viewModels {
-        QuestionViewModel.QuizModelFactory((applicationContext as MainApp).database)
-    }
+    private var viewModel = ViewModelProvider(this)[SplashScreenViewModel::class.java]
     private val localBroadcastManager by lazy {
         LocalBroadcastManager.getInstance(this)
     }
-    val receiver = object : BroadcastReceiver() {
+    private val receiver = object : BroadcastReceiver() {
+        @SuppressLint("SetTextI18n")
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == "loaded") {
                 val percent = intent.getIntExtra("percent", 0)
@@ -71,13 +54,13 @@ class SplashScreen : AppCompatActivity() {
         setContentView(binding.root)
         Log.d("WorkManager", "Начало")
         visibleTPOV(false)
-        questionViewModel.getQuestionDay()
+        viewModel.getQuestionDay()
 
         val intentFilter = IntentFilter().apply {
             addAction("loaded")
         }
         localBroadcastManager.registerReceiver(receiver, intentFilter)
-        checkQuestionNotDate(loadDate())
+        checkQuestionNotDate(viewModel.loadDate())
     }
 
     override fun onDestroy() {
@@ -100,52 +83,38 @@ class SplashScreen : AppCompatActivity() {
         }
     }
 
-    private fun loadDate(): String {
-        Log.d("WorkManager", "Загрузка даты.")
-        val formatter = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
-        return formatter.format(Calendar.getInstance().time)
-    }
-
     private fun checkQuestionNotDate(systemDate: String) {
-        numQuestionNotDate = 0
-        questionViewModel.allGetQuestionDay.observe(this, { item ->
+        viewModel.numQuestionNotDate = 0
+        viewModel.allGetQuestionDay.observe(this, { item ->
             Log.d("WorkManager", "Загрузка из бд.")
             item.forEach { it ->
-                generateQuestion = ApiQuestion(
-                    it.id,
-                    it.date,
-                    it.question,
-                    it.answer,
-                    it.questionTranslate,
-                    it.answerTranslate
-                )
-                Log.d("WorkManager", "${it.date}")
+                viewModel.generateQuestion = apiQuestion(it)
+                Log.d("WorkManager", it.date)
                 if (it.date == "0") {
-                    numQuestionNotDate++
-                    questionNotNetwork = it.questionTranslate
-                    answerNotNetwork = it.answerTranslate
-                    generateQuestionNotNetwork = generateQuestion
+                    viewModel.numQuestionNotDate++
+                    viewModel.questionNotNetwork = it.questionTranslate
+                    viewModel.answerNotNetwork = it.answerTranslate
+                    viewModel.generateQuestionNotNetwork = viewModel.generateQuestion
                     Log.d("WorkManager", "найден пустой квиз")
                 }
-                if (it.date == systemDate || numQuestionNotDate == 9 && !numSystemDate) {
+                if (it.date == systemDate || viewModel.numQuestionNotDate == 9 && !viewModel.numSystemDate) {
                     Log.d("WorkManager", "Создаем 10 квиз с датой")
-                    questionViewModel.updateQuestionDay(
-                        generateQuestion.copy(date = systemDate)
+                    viewModel.updateQuestionDay(
+                        viewModel.generateQuestion.copy(date = systemDate)
                     )        //Если из первых девяти вопросов не найдено который нужно отобразить, мы назначаем вопрос для отображения 10й
 
-                    numSystemDate = true
+                    viewModel.numSystemDate = true
                     binding.tvQuestion.text = it.questionTranslate
                     binding.tvAnswer.text = it.answerTranslate
-                    questionNotNetworkDate = it.questionTranslate
-                    answerNotNetworkDate = it.answerTranslate
+                    viewModel.questionNotNetworkDate = it.questionTranslate
+                    viewModel.answerNotNetworkDate = it.answerTranslate
                     createAnimation()
                 }
-
             }
 
-            Log.d("WorkManager", "Пустых вопросов $numQuestionNotDate")
-            if (numQuestionNotDate < 10) {
-                if (numQuestionNotDate == 0) {
+            Log.d("WorkManager", "Пустых вопросов $viewModel.numQuestionNotDate")
+            if (viewModel.numQuestionNotDate < 10) {
+                if (viewModel.numQuestionNotDate == 0) {
                     Toast.makeText(
                         this,
                         "Пожалуйста подождите, вопросы загружаются с сервера (~1Мб)",
@@ -154,10 +123,9 @@ class SplashScreen : AppCompatActivity() {
                 }
                 Log.d("WorkManager", "Пустых вопросов меньше 10, загружаем еще раз")
                 loadApi()
-                ckeckLoadApi = true
+                viewModel.checkLoadApi = true
             }
         })
-
     }
 
     private fun loadNotification(title: String, name: String) {
@@ -183,8 +151,8 @@ class SplashScreen : AppCompatActivity() {
         Log.d("WorkManager", "Создание воркера.")
         val workManager = WorkManager.getInstance(application)
 
-        val requeust2 = RefreshDataWorker.makeRequest(numQuestionNotDate)
-        val request3 = PeriodicWorkRequestBuilder<RefreshDataWorker>(
+        val requeust2 = RefreshDataWorker.makeRequest(viewModel.numQuestionNotDate)
+        val requeust3 = PeriodicWorkRequestBuilder<RefreshDataWorker>(
             20,
             TimeUnit.HOURS,
             28,
@@ -201,30 +169,30 @@ class SplashScreen : AppCompatActivity() {
                                 "${it.outputData.getStringArray(RefreshDataWorker.QUESTION)}, Принимаем данные из воркера"
                     )
 
-                    questionApiArray = it.outputData.getStringArray(RefreshDataWorker.QUESTION)
-                    answerApiArray = it.outputData.getStringArray(RefreshDataWorker.ANSWER)
+                    viewModel.questionApiArray = it.outputData.getStringArray(RefreshDataWorker.QUESTION)
+                    viewModel.answerApiArray = it.outputData.getStringArray(RefreshDataWorker.ANSWER)
 
 
-                    if (questionApiArray != null) {
+                    if (viewModel.questionApiArray != null) {
 
                         Log.d("WorkManager", "Квест апи не пустой")
                         loadQuestion()
                     } else {
                         loadNotification("Ошибка", "Вопросы не были загружены, ошибка сети.")
-                        if (numQuestionNotDate in 1..9) {
+                        if (viewModel.numQuestionNotDate in 1..9) {
                             Log.d("WorkManager", "Создаем последний свободный вопрос")
-                            questionViewModel.updateQuestionDay(
-                                generateQuestionNotNetwork.copy(date = loadDate())
+                            viewModel.updateQuestionDay(
+                                viewModel.generateQuestionNotNetwork.copy(date = viewModel.loadDate())
                             )        //Если из первых девяти вопросов не найдено который нужно отобразить, мы назначаем вопрос для отображения 10й
 
-                            numSystemDate = true
-                            if (questionNotNetworkDate != "") {
-                                binding.tvQuestion.text = questionNotNetworkDate
-                                binding.tvAnswer.text = answerNotNetworkDate
+                            viewModel.numSystemDate = true
+                            if (viewModel.questionNotNetworkDate != "") {
+                                binding.tvQuestion.text = viewModel.questionNotNetworkDate
+                                binding.tvAnswer.text = viewModel.answerNotNetworkDate
                             } else {
-                                binding.tvQuestion.text = questionNotNetwork
-                                binding.tvAnswer.text = answerNotNetwork
-                                numQuestionNotDate--
+                                binding.tvQuestion.text = viewModel.questionNotNetwork
+                                binding.tvAnswer.text = viewModel.answerNotNetwork
+                                viewModel.numQuestionNotDate--
                             }
 
                             createAnimation()
@@ -243,49 +211,19 @@ class SplashScreen : AppCompatActivity() {
                     }
                 }
             })
-        Log.d("WorkManager", "Передаем - $numQuestionNotDate")
+        Log.d("WorkManager", "Передаем - $viewModel.numQuestionNotDate")
         loadNotification("Загрузка", "Подключение к сети")
         workManager.enqueue(requeust2)
-        workManager.enqueue(request3)
+        workManager.enqueue(requeust3)
     }
 
     private fun loadQuestion() {
+        viewModel.loadQuestion()
 
-        Log.d("WorkManager", "Загрузка квеста.")
-        var list = mutableListOf(
-            ApiQuestion(null, "", "", "", "", ""),
-            ApiQuestion(null, "", "", "", "", ""),
-            ApiQuestion(null, "", "", "", "", ""),
-            ApiQuestion(null, "", "", "", "", ""),
-            ApiQuestion(null, "", "", "", "", ""),
-            ApiQuestion(null, "", "", "", "", ""),
-            ApiQuestion(null, "", "", "", "", ""),
-            ApiQuestion(null, "", "", "", "", ""),
-            ApiQuestion(null, "", "", "", "", ""),
-            ApiQuestion(null, "", "", "", "", "")
-        )
-
-        for (i in 0..9) {
-            if (questionApiArray!![i] != "") {
-                Log.d("WorkManager", "Найдет не пустой квест, $i")
-                var entityGenerateQuestion = ApiQuestion(
-                    null,
-                    "0",
-                    questionApiArray!![i],
-                    answerApiArray!![i],
-                    questionApiArray!![i],
-                    answerApiArray!![i]
-                )
-                list[i] = entityGenerateQuestion
-                numQuestionInList++
-            }
-        }
-        loadNotification("Успех", "Загружено: $numQuestionInList вопросов")
-        questionViewModel.insertApiQuestion(list)
-        Log.d("WorkManager", "Закончилась загрузка квеста")
-        Log.d("WorkManager", "ищем еще раз")
+        loadNotification("Успех", "Загружено: $viewModel.numQuestionInList вопросов")
+        Log.d("WorkManager", "Закончилась загрузка квеста /n ищем еще раз")
         Thread.sleep(250)
-        questionViewModel.getQuestionDay()
+        viewModel.getQuestionDay()
     }
 
     private fun createAnimation() = with(binding) {
@@ -296,14 +234,11 @@ class SplashScreen : AppCompatActivity() {
         tvO.startAnimation(AnimationUtils.loadAnimation(this@SplashScreen, R.anim.anim_splash_o))
 
         var anim3 = AnimationUtils.loadAnimation(this@SplashScreen, R.anim.anim_splash_v)
-        animationListener(anim3, 3)
+        animationListener(anim3)
         tvV.startAnimation(anim3)
     }
 
-    private fun animationListener(anim: Animation, numAnim: Int) {
-
-        var toastEnd = Toast.makeText(this@SplashScreen, "EndAnimation", Toast.LENGTH_LONG)
-        var toastStart = Toast.makeText(this@SplashScreen, "StartAnimation", Toast.LENGTH_LONG)
+    private fun animationListener(anim: Animation) {
 
         anim.setAnimationListener(object : AnimationListener {
             override fun onAnimationStart(p0: Animation?) {
@@ -322,13 +257,12 @@ class SplashScreen : AppCompatActivity() {
 
     private fun startActivity() {
         var intent = Intent(this, MainActivity::class.java)
-        intent.putExtra(MainActivity.NUM_QUESTION_NOT_NUL, numQuestionNotDate)
+        intent.putExtra(MainActivity.NUM_QUESTION_NOT_NUL, viewModel.numQuestionNotDate)
         startActivity(intent)
         finish()
     }
 
     companion object {
-        const val NUM_QUESTION = "numQuestion"
         const val CHANNEL_ID = "channel_id"
         const val CHANNEL_NAME = "load_question"
     }

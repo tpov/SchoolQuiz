@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.tpov.schoolquiz.R
-import com.tpov.schoolquiz.activity.MainActivity
+import com.tpov.schoolquiz.presentation.mainactivity.MainActivity
 import com.tpov.schoolquiz.databinding.CreateQuestionDialogBinding
 import kotlinx.coroutines.InternalCoroutinesApi
 

@@ -1,8 +1,45 @@
 package com.tpov.schoolquiz.presentation.question
 
+import com.tpov.schoolquiz.data.model.ListQuestion
+import com.tpov.schoolquiz.data.model.ListQuestionInfo
+import com.tpov.schoolquiz.data.database.entities.Question
+import com.tpov.schoolquiz.data.database.entities.Quiz
 import com.tpov.schoolquiz.data.database.entities.QuizDetail
 import com.tpov.shoppinglist.utils.TimeManager
 import kotlinx.coroutines.InternalCoroutinesApi
+
+@InternalCoroutinesApi
+fun QuestionActivity.quiz(it: Quiz) =
+    Quiz(
+        it.id!!,
+        it.nameQuestion,
+        viewModel.loadUserName(it.nameQuestion),
+        it.data,
+        viewModel.loadStarsFun(it.nameQuestion),
+        viewModel.quizListHQVar.size,
+        ((it.numA) + 1),
+        viewModel.quizListHardQuestion.size,
+        it.starsAll + viewModel.persentPoints
+    )
+
+fun listQuestionInfo(it: Question) =
+    ListQuestionInfo(
+        it.id!!,
+        it.nameQuestion,
+        it.answerQuestion,
+        it.typeQuestion,
+        it.idListNameQuestion
+    )
+
+@InternalCoroutinesApi
+fun QuestionActivity.listQuestion(it: QuizDetail) = ListQuestion(
+    it.id!!,
+    it.userName!!,
+    it.idNameQuiz,
+    it.data,
+    it.numQuestion!!,
+    it.persentPoints
+)
 
 @InternalCoroutinesApi
 fun QuestionViewModel.insertQuizDetail(idName: String): QuizDetail {
