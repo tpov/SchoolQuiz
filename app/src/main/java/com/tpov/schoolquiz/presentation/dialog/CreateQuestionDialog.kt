@@ -1,4 +1,4 @@
-package com.tpov.schoolquiz.dialog
+package com.tpov.schoolquiz.presentation.dialog
 
 import android.app.AlertDialog
 import android.text.Editable

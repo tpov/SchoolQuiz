@@ -1,4 +1,4 @@
-package com.tpov.schoolquiz.settings
+package com.tpov.schoolquiz.presentation.settings
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

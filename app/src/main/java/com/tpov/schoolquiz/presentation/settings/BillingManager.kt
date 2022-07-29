@@ -1,4 +1,4 @@
-package com.tpov.schoolquiz.settings
+package com.tpov.schoolquiz.presentation.settings
 
 import android.content.Context
 import android.widget.Toast

@@ -1,4 +1,4 @@
-package com.tpov.schoolquiz.activity.workers
+package com.tpov.schoolquiz.data.workers
 
 import android.annotation.SuppressLint
 import android.content.Context

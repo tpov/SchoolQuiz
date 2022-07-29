@@ -19,7 +19,7 @@
         <activity android:name="com.tpov.schoolquiz.QuestionActivity" />
         <activity android:name="com.tpov.schoolquiz.activity.CheatActivity" />
         <activity android:name="com.tpov.schoolquiz.presentation.mainactivity.MainActivity" />
-        <activity android:name="com.tpov.schoolquiz.settings.SettingsActivity" />
+        <activity android:name="com.tpov.schoolquiz.presentation.settings.SettingsActivity" />
         <activity android:name="com.tpov.schoolquiz.presentation.InfoActivity" />
         <activity
             android:name="com.tpov.schoolquiz.presentation.splashscreen.SplashScreen"
@@ -30,7 +30,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="com.tpov.schoolquiz.Services.MyService"/>
+        <service android:name="com.tpov.schoolquiz.data.Services.MyService"/>
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

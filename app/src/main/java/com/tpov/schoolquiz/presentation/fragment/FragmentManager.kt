@@ -1,4 +1,4 @@
-package com.tpov.schoolquiz.fragment
+package com.tpov.schoolquiz.presentation.fragment
 
 import androidx.appcompat.app.AppCompatActivity
 import com.tpov.schoolquiz.R

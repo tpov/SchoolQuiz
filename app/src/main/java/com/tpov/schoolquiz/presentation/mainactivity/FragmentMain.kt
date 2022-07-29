@@ -1,3 +1,5 @@
+package com.tpov.schoolquiz.presentation.mainactivity
+
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -7,17 +9,15 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.tpov.schoolquiz.presentation.mainactivity.MainActivity
 import com.tpov.schoolquiz.presentation.MainApp
 import com.tpov.schoolquiz.presentation.question.QuestionViewModel
-import com.tpov.schoolquiz.TitleAdapter
 import com.tpov.schoolquiz.databinding.TitleFragmentBinding
 import com.tpov.schoolquiz.databinding.TitleFragmentBinding.*
 import com.tpov.schoolquiz.data.database.entities.Question
-import com.tpov.schoolquiz.fragment.BaseFragment
-import com.tpov.schoolquiz.fragment.FragmentManager
-import com.tpov.schoolquiz.dialog.CreateQuestionDialog
-import com.tpov.schoolquiz.dialog.CreateQuestionSecondDialog
+import com.tpov.schoolquiz.presentation.fragment.BaseFragment
+import com.tpov.schoolquiz.presentation.fragment.FragmentManager
+import com.tpov.schoolquiz.presentation.dialog.CreateQuestionDialog
+import com.tpov.schoolquiz.presentation.dialog.CreateQuestionSecondDialog
 import com.tpov.schoolquiz.data.database.entities.Quiz
 import com.tpov.schoolquiz.presentation.question.QuestionActivity
 import com.tpov.shoppinglist.utils.ShareHelper
@@ -25,7 +25,7 @@ import com.tpov.shoppinglist.utils.TimeManager
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @InternalCoroutinesApi
-class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
+class FragmentMain: BaseFragment(), MainActivityAdapter.Listener {
 
     private lateinit var binding: TitleFragmentBinding
     private var createQuiz = false
@@ -60,7 +60,7 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
                             var nameQuiz = ""
                             val startObs = "delete"
                             Log.d("Delete quiz?", "1")
-                            questionViewModel.getQuiz.observe(this@FragmentTitle, {
+                            questionViewModel.getQuiz.observe(this@FragmentMain, {
                                 if (startObs == "delete") {
                                     Log.d("Delete quiz?", "2")
                                     it.forEach { item ->
@@ -75,7 +75,7 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
                         "Share quiz" -> {
                             var nameQuiz = ""
                             val startObs = "Share"
-                            questionViewModel.getQuiz.observe(this@FragmentTitle, {
+                            questionViewModel.getQuiz.observe(this@FragmentMain, {
                                 if (startObs == "Share") {
                                     it.forEach { item ->
                                         if (stars == item.id) nameQuiz = item.nameQuestion
@@ -83,7 +83,7 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
                                 }
 
                             })
-                            questionViewModel.getQuestion.observe(this@FragmentTitle, {
+                            questionViewModel.getQuestion.observe(this@FragmentMain, {
 
                                 startActivity(Intent.createChooser(
                                     ShareHelper.shareShopList(nameQuiz, it, nameTypeQuestion),
@@ -133,7 +133,7 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
         Log.d("onViewCreated", "onViewCreated")
 
         questionViewModel.getQuiz.observe(viewLifecycleOwner, {
-            val adapter = TitleAdapter(this@FragmentTitle)
+            val adapter = MainActivityAdapter(this@FragmentMain)
             adapter.submitList(it)
             binding.rcView.layoutManager = LinearLayoutManager(activity)
             binding.rcView.adapter = adapter
@@ -183,6 +183,6 @@ class FragmentTitle: BaseFragment(), TitleAdapter.Listener {
 
     companion object {
         @JvmStatic
-        fun newInstance() = FragmentTitle()
+        fun newInstance() = FragmentMain()
     }
 }
