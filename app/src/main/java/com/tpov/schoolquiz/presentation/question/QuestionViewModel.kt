@@ -53,8 +53,8 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
     var currentIndexThis: Int = -1          //Номер вопроса на который стоит таймер
     var isCheater: Boolean = false          //Использовал ли игрок жизнь
     var updateAnswer: Boolean = true        //Нужно ли восстанавливать эту сессию при следующем запуске
-    var insertQuiz: Boolean = true          //Заглушка для повторного запуска обсервера getInfoQuestion
-    var loadedQuestion: Boolean = true      //Заглушка
+    var insertQuiz: Boolean = true          //Заглушка от повторного запуска обсервера getInfoQuestion
+    var loadedQuestion: Boolean = true      //Заглушка от повторного запуска
     var constCurrentIndex: Int = 0          //Сколько вопросов осталось
     var points: Int = 0
     var persentPoints: Int = 0
@@ -354,9 +354,7 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
         checkTimer = false
     }
 
-    private fun moveToNext() {
-        _moveToNextLiveData.postValue(z++)
-    }
+    private fun moveToNext() { _moveToNextLiveData.postValue(z++) }
 
     private fun intToBool(nextInt: Int): Boolean = nextInt == 1
 
