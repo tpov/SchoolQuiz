@@ -1,6 +1,7 @@
 package com.tpov.schoolquiz.domain
 
 import com.tpov.schoolquiz.data.database.entities.Quiz
+import com.tpov.schoolquiz.domain.repository.Repository
 
 class UpdateQuizUseCase(private val repository: Repository) {
 

@@ -38,7 +38,7 @@ class MainActivityAdapter(private val listener: Listener) :
     class ItemHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val binding = ActivityMainItemBinding.bind(view)
 
-        @SuppressLint("ResourceAsColor", "ResourceType")
+        @SuppressLint("ResourceAsColor", "ResourceType", "SetTextI18n")
         fun setData(quiz: Quiz, listener: Listener) = with(binding) {
             tvNumQuestion.text = quiz.numQ.toString()
             tvNumAnswer.text = quiz.numA.toString()
@@ -62,10 +62,10 @@ class MainActivityAdapter(private val listener: Listener) :
             }
 
             if (quiz.stars >= MAX_PERCENT) {
-                tvHardQuiz.text = "Hard quiz!"
+                tvHardQuiz.setText(R.string.hard_question)
                 tvHardQuiz.setBackgroundResource(R.color.num_chack_norice_red)
             } else {
-                tvHardQuiz.text = "Light quiz!"
+                tvHardQuiz.setText(R.string.light_question)
                 tvHardQuiz.setBackgroundResource(R.color.num_chack_norice_green)
             }
 
@@ -87,7 +87,7 @@ class MainActivityAdapter(private val listener: Listener) :
         }
 
         private fun ActivityMainItemBinding.tvVisibleOrGone() {
-            if (tvAllStars.text == "0,00" || tvAllStars == null) tvAllStars.visibility = View.GONE
+            if (tvAllStars.text == "0.00" || tvAllStars ==  null) tvAllStars.visibility = View.GONE
             else tvAllStars.visibility = View.VISIBLE
 
             if (tvNumAnswer.text == "0") tvNumAnswer.visibility = View.GONE
@@ -102,8 +102,6 @@ class MainActivityAdapter(private val listener: Listener) :
             if (tvStars.text == "0") tvStars.visibility = View.GONE
             else tvStars.visibility = View.VISIBLE
         }
-
-
         companion object {
             const val PERCENT_TWO_STARS = 0.83333
             const val MAX_PERCENT = 100

@@ -7,7 +7,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.work.*
-import com.tpov.geoquiz.activity.api.ApiFactory
+import com.tpov.schoolquiz.data.api.ApiFactory
 import kotlinx.coroutines.InternalCoroutinesApi
 import java.util.concurrent.TimeUnit
 
@@ -34,7 +34,7 @@ class RefreshDataWorker(
         var getAnswerApiArray = arrayOf("", "", "", "", "", "", "", "", "", "")
 
         try {
-            apiService.getFullPriceList("1")[0]
+            apiService.getFullPriceList(CATEGORY_QUESTION)[0]
         } catch (e: Exception) {
             Result.success()
         }
@@ -42,13 +42,13 @@ class RefreshDataWorker(
         //Дозагружаем вопросов столько, сколько нужно что-бы было 10шт
         for (i in questionNum..9) {
 
-            val apiList = apiService.getFullPriceList("1")[0]
+            val apiList = apiService.getFullPriceList(CATEGORY_QUESTION)[0]
             getQuestionApiArray[i] = apiList.getQuestion()!!
             getAnswerApiArray[i] = apiList.getAnswer()!!
             Log.d("WorkManager", "Загружен вопрос: $i, ${getQuestionApiArray[i]}")
 
             val intent = Intent("loaded").apply {
-                putExtra("percent", ((i + 1) * 10))
+                putExtra("percent", ((i + 1) * 10)) //Подсчет процента загрузки
             }
             localBroadcastManager.sendBroadcast(intent)
         }
@@ -67,7 +67,7 @@ class RefreshDataWorker(
         const val QUESTION_NUM = "question_num"
         const val QUESTION = "question"
         const val ANSWER = "answer"
-        const val CHANNEL_ID = "1"
+        const val CATEGORY_QUESTION = "1"
 
         @SuppressLint("RestrictedApi")
         fun makeRequest(numQuestionNotData: Int): OneTimeWorkRequest {

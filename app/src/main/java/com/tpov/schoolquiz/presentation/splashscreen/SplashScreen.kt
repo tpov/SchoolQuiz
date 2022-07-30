@@ -20,9 +20,9 @@ import androidx.core.app.NotificationCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.work.*
+import com.tpov.geoquiz.activity.workers.RefreshDataWorker
 import com.tpov.schoolquiz.R
 import com.tpov.schoolquiz.presentation.mainactivity.MainActivity
-import com.tpov.schoolquiz.data.workers.RefreshDataWorker
 import com.tpov.schoolquiz.databinding.ActivitySplashScreenBinding
 import kotlinx.coroutines.InternalCoroutinesApi
 import java.util.*
@@ -52,7 +52,6 @@ class SplashScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        Log.d("WorkManager", "Начало")
         visibleTPOV(false)
         viewModel.getQuestionDay()
 
@@ -251,6 +250,7 @@ class SplashScreen : AppCompatActivity() {
             }
 
             override fun onAnimationRepeat(p0: Animation?) {
+
             }
         })
     }

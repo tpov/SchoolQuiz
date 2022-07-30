@@ -18,4 +18,5 @@
     <style name="RatingBar" parent="Theme.AppCompat">
     <item name="android:colorControlActivated">@color/ratingBar</item>
     </style>
+
 </resources>

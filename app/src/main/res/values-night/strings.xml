@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tv_auto_update_question">Автообновление вопроса</string>
+    <string name="list_question">Список вопросов</string>
+</resources>

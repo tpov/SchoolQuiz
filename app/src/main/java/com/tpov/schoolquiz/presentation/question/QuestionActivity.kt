@@ -19,8 +19,7 @@ import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.dynamicanimation.animation.SpringForce
 import androidx.lifecycle.observe
 import com.tpov.schoolquiz.*
-import com.tpov.schoolquiz.data.Services.MyService
-import com.tpov.schoolquiz.activity.*
+import com.tpov.schoolquiz.data.Services.MusicService
 import com.tpov.schoolquiz.databinding.ActivityQuestionBinding
 import com.tpov.schoolquiz.presentation.MainApp
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -85,7 +84,7 @@ class QuestionActivity : AppCompatActivity() {
             }
         }
         actionBarSettings()
-        startService(Intent(this, MyService::class.java))
+        startService(Intent(this, MusicService::class.java))
         startObserve()
     }
 
@@ -95,10 +94,11 @@ class QuestionActivity : AppCompatActivity() {
         loadBPAnswer()
         getQuizList()
         showToast()
-        loadFrontList()
+        loadQuiz()
         springAnimLiveData()
         moveToPref()
         moveToNext()
+        loadResultTimer()
 
         cheatPointLife()
         cheatButtonLiveData()
@@ -134,7 +134,7 @@ class QuestionActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        stopService(Intent(this, MyService::class.java))
+        stopService(Intent(this, MusicService::class.java))
     }
 
     private fun cheatPointLife() {
@@ -146,8 +146,8 @@ class QuestionActivity : AppCompatActivity() {
     private fun getInfoQuestion() {
         viewModel.getInfoQuestionLiveData.observe(this, {
 
-            if (viewModel.insertCrime) {
-                !viewModel.insertCrime
+            if (viewModel.insertQuiz) {
+                !viewModel.insertQuiz
                 it.forEach { item ->
                     viewModel.loadCrime(item)
                 }
@@ -239,10 +239,12 @@ class QuestionActivity : AppCompatActivity() {
 
                 viewModel.startGame(viewModel.mapAnswer[viewModel.currentIndex]!!)
                 viewModel.formattedTime.observe(this@QuestionActivity, {
+
+                    //Если тамер доходит до значения 00:03, то делаем анимацию которая отображает цифры 3,2,1 на весь экран
                     tvTimer.text = it
-                    if (it[3] == '0' && it[4] == '3') anim321(3)
-                    if (it[3] == '0' && it[4] == '2') anim321(2)
-                    if (it[3] == '0' && it[4] == '1') anim321(1)
+                    if (it[3] == '0' && it[4] == '3') anim321(3) //Анимация для цифры 3
+                    if (it[3] == '0' && it[4] == '2') anim321(2) //2
+                    if (it[3] == '0' && it[4] == '1') anim321(1) //1
                 })
                 viewModel.checkTimer = true
             }
@@ -257,7 +259,6 @@ class QuestionActivity : AppCompatActivity() {
         anim.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(p0: Animation?) {
                 tv321.visibility = View.VISIBLE
-
             }
 
             override fun onAnimationEnd(p0: Animation?) {
@@ -301,18 +302,18 @@ class QuestionActivity : AppCompatActivity() {
             putInt("numQuestion", viewModel.numQuestion!!)
             putInt("numAnswer", viewModel.numAnswer!!)
             putBoolean("updateAnswer", viewModel.updateAnswer)
-            putBoolean("insertCrime", viewModel.insertCrime)
-            putBoolean("insertCrimeNewQuiz", viewModel.insertCrimeNewQuiz)
+            putBoolean("insertCrime", viewModel.insertQuiz)
+            putBoolean("insertCrimeNewQuiz", viewModel.loadedQuestion)
             putString("charMap", viewModel.charMap)
             putInt("i", viewModel.i)
             putInt("j", viewModel.j)
-            putInt("idCrime", viewModel.idCrime)
+            putInt("idCrime", viewModel.idQuiz)
             putString("userName", viewModel.userName)
             putString("idUser", viewModel.idUser)
             putBoolean("hardQuestion", viewModel.hardQuestion)
-            putInt("updateFrontList", viewModel.updateFrontList)
+            putInt("updateFrontList", viewModel.updateQuiz)
             putInt("stars", viewModel.stars)
-            putInt("persentAnswer", viewModel.persentAnswer)
+            putInt("persentAnswer", viewModel.percentAnswer)
             putInt("currentIndex", viewModel.currentIndex)
             putBoolean("checkTimer", viewModel.checkTimer)
         }
@@ -332,24 +333,25 @@ class QuestionActivity : AppCompatActivity() {
         viewModel.numQuestion = saveInstanceState.getInt("numQuestion")
         viewModel.numAnswer = saveInstanceState.getInt("numAnswer")
         viewModel.updateAnswer = saveInstanceState.getBoolean("updateAnswer")
-        viewModel.insertCrime = saveInstanceState.getBoolean("insertCrime")
-        viewModel.insertCrimeNewQuiz = saveInstanceState.getBoolean("insertCrimeNewQuiz")
+        viewModel.insertQuiz = saveInstanceState.getBoolean("insertCrime")
+        viewModel.loadedQuestion = saveInstanceState.getBoolean("insertCrimeNewQuiz")
         viewModel.charMap = saveInstanceState.getString("charMap")
         viewModel.i = saveInstanceState.getInt("i")
         viewModel.j = saveInstanceState.getInt("j")
-        viewModel.idCrime = saveInstanceState.getInt("idCrime")
+        viewModel.idQuiz = saveInstanceState.getInt("idCrime")
         viewModel.userName = saveInstanceState.getString("userName")
         viewModel.idUser = saveInstanceState.getString("idUser")!!
         viewModel.hardQuestion = saveInstanceState.getBoolean("hardQuestion")
-        viewModel.updateFrontList = saveInstanceState.getInt("updateFrontList")
+        viewModel.updateQuiz = saveInstanceState.getInt("updateFrontList")
         viewModel.stars = saveInstanceState.getInt("stars")
-        viewModel.persentAnswer = saveInstanceState.getInt("persentAnswer")
+        viewModel.percentAnswer = saveInstanceState.getInt("persentAnswer")
         viewModel.currentIndex = saveInstanceState.getInt("currentIndex")
         viewModel.checkTimer = saveInstanceState.getBoolean("checkTimer")
         viewModel.constCurrentIndex = saveInstanceState.getInt("constCurrentIndex")
 
         binding.vAndroid.text =
-            "vAndroid - ${android.os.Build.VERSION.SDK_INT}, vCode - ${android.os.Build.VERSION_CODES.M}"
+
+            "vAndroid - ${android.os.Build.VERSION.SDK_INT}, vCode - ${Build.VERSION_CODES.M}"
         viewModel.updatePersentView(viewModel.leftAnswer!!, viewModel.persentPoints)
         viewModel.decoderBlockMap()
         viewModel.checkBlock()
@@ -377,56 +379,13 @@ class QuestionActivity : AppCompatActivity() {
         })
     }
 
+        //Загружаем вопросы
     private fun getQuizList() {
         viewModel.getQuizListLiveData.observe(this, {
 
             this.viewModel.getQuestion.observe(this, {
-                if (viewModel.insertCrimeNewQuiz) {
-                    viewModel.insertCrimeNewQuiz = false
-                    viewModel.quizList.clear()
-                    it.forEach { item ->
-                        if (item.idListNameQuestion == viewModel.idUser) {
-                            if (item.typeQuestion) viewModel.quizListHardQuestion.add(
-                                com.tpov.schoolquiz.data.model.Quiz(
-                                    item.nameQuestion,
-                                    item.answerQuestion
-                                )
-                            )
-                            else viewModel.quizList.add(
-                                com.tpov.schoolquiz.data.model.Quiz(
-                                    item.nameQuestion,
-                                    item.answerQuestion
-                                )
-                            )
-                        }
-                    }
-
-                    if (viewModel.hardQuestion) {
-                        viewModel.quizListHQVar = viewModel.quizList
-                        viewModel.quizList = viewModel.quizListHardQuestion
-                    } else {
-                        viewModel.quizListHQVar = viewModel.quizList
-                    }
-
-                    if (viewModel.numQuestion == null) {
-
-                        viewModel.numQuestion = viewModel.quizList.size
-                        viewModel.numAnswer = viewModel.quizList.size
-                        viewModel.leftAnswer = viewModel.quizList.size
-                        viewModel.charMap = ""
-                        viewModel.createCodeAnswer()
-                        viewModel.coderBlockMap()
-                    }
-                    viewModel.updatePersentView(viewModel.leftAnswer!!, viewModel.persentPoints)
-                    viewModel.decoderBlockMap()
-                    viewModel.checkBlock()
-                    viewModel.insertCrimeNewQuiz = false
-                    viewModel.setCrimeVar(true, false)
-
-                    viewModel.updateQuestion()
-                    viewModel.loadPBAnswer()
-
-                    loadResultTimer()
+                if (viewModel.loadedQuestion) {     //Заглушка что-бы обсервер не работал когда нам не нужно
+                    viewModel.getQuizLists(it)
                 }
             })
 
@@ -446,10 +405,10 @@ class QuestionActivity : AppCompatActivity() {
         })
     }
 
-
-    private fun loadFrontList() {
+//Подсчитываем результаты прохождения квеста и заполняем их в бд
+    private fun loadQuiz() {
         viewModel.loadFrontListLiveData.observe(this, {
-
+            //Загружаем все данные из таблицы QuizDetail
             viewModel.getInfoQuestion.observe(this, { item ->
                 viewModel.listQuestion.clear()
                 item.forEach {
@@ -458,6 +417,7 @@ class QuestionActivity : AppCompatActivity() {
                     )
                 }
             })
+            //Загружаем все данные из таблицы Question
             viewModel.getQuestion.observe(this, { it ->
                 viewModel.listQuestionInfo.clear()
                 it.forEach {
@@ -466,12 +426,13 @@ class QuestionActivity : AppCompatActivity() {
                     )
                 }
             })
+            //Обновляем данные квеста
             viewModel.getQuiz.observe(this, { it ->
                 viewModel.listQuiz.clear()
                 it.forEach {
                     if (it.nameQuestion == viewModel.idUser) {
-                        viewModel.updateFrontList++              //Костыль, потому что эта фн-я почему-то выполняется 2 раза
-                        if (viewModel.updateFrontList == 2) {
+                        viewModel.updateQuiz++
+                        if (viewModel.updateQuiz == 2) {       //Костыль, потому что эта фн-я почему-то выполняется 2 раза
 
                             var frontList = quiz(it)
                             viewModel.updateQuiz(frontList)
@@ -482,8 +443,7 @@ class QuestionActivity : AppCompatActivity() {
         })
     }
 
-
-
+    //Проверка на блокировку кнопок
     private fun checkBlock() = with(binding) {
         viewModel.checkBlockLiveData.observe(this@QuestionActivity, {
             falseButton.isEnabled = !it
@@ -493,11 +453,9 @@ class QuestionActivity : AppCompatActivity() {
         })
     }
 
-
     private fun moveToPref() = with(binding) {
+
         viewModel.moveToPrevLiveData.observe(this@QuestionActivity, {
-
-
             var animPref1 =
                 AnimationUtils.loadAnimation(this@QuestionActivity, R.anim.pref_question1)
             var animPref2 =
@@ -505,6 +463,7 @@ class QuestionActivity : AppCompatActivity() {
 
             animPref1.setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(p0: Animation?) {
+
                 }
 
                 override fun onAnimationEnd(p0: Animation?) {
@@ -516,6 +475,7 @@ class QuestionActivity : AppCompatActivity() {
                 }
 
                 override fun onAnimationRepeat(p0: Animation?) {
+
                 }
             })
 
@@ -529,13 +489,12 @@ class QuestionActivity : AppCompatActivity() {
                 }
 
                 override fun onAnimationRepeat(p0: Animation?) {
+
                 }
             })
             questionTextView.startAnimation(animPref1)
-
         })
     }
-
 
     private fun moveToNext() {
         viewModel.moveToNextLiveData.observe(this, {
@@ -544,6 +503,7 @@ class QuestionActivity : AppCompatActivity() {
 
             animNext1.setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(p0: Animation?) {
+
                 }
 
                 override fun onAnimationEnd(p0: Animation?) {
@@ -555,11 +515,12 @@ class QuestionActivity : AppCompatActivity() {
                 }
 
                 override fun onAnimationRepeat(p0: Animation?) {
+
                 }
             })
+
             animNext2.setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(p0: Animation?) {
-
                     binding.questionTextView.visibility = View.VISIBLE
                 }
 
@@ -568,18 +529,17 @@ class QuestionActivity : AppCompatActivity() {
                 }
 
                 override fun onAnimationRepeat(p0: Animation?) {
+
                 }
             })
             binding.questionTextView.startAnimation(animNext1)
         })
-
     }
 
     companion object {
         const val NAME_QUESTION = "name_question"
         const val NAME_USER = "name_user"
         const val STARS = "stars"
+        const val UPDATE_CURRENT_INDEX = 1
     }
 }
-
-private const val UPDATE_CURRENT_INDEX = 1

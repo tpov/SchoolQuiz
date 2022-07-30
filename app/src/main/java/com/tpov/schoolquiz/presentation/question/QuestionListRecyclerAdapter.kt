@@ -43,6 +43,8 @@ class QuestionListRecyclerAdapter(
         if (currentIndex2 == position) {
             holder.itemView.setBackgroundColor(Color.parseColor("#009999"))
         } else {
+            //В зависимости от символа в "строке ответов" тот или иной вопрос окрашивается красным, зеленый, белым,
+                // таким образом видно как мы ответили на каждый из вопросов
             when {
                 codeAnswer2Array[position] == '0' -> {
                     holder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"))

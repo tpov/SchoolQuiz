@@ -45,33 +45,36 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
     val TAG = "QuestionViewModel"
 
     //Начальные данные для квеста
-    var numQuestion: Int? = 0       //WTF
-    var numAnswer: Int? = 0
-    var leftAnswer: Int? = 0        //WTF
-    var codeAnswer: String? = ""
-    var codeMap: String? = ""
-    var currentIndexThis: Int = -1
-    var isCheater: Boolean = false
-    var updateAnswer: Boolean = true
-    var insertCrime: Boolean = true
-    var insertCrimeNewQuiz: Boolean = true
-    var constCurrentIndex: Int = 0
+    var numQuestion: Int? = 0               //К-во вопросов
+    var numAnswer: Int? = 0                 //К-во ответов
+    var leftAnswer: Int? = 0                //WTF
+    var codeAnswer: String? = ""            //Строка показывает как игрок ответил на все вопросы (напр. "02102" - Если в квесте 5 вопросов)
+    var codeMap: String? = ""               //Строка показывает какой вопрос был отвечен что-бы блокировать кнопки (напр "01011" - если 5 вопросов)
+    var currentIndexThis: Int = -1          //Номер вопроса на который стоит таймер
+    var isCheater: Boolean = false          //Использовал ли игрок жизнь
+    var updateAnswer: Boolean = true        //Нужно ли восстанавливать эту сессию при следующем запуске
+    var insertQuiz: Boolean = true          //Заглушка для повторного запуска обсервера getInfoQuestion
+    var loadedQuestion: Boolean = true      //Заглушка
+    var constCurrentIndex: Int = 0          //Сколько вопросов осталось
     var points: Int = 0
     var persentPoints: Int = 0
     var cheatPoints: Int = 3
-    var charMap: String? = ""
-    var i: Int = 0
-    var j: Int = 0
-    var idCrime = 0
+    var charMap: String? = ""               //Нужно для codeMap
+    var idQuiz = 0                          //id в бд
     var userName: String? = ""
-    var idUser = ""
+    var idUser = ""                         //Имя квеста который хочет пройти пользователь
     var hardQuestion = false
-    var updateFrontList = 0
+    var updateQuiz = 0
     var stars = 0
-    var persentAnswer = 0
-    var currentIndex = 0
+    var percentAnswer = 0
+    var currentIndex = 0                    //Номер вопроса который видет пользователь
     var checkTimer = false
 
+    //Ильтераторы с помощю которых при их изменении активируется ливдата
+    var x = 0
+    var i: Int = 0
+    var j: Int = 0
+    private var z = 0
     private var s = 0
     private var d = 0
     private var f = 0
@@ -91,6 +94,7 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
 
     private val insertQuizUseCase = InsertQuizUseCase(repository)
     private val insertQuestionUseCase = InsertQuestionUseCase(repository)
+
     fun insertQuiz(quiz: Quiz) = viewModelScope.launch { insertQuizUseCase(quiz) }
     fun insertQuestion(question: Question) =
         viewModelScope.launch { insertQuestionUseCase(question) }
@@ -110,6 +114,57 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
             getInfoQuestionParamsUseCase(updateQuestion, insertQuiz, idUser)
         }
 
+    private var _viewResultLiveData = MutableLiveData<String>()
+    var viewResultLiveData: LiveData<String> = _viewResultLiveData
+
+    private var _cheatPointsLifeLiveData = MutableLiveData<String>()
+    var cheatPointsLiveData: LiveData<String> = _cheatPointsLifeLiveData
+
+    private var _loadToastLiveData = MutableLiveData<String>()
+    var loadToastLiveData: LiveData<String> = _loadToastLiveData
+
+    private var _loadTimerLiveData = MutableLiveData<Int>()
+    var loadTimerLiveData: LiveData<Int> = _loadTimerLiveData
+
+    private var _questionTextViewLiveData = MutableLiveData<String>()
+    var questionTextViewLiveData: LiveData<String> = _questionTextViewLiveData
+
+    private var _lastToastLiveData = MutableLiveData<String>()
+    var lastToastLiveData: LiveData<String> = _lastToastLiveData
+
+    private var _checkBlockLiveData = MutableLiveData<Boolean>()
+    var checkBlockLiveData: LiveData<Boolean> = _checkBlockLiveData
+
+    private var _cheatButtonLiveData = MutableLiveData<Boolean>()
+    var cheatButtonLiveData: LiveData<Boolean> = _cheatButtonLiveData
+
+    private var _springAnim = MutableLiveData<Boolean>()
+    var springAnim: LiveData<Boolean> = _springAnim
+
+    private var _moveToPrevLiveData = MutableLiveData<Int>()
+    var moveToPrevLiveData: LiveData<Int> = _moveToPrevLiveData
+
+    private var _moveToNextLiveData = MutableLiveData<Int>()
+    var moveToNextLiveData: LiveData<Int> = _moveToNextLiveData
+
+    private var _loadResultTimerLiveData = MutableLiveData<Int>()
+    var loadResultTimerLiveData: LiveData<Int> = _loadResultTimerLiveData
+
+    private var _getQuizListLiveData = MutableLiveData<Int>()
+    var getQuizListLiveData: LiveData<Int> = _getQuizListLiveData
+
+    private var _loadFrontListLiveData = MutableLiveData<Int>()
+    var loadFrontListLiveData: LiveData<Int> = _loadFrontListLiveData
+
+    private var _loadBDAnswerLiveData = MutableLiveData<Int>()
+    var loadBDAnswerLiveData: LiveData<Int> = _loadBDAnswerLiveData
+
+    private var _toastShowLiveData = MutableLiveData<Int>()
+    var toastShowLiveData: LiveData<Int> = _toastShowLiveData
+
+    private var _getInfoQuestionLiveData = MutableLiveData<List<QuizDetail>>()
+    var getInfoQuestionLiveData: LiveData<List<QuizDetail>> = _getInfoQuestionLiveData
+
     var getQuestion: LiveData<List<Question>> = getQuestionUseCase()
     var getInfoQuestion: LiveData<List<QuizDetail>> = getInfoQuestionUseCase()
     lateinit var getInfoQuestionList: List<QuizDetail>
@@ -120,9 +175,6 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
             getInfoQuestionList = getInfoQuestionListUseCase()
         }
     }
-
-    private var _getInfoQuestionLiveData = MutableLiveData<List<QuizDetail>>()
-    var getInfoQuestionLiveData: LiveData<List<QuizDetail>> = _getInfoQuestionLiveData
 
     fun updateInfoQuestion(quizDetail: QuizDetail) = viewModelScope.launch {
         updateInfoQuestionUseCase(quizDetail)
@@ -140,13 +192,8 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
         getInfoQuestion(true, insertQuizDetail(idUser), idUser)
     }
 
-    private var _cheatPointsLifeLiveData = MutableLiveData<String>()
-    var cheatPointsLiveData: LiveData<String> = _cheatPointsLifeLiveData
-    private var _cheatButtonLiveData = MutableLiveData<Boolean>()
-    var cheatButtonLiveData: LiveData<Boolean> = _cheatButtonLiveData
-
     private fun useCheat() {
-        cheatPoints -= 1
+        cheatPoints --
         _cheatPointsLifeLiveData.postValue("Life = $cheatPoints")
         if (cheatPoints == 0) {
             _cheatButtonLiveData.postValue(false)
@@ -155,7 +202,6 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
     }
 
     fun prefButton() {
-
         if (currentIndex == 0) {
             showToast(R.string.null_toast)
             springAnim(false)
@@ -164,10 +210,6 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
         }
         checkBlock()
     }
-
-    var x = 0
-    private var _moveToPrevLiveData = MutableLiveData<Int>()
-    var moveToPrevLiveData: LiveData<Int> = _moveToPrevLiveData
 
     private fun moveToPref() {
         _moveToPrevLiveData.postValue(x++)
@@ -233,7 +275,7 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
             checkBlock()
             coderBlockMap()
             checkAnswer(false)
-            constCurrentIndex += 1
+            constCurrentIndex ++
             resultTextView(points)
             if (constCurrentIndex == numAnswer) {
                 result(points)
@@ -245,7 +287,7 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
             checkBlock()
             coderBlockMap()
             checkAnswer(false)
-            constCurrentIndex += 1
+            constCurrentIndex ++
             resultTextView(points)
 
             if (currentIndex == numAnswer!! - 1) {
@@ -266,9 +308,6 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
         }
     }
 
-    private var _springAnim = MutableLiveData<Boolean>()
-    var springAnim: LiveData<Boolean> = _springAnim
-
     private fun springAnim(b: Boolean) {
         _springAnim.postValue(b)
     }
@@ -280,7 +319,7 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
             checkBlock()
             coderBlockMap()
             checkAnswer(intToBool(Random.nextInt(0, 1)))
-            constCurrentIndex += 1
+            constCurrentIndex ++
             resultTextView(points)
             if (constCurrentIndex == numAnswer) {
                 result(points)
@@ -293,7 +332,7 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
             coderBlockMap()
             checkAnswer(intToBool(Random.nextInt(0, 1)))
 
-            constCurrentIndex += 1
+            constCurrentIndex ++
             resultTextView(points)
 
             if (currentIndex == numAnswer!! - 1) {
@@ -315,24 +354,18 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
         checkTimer = false
     }
 
-    private var _moveToNextLiveData = MutableLiveData<Int>()
-    var moveToNextLiveData: LiveData<Int> = _moveToNextLiveData
-
-    //Ильтераторы с помощю которых при их изменении активируется ливдата
-    private var z = 0
-
     private fun moveToNext() {
         _moveToNextLiveData.postValue(z++)
     }
 
     private fun intToBool(nextInt: Int): Boolean = nextInt == 1
 
-    fun getHardQuestion(stars: Int) = stars >= 100
+    fun getHardQuestion(stars: Int) = stars >= MAX_PERCENT
 
     //Когда отвечаете на вопрос квеста, все ответы сохраняются в виде одной строки с набором символов 0,1,2
     //где 0 - не отвеченный вопрос, 1 - не верный ответ, 2 - верный.
     //Это позволяет восстановить сессию, подсчитывать результаты, показывать список вопросов с результатами
-    fun createCodeAnswer() {
+    private fun createCodeAnswer() {
         codeAnswer = ""
         repeat(quizList.size) {
             codeAnswer += '0'
@@ -341,8 +374,8 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
 
     @InternalCoroutinesApi
     fun result(points: Int) {
-        persentPoints = if (hardQuestion) (points * 20 / numQuestion!!) + 100
-        else points * 100 / numQuestion!!
+        persentPoints = if (hardQuestion) (points * COEF_PERCENT_HARD_QUIZ / numQuestion!!) + MAX_PERCENT
+        else points * MAX_PERCENT / numQuestion!!
         showToast(persentPoints)
         updatePersentView(leftAnswer!!, persentPoints)
         setCrimeVar(getUpdateQuestion = false, insertCrime = false)
@@ -361,7 +394,7 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
     }
 
     //Переобразовывам данные маппера в строку для сохранения в бд
-    fun coderBlockMap() {
+    private fun coderBlockMap() {
         codeMap = ""
         for (i in 0 until numAnswer!!) {
             if (mapAnswer[i] == false) {
@@ -386,7 +419,7 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
 
     private fun resultTextView(points: Int) {
         log("resultTextView")
-        persentPoints = points * 100 / numAnswer!!
+        persentPoints = points * MAX_PERCENT / numAnswer!!
         updatePersentView(leftAnswer!!, persentPoints)
 
         checkTimer = false
@@ -433,11 +466,9 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
                 getCurrentTimer(hardQuestion) * MILLIS_IN_SECONDS,
                 MILLIS_IN_SECONDS
             ) {
-
                 override fun onTick(millisUntilFinished: Long) {
                     _formattedTime.postValue(formatTime(millisUntilFinished))
                 }
-
                 override fun onFinish() {
                     _gameResult.postValue(false)
                 }
@@ -457,7 +488,7 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
 
     private fun updatePercentAnswer(leftAnswer: Int, numAnswer: Int) {
         if (numAnswer == 0) _answerQuiz.value = 0
-        else _answerQuiz.value = (100 * numAnswer / (leftAnswer + numAnswer))
+        else _answerQuiz.value = (MAX_PERCENT * numAnswer / (leftAnswer + numAnswer))
     }
 
     fun formatTime(millisUntilFinished: Long): String {
@@ -467,17 +498,9 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
         return String.format("%02d:%02d", minutes, leftSeconds)
     }
 
-    private var _checkBlockLiveData = MutableLiveData<Boolean>()
-    var checkBlockLiveData: LiveData<Boolean> = _checkBlockLiveData
-
     fun checkBlock() {
         _checkBlockLiveData.postValue(mapAnswer[currentIndex]!!)
     }
-
-    private var _questionTextViewLiveData = MutableLiveData<String>()
-    var questionTextViewLiveData: LiveData<String> = _questionTextViewLiveData
-    private var _lastToastLiveData = MutableLiveData<String>()
-    var lastToastLiveData: LiveData<String> = _lastToastLiveData
 
     fun updateQuestion() {
         log("updateQuestion")
@@ -489,36 +512,25 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
             _questionTextViewLiveData.postValue(questionTextResId)
             _lastToastLiveData.postValue(" ")
         }
-
         if (mapAnswer[currentIndex]!! && !mapAnswer[currentIndexThis]!!) checkTimer = false
         if (mapAnswer[currentIndex]!!) currentIndexThis = currentIndex
 
         loadTimer()
     }
 
-    private var _loadTimerLiveData = MutableLiveData<Int>()
-    var loadTimerLiveData: LiveData<Int> = _loadTimerLiveData
-
     fun loadTimer() {
         _loadTimerLiveData.postValue(s++)
     }
 
-    private var _loadFrontListLiveData = MutableLiveData<Int>()
-    var loadFrontListLiveData: LiveData<Int> = _loadFrontListLiveData
     private fun loadFrontList() {
         _loadFrontListLiveData.postValue(d++)
     }
 
 
-    private var _loadResultTimerLiveData = MutableLiveData<Int>()
-    var loadResultTimerLiveData: LiveData<Int> = _loadResultTimerLiveData
-
     fun loadResultTimer() {
         _loadResultTimerLiveData.postValue(f++)
     }
 
-    private var _getQuizListLiveData = MutableLiveData<Int>()
-    var getQuizListLiveData: LiveData<Int> = _getQuizListLiveData
 
     fun getQuizList() {
         _getQuizListLiveData.postValue(h++)
@@ -528,16 +540,11 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
         Log.d("QuestionListActivity", "$text")
     }
 
-    private var _loadBDAnswerLiveData = MutableLiveData<Int>()
-    var loadBDAnswerLiveData: LiveData<Int> = _loadBDAnswerLiveData
-    fun loadPBAnswer() {
+    private fun loadPBAnswer() {
         log("loadPBAnswer")
         updatePercentAnswer(leftAnswer!!, constCurrentIndex)
         _loadBDAnswerLiveData.postValue(l++)
     }
-
-    private var _loadToastLiveData = MutableLiveData<String>()
-    var loadToastLiveData: LiveData<String> = _loadToastLiveData
 
     @InternalCoroutinesApi
     @SuppressLint("SetTextI18n")
@@ -572,8 +579,7 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
                     showToast(R.string.nice)
                 } else {
                     _loadToastLiveData.postValue("Верно!")
-                    val toastCheckAnswer =
-                        showToast(R.string.correct_toast)
+                    showToast(R.string.correct_toast)
                 }
             }
             else -> {
@@ -594,14 +600,9 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
         }
     }
 
-    private fun loadStars(points: Int): Int = points / 100
+    private fun loadStars(points: Int): Int = points / MAX_PERCENT
 
-    private var _toastShowLiveData = MutableLiveData<Int>()
-    var toastShowLiveData: LiveData<Int> = _toastShowLiveData
-
-    private fun showToast(text: Int) {
-        _toastShowLiveData.postValue(text)
-    }
+    private fun showToast(text: Int) { _toastShowLiveData.postValue(text) }
 
     fun loadUserName(question: String): String {
         log("loadUserName")
@@ -635,14 +636,62 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
         return num
     }
 
-    private var _viewResultLiveData = MutableLiveData<String>()
-    var viewResultLiveData: LiveData<String> = _viewResultLiveData
-
     @SuppressLint("SetTextI18n")
     fun updatePersentView(leftAnswer: Int, persentPoints: Int) {
         log("updatePercentView")
         if (hardQuestion) _viewResultLiveData.postValue("(I don`t no) % Осталось - $leftAnswer")
         else _viewResultLiveData.postValue("$persentPoints % Осталось - $leftAnswer")
+    }
+
+    @InternalCoroutinesApi
+    fun getQuizLists(it: List<Question>) {
+        loadedQuestion = false
+        quizList.clear()
+
+        //Загружаем все легкие и сложные вопросы в списки.
+        it.forEach { item ->
+            if (item.idListNameQuestion == idUser) {
+                if (item.typeQuestion) quizListHardQuestion.add(
+                    com.tpov.schoolquiz.data.model.Quiz(
+                        item.nameQuestion,
+                        item.answerQuestion
+                    )
+                )
+                else quizList.add(
+                    com.tpov.schoolquiz.data.model.Quiz(
+                        item.nameQuestion,
+                        item.answerQuestion
+                    )
+                )
+            }
+        }
+
+        //В зависимости сложные или легкие вопросы нужно отобразить, мы выбераем из двух списков - один нужный список
+        if (hardQuestion) {
+            quizListHQVar = quizList
+            quizList = quizListHardQuestion
+        } else {
+            quizListHQVar = quizList
+        }
+
+        //Если это новая сессия, то в параметрах квеста(entity QuestionInfo) не будут некоторые начальные значения, создаем их сами.
+        if (numQuestion == null) {
+            numQuestion = quizList.size
+            numAnswer = quizList.size
+            leftAnswer = quizList.size
+            charMap = ""
+            createCodeAnswer()
+            coderBlockMap()
+        }
+        updatePersentView(leftAnswer!!, persentPoints)
+        decoderBlockMap()
+        checkBlock()
+        loadedQuestion = false
+        setCrimeVar(true, false)
+
+        updateQuestion()
+        loadPBAnswer()
+        loadResultTimer()
     }
 
     class QuizModelFactory(private var database: QuizDatabase) : ViewModelProvider.Factory {
@@ -661,5 +710,8 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
 
         private const val TIME_HARD_QUESTION = 10
         private const val TIME_LIGHT_QUESTION = 20
+
+        private const val MAX_PERCENT = 100
+        private const val COEF_PERCENT_HARD_QUIZ = 20 //Это нужно что-бы посчитать проценты сложных вопросов
     }
 }

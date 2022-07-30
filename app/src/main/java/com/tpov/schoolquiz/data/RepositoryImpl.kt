@@ -7,7 +7,7 @@ import com.tpov.schoolquiz.data.database.entities.ApiQuestion
 import com.tpov.schoolquiz.data.database.entities.Question
 import com.tpov.schoolquiz.data.database.entities.Quiz
 import com.tpov.schoolquiz.data.database.entities.QuizDetail
-import com.tpov.schoolquiz.domain.Repository
+import com.tpov.schoolquiz.domain.repository.Repository
 
 class RepositoryImpl(
     private val database: QuizDatabase
@@ -15,9 +15,11 @@ class RepositoryImpl(
 
     private val dao = database.getCrimeDao()
 
-    override suspend fun deleteQuiz(id: Int,
-                                    deleteAnswerQuestion: Boolean,
-                                    nameQuiz: String) {
+    override suspend fun deleteQuiz(
+        id: Int,
+        deleteAnswerQuestion: Boolean,
+        nameQuiz: String
+    ) {
         dao.deleteQuizByNameQuestion(nameQuiz)
         if (deleteAnswerQuestion) {
             dao.deleteQuizDetailByIdNameQuiz(nameQuiz)
@@ -65,13 +67,28 @@ class RepositoryImpl(
         idUser: String
     ): LiveData<List<QuizDetail>> {
 
-        val updateUnswerMutableCrime = MutableLiveData<List<QuizDetail>>()
-        updateUnswerMutableCrime.postValue(dao.getListQuizDetailByUpdateANDIdUser(updateAnswer, idUser))
+        val updateAnswerMutableCrime = MutableLiveData<List<QuizDetail>>()
+        updateAnswerMutableCrime.postValue(
+            dao.getListQuizDetailByUpdateANDIdUser(
+                updateAnswer,
+                idUser
+            )
+        )
 
         //Из-за плавающей ошибки(не всегда принимаются данные) вызываем еще пару раз :)
-        updateUnswerMutableCrime.postValue(dao.getListQuizDetailByUpdateANDIdUser(updateAnswer, idUser))
-        updateUnswerMutableCrime.postValue(dao.getListQuizDetailByUpdateANDIdUser(updateAnswer, idUser))
-        return updateUnswerMutableCrime
+        updateAnswerMutableCrime.postValue(
+            dao.getListQuizDetailByUpdateANDIdUser(
+                updateAnswer,
+                idUser
+            )
+        )
+        updateAnswerMutableCrime.postValue(
+            dao.getListQuizDetailByUpdateANDIdUser(
+                updateAnswer,
+                idUser
+            )
+        )
+        return updateAnswerMutableCrime
     }
 
     override suspend fun insertInfoQuestion(
@@ -79,7 +96,9 @@ class RepositoryImpl(
         insertQuiz: QuizDetail,
         idUser: String
     ) {
-        if (dao.getListQuizDetailByUpdateANDIdUser(true, idUser).isEmpty()) dao.insertQuizDetail(insertQuiz)
+        if (dao.getListQuizDetailByUpdateANDIdUser(true, idUser).isEmpty()) dao.insertQuizDetail(
+            insertQuiz
+        )
     }
 
     override suspend fun updateInfoQuestion(quizDetail: QuizDetail) {

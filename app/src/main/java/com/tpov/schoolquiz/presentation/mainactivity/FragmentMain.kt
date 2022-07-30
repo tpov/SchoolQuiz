@@ -2,30 +2,30 @@ package com.tpov.schoolquiz.presentation.mainactivity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.tpov.schoolquiz.presentation.MainApp
-import com.tpov.schoolquiz.presentation.question.QuestionViewModel
+import com.tpov.schoolquiz.R
+import com.tpov.schoolquiz.data.database.entities.Question
+import com.tpov.schoolquiz.data.database.entities.Quiz
 import com.tpov.schoolquiz.databinding.TitleFragmentBinding
 import com.tpov.schoolquiz.databinding.TitleFragmentBinding.*
-import com.tpov.schoolquiz.data.database.entities.Question
-import com.tpov.schoolquiz.presentation.fragment.BaseFragment
-import com.tpov.schoolquiz.presentation.fragment.FragmentManager
+import com.tpov.schoolquiz.presentation.MainApp
 import com.tpov.schoolquiz.presentation.dialog.CreateQuestionDialog
 import com.tpov.schoolquiz.presentation.dialog.CreateQuestionSecondDialog
-import com.tpov.schoolquiz.data.database.entities.Quiz
+import com.tpov.schoolquiz.presentation.fragment.BaseFragment
+import com.tpov.schoolquiz.presentation.fragment.FragmentManager
 import com.tpov.schoolquiz.presentation.question.QuestionActivity
+import com.tpov.schoolquiz.presentation.question.QuestionViewModel
 import com.tpov.shoppinglist.utils.ShareHelper
 import com.tpov.shoppinglist.utils.TimeManager
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @InternalCoroutinesApi
-class FragmentMain: BaseFragment(), MainActivityAdapter.Listener {
+class FragmentMain : BaseFragment(), MainActivityAdapter.Listener {
 
     private lateinit var binding: TitleFragmentBinding
     private var createQuiz = false
@@ -33,7 +33,6 @@ class FragmentMain: BaseFragment(), MainActivityAdapter.Listener {
     private val questionViewModel: QuestionViewModel by activityViewModels {
         QuestionViewModel.QuizModelFactory((context?.applicationContext as MainApp).database)
     }
-
 
     override fun onClickNew(name: String, stars: Int) {
 
@@ -52,42 +51,39 @@ class FragmentMain: BaseFragment(), MainActivityAdapter.Listener {
 
                     ) {
                     when (name) {
-                        "" -> {
+                        CREATE_QUIZ -> {
                             createQuiz = true
-                            startSecondDialog(listUserName, listNameQuestion)
+                            startSecondDialog(listUserName)
                         }
-                        "Delete quiz?" -> {
+                        getString(R.string.dialog_text_delete) -> {
                             var nameQuiz = ""
-                            val startObs = "delete"
-                            Log.d("Delete quiz?", "1")
+                            val startObs = getString(R.string.dialog_short_text_delete)
                             questionViewModel.getQuiz.observe(this@FragmentMain, {
-                                if (startObs == "delete") {
-                                    Log.d("Delete quiz?", "2")
+                                if (startObs == getString(R.string.dialog_short_text_delete)) {
                                     it.forEach { item ->
-                                        Log.d("Delete quiz?", "3")
                                         if (stars == item.id) nameQuiz = item.nameQuestion
                                     }
-                                    Log.d("Delete quiz?", "$id, $nameTypeQuestion, $nameQuiz")
                                     questionViewModel.deleteQuiz(id, nameTypeQuestion, nameQuiz)
                                 }
                             })
                         }
-                        "Share quiz" -> {
+                        getString(R.string.dialog_text_share) -> {
                             var nameQuiz = ""
-                            val startObs = "Share"
+                            val startObs = getString(R.string.dialog_short_text_share)
                             questionViewModel.getQuiz.observe(this@FragmentMain, {
-                                if (startObs == "Share") {
+                                if (startObs == getString(R.string.dialog_short_text_share)) {
                                     it.forEach { item ->
                                         if (stars == item.id) nameQuiz = item.nameQuestion
                                     }
                                 }
-
                             })
                             questionViewModel.getQuestion.observe(this@FragmentMain, {
-
-                                startActivity(Intent.createChooser(
-                                    ShareHelper.shareShopList(nameQuiz, it, nameTypeQuestion),
-                                    "Share by"))
+                                startActivity(
+                                    Intent.createChooser(
+                                        ShareHelper.shareShopList(nameQuiz, it, nameTypeQuestion),
+                                        "Share by"
+                                    )
+                                )
                             })
                         }
                         else -> {
@@ -100,7 +96,7 @@ class FragmentMain: BaseFragment(), MainActivityAdapter.Listener {
                     }
                 }
 
-                fun startSecondDialog(listNameQuestionSecond: String, listNameQuestion: String) {
+                fun startSecondDialog(listNameQuestionSecond: String) {
                     CreateQuestionSecondDialog.showDialog(
                         activity as AppCompatActivity,
                         object : CreateQuestionSecondDialog.Listener {
@@ -130,15 +126,12 @@ class FragmentMain: BaseFragment(), MainActivityAdapter.Listener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("onViewCreated", "onViewCreated")
 
         questionViewModel.getQuiz.observe(viewLifecycleOwner, {
             val adapter = MainActivityAdapter(this@FragmentMain)
             adapter.submitList(it)
             binding.rcView.layoutManager = LinearLayoutManager(activity)
             binding.rcView.adapter = adapter
-
-            Log.d("onViewCreated", "$it")
         })
     }
 
@@ -151,14 +144,6 @@ class FragmentMain: BaseFragment(), MainActivityAdapter.Listener {
         return binding.root
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        /*if (item.itemId == R.id.ListQuestion_Button) {
-            FragmentManager.currentFrag?.onClickNew("", stars)
-        }*/
-        return super.onOptionsItemSelected(item)
-    }
-
     @InternalCoroutinesApi
     fun insertFrontList(listNameQuestion: String, listUserName: String, nameList: Question) {
         val frontList = Quiz(
@@ -167,18 +152,20 @@ class FragmentMain: BaseFragment(), MainActivityAdapter.Listener {
             listUserName,
             TimeManager.getCurrentTime(),
             0,
-        0,
-        0,
-        0,
-        0)
+            0,
+            0,
+            0,
+            0
+        )
         questionViewModel.insertQuiz(frontList)
         if (createQuiz) questionViewModel.insertQuestion(nameList)
 
         createQuiz = false
     }
+
     //Тег по которому диалог определяет что нужно именно сделать с квестом. И id самого квеста
     override fun deleteItem(id: Int) {
-        FragmentManager.currentFrag?.onClickNew("deleteQuiz", id)
+        FragmentManager.currentFrag?.onClickNew(DELETE_QUIZ, id)
     }
 
     override fun onClick(name: String, stars: Int) {
@@ -186,11 +173,15 @@ class FragmentMain: BaseFragment(), MainActivityAdapter.Listener {
     }
 
     override fun shareItem(name: String, stars: Int) {
-        FragmentManager.currentFrag?.onClickNew("shareQuiz", stars)
+        FragmentManager.currentFrag?.onClickNew(SHARE_QUIZ, stars)
     }
 
     companion object {
         @JvmStatic
         fun newInstance() = FragmentMain()
+
+        const val CREATE_QUIZ = ""
+        const val DELETE_QUIZ = "deleteQuiz"
+        const val SHARE_QUIZ = "shareQuiz"
     }
 }

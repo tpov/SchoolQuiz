@@ -20,5 +20,4 @@ class MainActivityViewModel(var database: QuizDatabase) : ViewModel() {
 
     fun insertQuestion(question: com.tpov.schoolquiz.data.database.entities.Question) =
         viewModelScope.launch { insertQuestionUseCase(question) }
-
 }

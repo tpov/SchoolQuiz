@@ -1,5 +1,6 @@
 package com.tpov.schoolquiz.presentation.dialog
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.text.Editable
 import android.text.TextWatcher
@@ -7,11 +8,15 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.tpov.schoolquiz.R
-import com.tpov.schoolquiz.presentation.mainactivity.MainActivity
 import com.tpov.schoolquiz.databinding.CreateQuestionDialogBinding
+import com.tpov.schoolquiz.presentation.mainactivity.FragmentMain.Companion.CREATE_QUIZ
+import com.tpov.schoolquiz.presentation.mainactivity.FragmentMain.Companion.DELETE_QUIZ
+import com.tpov.schoolquiz.presentation.mainactivity.FragmentMain.Companion.SHARE_QUIZ
+import com.tpov.schoolquiz.presentation.mainactivity.MainActivity
 import kotlinx.coroutines.InternalCoroutinesApi
 
 object CreateQuestionDialog {
+    @SuppressLint("SetTextI18n")
     @InternalCoroutinesApi
     fun showDialog(
         activity: MainActivity,
@@ -20,7 +25,7 @@ object CreateQuestionDialog {
         listener: Listener
     ) {
         val viewModel by lazy {
-            ViewModelProvider(activity)[CreateQuestionDialiogViewModel::class.java]
+            ViewModelProvider(activity)[CreateQuestionDialogViewModel::class.java]
         }
 
         var numQuestion = 0
@@ -35,8 +40,10 @@ object CreateQuestionDialog {
 
         binding.apply {
             if (closeDialog) dialog?.dismiss()
+
+            //Поскольку один и тот же диалог используется в нескольких случаях, нам нужно определить что нужно отображать имея входную строку
             when (nameQuiz) {
-                "" -> {
+                CREATE_QUIZ -> {
                     clickAll(binding, false)
                     tvQuestion.setHint(R.string.new_question)
                     tvQuestion.setText("")
@@ -60,7 +67,7 @@ object CreateQuestionDialog {
                         }
                     }
                 }
-                "deleteQuiz" -> {
+                DELETE_QUIZ -> {
                     CheckBox.text = "Delete all question?"
                     bNext.text = "DELETE"
                     CheckBox.setOnClickListener {
@@ -86,7 +93,7 @@ object CreateQuestionDialog {
                         dialog?.dismiss()
                     }
                 }
-                "shareQuiz" -> {
+                SHARE_QUIZ -> {
                     CheckBox.text = "Show answer?"
                     bNext.text = "SHARE"
                     CheckBox.setOnClickListener {
@@ -146,10 +153,11 @@ object CreateQuestionDialog {
 
     private fun addTextChangeListeners(
         binding: CreateQuestionDialogBinding,
-        viewModel: CreateQuestionDialiogViewModel
+        viewModel: CreateQuestionDialogViewModel
     ) {
         binding.tvQuestion.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -157,6 +165,7 @@ object CreateQuestionDialog {
             }
 
             override fun afterTextChanged(s: Editable?) {
+
             }
         })
     }

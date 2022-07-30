@@ -30,7 +30,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="com.tpov.schoolquiz.data.Services.MyService"/>
+        <service android:name="com.tpov.schoolquiz.data.Services.MusicService"/>
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

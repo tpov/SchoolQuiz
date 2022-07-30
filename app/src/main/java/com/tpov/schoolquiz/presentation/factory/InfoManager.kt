@@ -14,8 +14,4 @@ class InfoManager : PreferenceFragmentCompat() {
     private fun init() {
 
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-    }
 }

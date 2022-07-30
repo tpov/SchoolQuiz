@@ -80,7 +80,7 @@ fun QuestionViewModel.loadCrime(quizTable: QuizDetail) {
     charMap = quizTable.charMap
     i = quizTable.i
     j = quizTable.j
-    idCrime = quizTable.id!!
+    idQuiz = quizTable.id!!
 
     leftAnswer = quizTable.leftUnswer
     numQuestion = quizTable.numQuestion
@@ -100,7 +100,7 @@ fun QuestionViewModel.setCrimeVar(getUpdateQuestion: Boolean, insertCrime: Boole
     if (!insertCrime) {
         if (hardQuestion) {
             var crimeUpdate = QuizDetail(
-                idCrime,
+                idQuiz,
                 idUser,
                 userName,
                 TimeManager.getCurrentTime(),
@@ -123,7 +123,7 @@ fun QuestionViewModel.setCrimeVar(getUpdateQuestion: Boolean, insertCrime: Boole
             updateInfoQuestion(crimeUpdate)
         } else {
             var crimeUpdate = QuizDetail(
-                idCrime,
+                idQuiz,
                 idUser,
                 userName,
                 TimeManager.getCurrentTime(),
