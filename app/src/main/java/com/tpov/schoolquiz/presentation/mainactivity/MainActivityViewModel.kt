@@ -1,20 +1,20 @@
 package com.tpov.schoolquiz.presentation.mainactivity
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tpov.schoolquiz.data.RepositoryImpl
-import com.tpov.schoolquiz.data.database.QuizDatabase
 import com.tpov.schoolquiz.data.database.entities.Quiz
 import com.tpov.schoolquiz.domain.InsertQuestionUseCase
 import com.tpov.schoolquiz.domain.InsertQuizUseCase
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainActivityViewModel(var database: QuizDatabase) : ViewModel() {
-
-    private val repository = RepositoryImpl(database)
-
-    private val insertQuizUseCase = InsertQuizUseCase(repository)
-    private val insertQuestionUseCase = InsertQuestionUseCase(repository)
+@InternalCoroutinesApi
+class MainActivityViewModel @Inject constructor(
+    private val insertQuizUseCase: InsertQuizUseCase,
+    private val insertQuestionUseCase: InsertQuestionUseCase
+) : ViewModel() {
 
     fun insertQuiz(quiz: Quiz) = viewModelScope.launch { insertQuizUseCase(quiz) }
 

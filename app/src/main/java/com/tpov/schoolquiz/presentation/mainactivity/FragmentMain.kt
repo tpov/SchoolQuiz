@@ -1,5 +1,7 @@
 package com.tpov.schoolquiz.presentation.mainactivity
 
+import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tpov.schoolquiz.R
 import com.tpov.schoolquiz.data.database.entities.Question
@@ -16,6 +19,7 @@ import com.tpov.schoolquiz.databinding.TitleFragmentBinding.*
 import com.tpov.schoolquiz.presentation.MainApp
 import com.tpov.schoolquiz.presentation.dialog.CreateQuestionDialog
 import com.tpov.schoolquiz.presentation.dialog.CreateQuestionSecondDialog
+import com.tpov.schoolquiz.presentation.factory.ViewModelFactory
 import com.tpov.schoolquiz.presentation.fragment.BaseFragment
 import com.tpov.schoolquiz.presentation.fragment.FragmentManager
 import com.tpov.schoolquiz.presentation.question.QuestionActivity
@@ -23,17 +27,25 @@ import com.tpov.schoolquiz.presentation.question.QuestionViewModel
 import com.tpov.shoppinglist.utils.ShareHelper
 import com.tpov.shoppinglist.utils.TimeManager
 import kotlinx.coroutines.InternalCoroutinesApi
+import javax.inject.Inject
 
 @InternalCoroutinesApi
 class FragmentMain : BaseFragment(), MainActivityAdapter.Listener {
 
+    private lateinit var questionViewModel: QuestionViewModel
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+    private val component by lazy {
+        (requireActivity().application as MainApp).component
+    }
+
     private lateinit var binding: TitleFragmentBinding
     private var createQuiz = false
 
-    private val questionViewModel: QuestionViewModel by activityViewModels {
-        QuestionViewModel.QuizModelFactory((context?.applicationContext as MainApp).database)
+    override fun onAttach(context: Context) {
+        component.inject(this)
+        super.onAttach(context)
     }
-
     override fun onClickNew(name: String, stars: Int) {
 
         val closeDialog = false
@@ -126,7 +138,7 @@ class FragmentMain : BaseFragment(), MainActivityAdapter.Listener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        questionViewModel = ViewModelProvider(this, viewModelFactory)[QuestionViewModel::class.java]
         questionViewModel.getQuiz.observe(viewLifecycleOwner, {
             val adapter = MainActivityAdapter(this@FragmentMain)
             adapter.submitList(it)

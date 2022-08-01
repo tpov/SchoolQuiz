@@ -5,20 +5,33 @@ import android.os.CountDownTimer
 import android.util.Log
 import androidx.lifecycle.*
 import com.tpov.schoolquiz.R
-import com.tpov.schoolquiz.data.model.ListQuestion
-import com.tpov.schoolquiz.data.model.ListQuestionInfo
-import com.tpov.schoolquiz.data.model.ListQuiz
-import com.tpov.schoolquiz.data.RepositoryImpl
-import com.tpov.schoolquiz.data.database.QuizDatabase
 import com.tpov.schoolquiz.data.database.entities.Question
 import com.tpov.schoolquiz.data.database.entities.Quiz
 import com.tpov.schoolquiz.data.database.entities.QuizDetail
+import com.tpov.schoolquiz.data.model.ListQuestion
+import com.tpov.schoolquiz.data.model.ListQuestionInfo
+import com.tpov.schoolquiz.data.model.ListQuiz
 import com.tpov.schoolquiz.domain.*
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.random.Random
 
-class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
+@InternalCoroutinesApi
+class QuestionViewModel @Inject constructor(
+        private val insertInfoQuestionUseCase: InsertInfoQuestionUseCase,
+        private val getInfoQuestionParamsUseCase: GetInfoQuestionParamsUseCase,
+        private val getQuestionUseCase: GetQuestionUseCase,
+        private val getInfoQuestionUseCase: GetInfoQuestionUseCase,
+        private val getQuizUseCase: GetQuizUseCase,
+        private val updateInfoQuestionUseCase: UpdateInfoQuestionUseCase,
+        private val updateQuizUseCase: UpdateQuizUseCase,
+        private val getInfoQuestionListUseCase: GetInfoQuestionListUseCase,
+        private val insertQuizUseCase: InsertQuizUseCase,
+        private val insertQuestionUseCase: InsertQuestionUseCase,
+        private val deleteQuizUseCase: DeleteQuizUseCase
+) : ViewModel() {
+
     private var timer: CountDownTimer? = null
 
     private val _formattedTime = MutableLiveData<String>()
@@ -81,25 +94,10 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
     private var h = 0
     private var l = 0
 
-    private val repository = RepositoryImpl(database)
-
-    private val insertInfoQuestionUseCase = InsertInfoQuestionUseCase(repository)
-    private val getInfoQuestionParamsUseCase = GetInfoQuestionParamsUseCase(repository)
-    private val getQuestionUseCase = GetQuestionUseCase(repository)
-    private val getInfoQuestionUseCase = GetInfoQuestionUseCase(repository)
-    private val getQuizUseCase = GetQuizUseCase(repository)
-    private val updateInfoQuestionUseCase = UpdateInfoQuestionUseCase(repository)
-    private val updateQuizUseCase = UpdateQuizUseCase(repository)
-    private val getInfoQuestionListUseCase = GetInfoQuestionListUseCase(repository)
-
-    private val insertQuizUseCase = InsertQuizUseCase(repository)
-    private val insertQuestionUseCase = InsertQuestionUseCase(repository)
-
     fun insertQuiz(quiz: Quiz) = viewModelScope.launch { insertQuizUseCase(quiz) }
     fun insertQuestion(question: Question) =
         viewModelScope.launch { insertQuestionUseCase(question) }
 
-    private val deleteQuizUseCase = DeleteQuizUseCase(repository)
     fun deleteQuiz(id: Int, deleteQuestion: Boolean, nameQuiz: String) = viewModelScope.launch {
         deleteQuizUseCase(id, deleteQuestion, nameQuiz)
     }
@@ -186,7 +184,7 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
     }
 
     @InternalCoroutinesApi
-    fun getUpdateCrime(idUser: String) {
+    fun getUpdateQuiz(idUser: String) {
         insertQuestion(true, insertQuizDetail(idUser), idUser)
         _getInfoQuestionLiveData.postValue(getInfoQuestionList)
         getInfoQuestion(true, insertQuizDetail(idUser), idUser)
@@ -690,16 +688,6 @@ class QuestionViewModel(var database: QuizDatabase) : ViewModel() {
         updateQuestion()
         loadPBAnswer()
         loadResultTimer()
-    }
-
-    class QuizModelFactory(private var database: QuizDatabase) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(QuestionViewModel::class.java)) {
-                @Suppress("UNCHECKED.CAST")
-                return QuestionViewModel(database) as T
-            }
-            throw IllegalAccessException("Unknown ViewModelClass")
-        }
     }
 
     companion object {

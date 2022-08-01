@@ -17,7 +17,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
     exportSchema = true, autoMigrations = [AutoMigration(from = 4, to = 5)]
 )
 abstract class QuizDatabase : RoomDatabase() {
-    abstract fun getCrimeDao(): QuizDao
+    abstract fun getQuizDao(): QuizDao
 
     companion object {
         @Volatile                                                 //Дает доступ к остальным потокам

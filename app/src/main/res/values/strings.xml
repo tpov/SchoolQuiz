@@ -106,5 +106,9 @@ In general, the timer starts if you read an unanswered question.</string>
     <string name="FrontActivity_num_chack_norice">Remaining questions-days offline</string>
     <string name="tv_auto_update_question">Question auto-update</string>
     <string name="list_question">A list of questions</string>
+    <string name="dialog_text_delete">Delete text?</string>
+    <string name="dialog_short_text_delete">delete</string>
+    <string name="dialog_short_text_share">Share</string>
+    <string name="dialog_text_share">Share text</string>
 
 </resources>

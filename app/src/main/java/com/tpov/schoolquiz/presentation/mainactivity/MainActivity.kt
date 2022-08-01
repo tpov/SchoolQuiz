@@ -13,27 +13,41 @@ import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.tpov.schoolquiz.R
 import com.tpov.schoolquiz.databinding.ActivityMainBinding
-import com.tpov.schoolquiz.presentation.InfoActivity
+import com.tpov.schoolquiz.presentation.MainApp
+import com.tpov.schoolquiz.presentation.factory.ViewModelFactory
 import com.tpov.schoolquiz.presentation.fragment.FragmentManager
+import com.tpov.schoolquiz.presentation.mainactivity.info.InfoActivity
+import com.tpov.schoolquiz.presentation.question.QuestionViewModel
 import com.tpov.schoolquiz.presentation.settings.SettingsActivity
 import kotlinx.coroutines.InternalCoroutinesApi
+import javax.inject.Inject
 
+/**
+ * This is the main screen of the application, it consists of a panel that shows how much spare is left.
+ * questions of the day and a fragment that displays user and system questions
+ */
 @InternalCoroutinesApi
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private var iAd: InterstitialAd? = null
     private var numQuestionNotDate = 0
+    private lateinit var viewModel: MainActivityViewModel
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
 
-    @InternalCoroutinesApi
-    private val viewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
+    private val component by lazy {
+        (application as MainApp).component
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        component.inject(this)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-
-        insertQuestion("GeoQuiz")
         setContentView(binding.root)
+
+        viewModel = ViewModelProvider(this, viewModelFactory)[MainActivityViewModel::class.java]
+        insertQuestion("GeoQuiz")
 
         setButtonNavListener()
         insertQuizList("GeoQuiz", "")
@@ -103,7 +117,6 @@ class MainActivity : AppCompatActivity() {
             true
         }
     }
-
 
     private fun loadInterAd() {
         val request = AdRequest.Builder().build()

@@ -16,11 +16,10 @@
         android:theme="@style/Theme.GeoQuiz">
         <activity
             android:name="com.tpov.schoolquiz.presentation.mainactivity.MainActivity"/>
-        <activity android:name="com.tpov.schoolquiz.QuestionActivity" />
-        <activity android:name="com.tpov.schoolquiz.activity.CheatActivity" />
-        <activity android:name="com.tpov.schoolquiz.presentation.mainactivity.MainActivity" />
+        <activity android:name="com.tpov.schoolquiz.presentation.question.QuestionActivity" />
+        <activity android:name="com.tpov.schoolquiz.presentation.question.CheatActivity" />
         <activity android:name="com.tpov.schoolquiz.presentation.settings.SettingsActivity" />
-        <activity android:name="com.tpov.schoolquiz.presentation.InfoActivity" />
+        <activity android:name="com.tpov.schoolquiz.presentation.mainactivity.info.InfoActivity" />
         <activity
             android:name="com.tpov.schoolquiz.presentation.splashscreen.SplashScreen"
             android:exported="true">

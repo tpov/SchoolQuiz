@@ -24,9 +24,13 @@ import com.tpov.geoquiz.activity.workers.RefreshDataWorker
 import com.tpov.schoolquiz.R
 import com.tpov.schoolquiz.presentation.mainactivity.MainActivity
 import com.tpov.schoolquiz.databinding.ActivitySplashScreenBinding
+import com.tpov.schoolquiz.presentation.MainApp
+import com.tpov.schoolquiz.presentation.factory.ViewModelFactory
+import com.tpov.schoolquiz.presentation.question.QuestionViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
 import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 @SuppressLint("CustomSplashScreen")
 @InternalCoroutinesApi
@@ -34,7 +38,14 @@ class SplashScreen : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashScreenBinding
 
-    private var viewModel = ViewModelProvider(this)[SplashScreenViewModel::class.java]
+    private lateinit var viewModel: SplashScreenViewModel
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val component by lazy {
+        (application as MainApp).component
+    }
+
     private val localBroadcastManager by lazy {
         LocalBroadcastManager.getInstance(this)
     }
@@ -49,8 +60,10 @@ class SplashScreen : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        component.inject(this)
         super.onCreate(savedInstanceState)
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
+        viewModel = ViewModelProvider(this, viewModelFactory)[SplashScreenViewModel::class.java]
         setContentView(binding.root)
         visibleTPOV(false)
         viewModel.getQuestionDay()
