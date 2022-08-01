@@ -1,8 +1,11 @@
 # SchoolQuiz
 
+![image](https://user-images.githubusercontent.com/33009369/182173509-5cbf267e-ad01-4958-9cca-a5db8e36cad0.png)
+
+# Info
 Quiz – is a true–false quest, which initially has basic questions with the possibility of adding your own, answering which you earn points 1–100.
 
-#Home
+# Home
 After clicking on the name of the quest, you go to the stage of passing, which consists of 2 parts (easy questions and difficult ones). Initially, you go through easy questions, which can earn a maximum of 83.3% (2 stars), if you score 2 stars – for the next passage of the quest, you will answer difficult questions with which you can score 83.3 – 100% (2–3 stars)
 
 Quests can also be deleted - by clicking on the trash can, with a pop-up window with confirmation, as well as the ability not to delete the questions themselves from the database (We recommend checking the box - delete all questions)
