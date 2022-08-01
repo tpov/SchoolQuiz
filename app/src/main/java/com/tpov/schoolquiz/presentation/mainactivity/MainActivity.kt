@@ -23,8 +23,8 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
 
 /**
- * Это главный екран приложения, он состоит из панели которая показывает сколько осталось запасных
- * вопросов-дня и фрагмента который отображает пользовательские и системные вопросы
+ * This is the main screen of the application, it consists of a panel that shows how much spare is left.
+ * questions of the day and a fragment that displays user and system questions
  */
 @InternalCoroutinesApi
 class MainActivity : AppCompatActivity() {
