@@ -6,6 +6,9 @@ import android.view.LayoutInflater
 import com.tpov.schoolquiz.R
 import com.tpov.schoolquiz.databinding.CreateQuestionDialogBinding
 
+/**
+ * The second dialogue opens after the player has created the quest and now needs to create questions.
+ */
 object CreateQuestionSecondDialog {
     fun showDialog(context: Context, listener: Listener) {
         var numQuestion = 1
@@ -53,7 +56,6 @@ object CreateQuestionSecondDialog {
                     numQuestion,
                     false
                 )
-
                 numQuestion++
                 hardQuestion = false
                 clearDialog(binding, numQuestion)

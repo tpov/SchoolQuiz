@@ -1,19 +1,23 @@
 package com.tpov.schoolquiz.data
 
+import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.room.Dao
+import com.tpov.schoolquiz.data.database.QuizDao
 import com.tpov.schoolquiz.data.database.QuizDatabase
 import com.tpov.schoolquiz.data.database.entities.ApiQuestion
 import com.tpov.schoolquiz.data.database.entities.Question
 import com.tpov.schoolquiz.data.database.entities.Quiz
 import com.tpov.schoolquiz.data.database.entities.QuizDetail
 import com.tpov.schoolquiz.domain.repository.Repository
+import kotlinx.coroutines.InternalCoroutinesApi
+import javax.inject.Inject
 
-class RepositoryImpl(
-    private val database: QuizDatabase
+@InternalCoroutinesApi
+class RepositoryImpl @Inject constructor(
+    private val dao: QuizDao
 ) : Repository {
-
-    private val dao = database.getCrimeDao()
 
     override suspend fun deleteQuiz(
         id: Int,

@@ -4,13 +4,16 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tpov.schoolquiz.data.model.Quiz
 import com.tpov.schoolquiz.R
 import com.tpov.schoolquiz.presentation.mainactivity.MainActivity
 import com.tpov.schoolquiz.presentation.MainApp
+import com.tpov.schoolquiz.presentation.factory.ViewModelFactory
 import kotlinx.coroutines.InternalCoroutinesApi
+import javax.inject.Inject
 import android.content.Intent as Intent1
 
 const val EXTRA_UPDATE_CURRENT_INDEX = "com.tpov.geoquiz.update_current_index"
@@ -21,13 +24,20 @@ const val EXTRA_CODE_ID_USER = "com.tpov.geoquiz.code_question_bank"
 // TODO: 25.07.2022 QuestionListActivity -> QuestionListFragment
 @InternalCoroutinesApi
 class QuestionListActivity : AppCompatActivity(), QuestionListRecyclerAdapter.UpdateData {
-    private val questionViewModel: QuestionViewModel by viewModels {
-        QuestionViewModel.QuizModelFactory((applicationContext as MainApp).database)
+
+    private lateinit var questionViewModel: QuestionViewModel
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val component by lazy {
+        (application as MainApp).component
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        component.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list_question)
+        questionViewModel = ViewModelProvider(this, viewModelFactory)[QuestionViewModel::class.java]
 
         var questionBankAdapter = mutableListOf<Quiz>()
 

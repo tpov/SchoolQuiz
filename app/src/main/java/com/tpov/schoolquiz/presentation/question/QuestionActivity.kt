@@ -1,8 +1,5 @@
 package com.tpov.schoolquiz.presentation.question
 
-/**
- * Этот код писался с самого начала моего обучения в андроид студио, как он работает - никто не знает :)
- */
 import android.annotation.SuppressLint
 import android.app.ActivityOptions
 import android.content.Intent
@@ -17,28 +14,44 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.dynamicanimation.animation.DynamicAnimation
 import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.dynamicanimation.animation.SpringForce
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.tpov.schoolquiz.*
 import com.tpov.schoolquiz.data.Services.MusicService
 import com.tpov.schoolquiz.databinding.ActivityQuestionBinding
 import com.tpov.schoolquiz.presentation.MainApp
+import com.tpov.schoolquiz.presentation.factory.ViewModelFactory
 import kotlinx.coroutines.InternalCoroutinesApi
+import javax.inject.Inject
 
 private const val REQUEST_CODE_CHEAT = 0
-
+/**
+ * This activity contains many variables that are needed to restore the session and the information processing logic.
+ * High WTF/min
+ * Refractoring incomplete
+ */
 @InternalCoroutinesApi
 class QuestionActivity : AppCompatActivity() {
 
-    internal val viewModel: QuestionViewModel by viewModels {
-        QuestionViewModel.QuizModelFactory((applicationContext as MainApp).database)
+    lateinit var viewModel: QuestionViewModel
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val binding by lazy {
+        ActivityQuestionBinding.inflate(layoutInflater)
     }
 
-    private lateinit var binding: ActivityQuestionBinding
+    private val component by lazy {
+        (application as MainApp).component
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        component.inject(this)
         super.onCreate(savedInstanceState)
-        binding = ActivityQuestionBinding.inflate(layoutInflater)
+
         setContentView(binding.root)
+        viewModel = ViewModelProvider(this, viewModelFactory)[QuestionViewModel::class.java]
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
@@ -48,7 +61,7 @@ class QuestionActivity : AppCompatActivity() {
         viewModel.idUser = nameQuestionUser!!
         viewModel.hardQuestion = viewModel.getHardQuestion(viewModel.stars)
 
-        viewModel.getUpdateCrime(viewModel.idUser)
+        viewModel.getUpdateQuiz(viewModel.idUser)
         viewModel.getQuizList()
 
         binding.apply {

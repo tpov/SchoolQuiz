@@ -16,10 +16,14 @@ import com.tpov.schoolquiz.domain.UpdateQuestionDayUseCase
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 @SuppressLint("CustomSplashScreen")
-class SplashScreenViewModel(var database: QuizDatabase): ViewModel() {
-
+class SplashScreenViewModel @Inject constructor(
+        private val insertApiQuestionUseCase: InsertApiQuestionUseCase,
+        private val getQuestionDayUseCase: GetQuestionDayUseCase,
+        private val updateApiQuestionUseCase: UpdateQuestionDayUseCase,
+): ViewModel() {
 
     lateinit var generateQuestion: ApiQuestion
     lateinit var generateQuestionNotNetwork: ApiQuestion
@@ -34,11 +38,6 @@ class SplashScreenViewModel(var database: QuizDatabase): ViewModel() {
     var questionApiArray: Array<String>? = null
     var answerApiArray: Array<String>? = null
 
-    private val repository = RepositoryImpl(database)
-
-    private val insertApiQuestionUseCase = InsertApiQuestionUseCase(repository)
-    private val getQuestionDayUseCase = GetQuestionDayUseCase(repository)
-    private val updateApiQuestionUseCase = UpdateQuestionDayUseCase(repository)
     private var _allGetQuestionDay = MutableLiveData<List<ApiQuestion>>()
     var allGetQuestionDay: LiveData<List<ApiQuestion>> = _allGetQuestionDay
 

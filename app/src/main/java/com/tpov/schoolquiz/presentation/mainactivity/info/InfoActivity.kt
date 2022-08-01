@@ -1,4 +1,4 @@
-package com.tpov.schoolquiz.presentation
+package com.tpov.schoolquiz.presentation.mainactivity.info
 
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -8,6 +8,9 @@ import androidx.preference.PreferenceManager
 import com.tpov.schoolquiz.R
 import com.tpov.schoolquiz.presentation.factory.InfoManager
 
+/**
+ * The InfoActivity displays information about the application for the user.
+ */
 class InfoActivity: AppCompatActivity() {
     private lateinit var defPref: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
