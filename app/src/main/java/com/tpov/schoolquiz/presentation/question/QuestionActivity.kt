@@ -29,6 +29,10 @@ private const val REQUEST_CODE_CHEAT = 0
  * This activity contains many variables that are needed to restore the session and the information processing logic.
  * High WTF/min
  * Refractoring incomplete
+ * First, there is a check to see if the quest that the player wants to complete is not completed, if not, 
+ * then he goes through it from the beginning. 
+ * To save the session, many variables and encodings are used that are made from objects in one line, 
+ * this allows you to have the entire progress of the passage, save it and restore it.
  */
 @InternalCoroutinesApi
 class QuestionActivity : AppCompatActivity() {
