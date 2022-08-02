@@ -168,9 +168,9 @@ class QuestionViewModel @Inject constructor(
     lateinit var getInfoQuestionList: List<QuizDetail>
     var getQuiz: LiveData<List<Quiz>> = getQuizUseCase()
 
-    init {
+    fun inits() {
         viewModelScope.launch {
-            getInfoQuestionList = getInfoQuestionListUseCase()
+           getInfoQuestionList = getInfoQuestionListUseCase()
         }
     }
 
@@ -185,6 +185,7 @@ class QuestionViewModel @Inject constructor(
 
     @InternalCoroutinesApi
     fun getUpdateQuiz(idUser: String) {
+
         insertQuestion(true, insertQuizDetail(idUser), idUser)
         _getInfoQuestionLiveData.postValue(getInfoQuestionList)
         getInfoQuestion(true, insertQuizDetail(idUser), idUser)
