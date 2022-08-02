@@ -52,7 +52,7 @@ class QuestionActivity : AppCompatActivity() {
 
         setContentView(binding.root)
         viewModel = ViewModelProvider(this, viewModelFactory)[QuestionViewModel::class.java]
-
+        viewModel.inits()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         val nameQuestionUser = intent.getStringExtra(NAME_QUESTION)
