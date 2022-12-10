@@ -5,6 +5,7 @@ import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -56,15 +57,16 @@ class QuestionActivity : AppCompatActivity() {
 
         setContentView(binding.root)
         viewModel = ViewModelProvider(this, viewModelFactory)[QuestionViewModel::class.java]
-        viewModel.inits()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         val nameQuestionUser = intent.getStringExtra(NAME_QUESTION)
         viewModel.userName = intent.getStringExtra(NAME_USER)
         viewModel.stars = intent.getStringExtra(STARS)!!.toInt()
         viewModel.idUser = nameQuestionUser!!
-        viewModel.hardQuestion = viewModel.getHardQuestion(viewModel.stars)
 
+        viewModel.insertQuiz()
+        viewModel.inits()
+        viewModel.hardQuestion = viewModel.getHardQuestion(viewModel.stars)
         viewModel.getUpdateQuiz(viewModel.idUser)
         viewModel.getQuizList()
 
@@ -107,7 +109,7 @@ class QuestionActivity : AppCompatActivity() {
 
     private fun startObserve() {
         getInfoQuestion()
-        checkBlock()
+
         loadBPAnswer()
         getQuizList()
         showToast()
@@ -116,6 +118,7 @@ class QuestionActivity : AppCompatActivity() {
         moveToPref()
         moveToNext()
         loadResultTimer()
+        checkBlock()
 
         cheatPointLife()
         cheatButtonLiveData()
@@ -161,11 +164,15 @@ class QuestionActivity : AppCompatActivity() {
     }
 
     private fun getInfoQuestion() {
-        viewModel.getInfoQuestionLiveData.observe(this) {
 
+        viewModel.getInfoQuestionLiveData.observe(this) {
+Log.d("startAdd", "1")
             if (viewModel.insertQuiz) {
+                Log.d("startAdd", "2")
                 !viewModel.insertQuiz
                 it.forEach { item ->
+
+                    Log.d("startAdd", "3")
                     viewModel.loadCrime(item)
                 }
             }

@@ -170,6 +170,14 @@ class QuestionViewModel @Inject constructor(
 
     fun inits() {
         getInfoQuestionList = getInfoQuestionListUseCase()
+        Log.d("startAdd", "${getInfoQuestionList}")
+
+        Log.d("startAdd", "${idUser}")
+    }
+
+    fun insertQuiz() {
+
+        Log.d("startAdd", "${idUser}")
         insertQuestion(true, insertQuizDetail(idUser), idUser)
         getInfoQuestion(true, insertQuizDetail(idUser), idUser)
     }
@@ -503,8 +511,11 @@ class QuestionViewModel @Inject constructor(
             _questionTextViewLiveData.postValue(questionTextResId)
             _lastToastLiveData.postValue(" ")
         }
-        if (mapAnswer[currentIndex]!! && !mapAnswer[currentIndexThis]!!) checkTimer = false
-        if (mapAnswer[currentIndex]!!) currentIndexThis = currentIndex
+
+        Log.d("testAdd", "$currentIndex, $currentIndexThis, ${mapAnswer[currentIndex]}, ${mapAnswer[currentIndexThis]}" )
+        Log.d("testAdd","${getInfoQuestionListUseCase()}")
+        //if (mapAnswer[currentIndex]!! && !mapAnswer[currentIndexThis]!!) checkTimer = false
+        //if (mapAnswer[currentIndex]!!) currentIndexThis = currentIndex
 
         loadTimer()
     }
@@ -525,6 +536,8 @@ class QuestionViewModel @Inject constructor(
 
     fun getQuizList() {
         _getQuizListLiveData.postValue(h++)
+
+        Log.d("startAdd", "${getInfoQuestionListUseCase()}")
     }
 
     private fun log(text: String) {
@@ -666,19 +679,23 @@ class QuestionViewModel @Inject constructor(
         }
 
         //Если это новая сессия, то в параметрах квеста(entity QuestionInfo) не будут некоторые начальные значения, создаем их сами.
-        if (numQuestion == null) {
+
+        Log.d("testAdd", "$numQuestion" )
+        //if (numQuestion == null) {
             numQuestion = quizList.size
             numAnswer = quizList.size
             leftAnswer = quizList.size
             charMap = ""
             createCodeAnswer()
             coderBlockMap()
-        }
+            Log.d("testAdd", "$numAnswer" )
+        //}
         updatePersentView(leftAnswer!!, persentPoints)
         decoderBlockMap()
 
         loadedQuestion = false
         setCrimeVar(true, false)
+
         checkBlock()
         updateQuestion()
         loadPBAnswer()

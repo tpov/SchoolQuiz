@@ -5,5 +5,5 @@ import com.tpov.schoolquiz.domain.repository.Repository
 import javax.inject.Inject
 
 class InsertQuizUseCase @Inject constructor(private val repository: Repository) {
-    suspend operator fun invoke(quiz: Quiz) = repository.insertQuiz(quiz)
+    operator fun invoke(quiz: Quiz) = repository.insertQuiz(quiz)
 }

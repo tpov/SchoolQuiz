@@ -5,5 +5,5 @@ import com.tpov.schoolquiz.domain.repository.Repository
 import javax.inject.Inject
 
 class InsertApiQuestionUseCase @Inject constructor(private val repository: Repository) {
-    suspend operator fun invoke(apiQuestion: List<ApiQuestion>) = repository.insertQuestionDay(apiQuestion)
+    operator fun invoke(apiQuestion: List<ApiQuestion>) = repository.insertQuestionDay(apiQuestion)
 }
