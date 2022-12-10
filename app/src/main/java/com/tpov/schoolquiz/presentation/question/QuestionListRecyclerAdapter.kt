@@ -25,7 +25,7 @@ class QuestionListRecyclerAdapter(
         var shortQuestionTextView: TextView? = null
 
         init {
-            numQuestionView = itemView.findViewById<EditText>(R.id.num_question_view) as? TextView
+            numQuestionView = itemView.findViewById<EditText>(R.id.num_question_view)
             shortQuestionTextView =
                 itemView.findViewById(R.id.short_question_text_view) as? TextView
         }

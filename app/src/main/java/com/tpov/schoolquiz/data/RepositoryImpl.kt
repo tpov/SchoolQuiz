@@ -11,6 +11,7 @@ import com.tpov.schoolquiz.data.database.entities.Question
 import com.tpov.schoolquiz.data.database.entities.Quiz
 import com.tpov.schoolquiz.data.database.entities.QuizDetail
 import com.tpov.schoolquiz.domain.repository.Repository
+import com.tpov.schoolquiz.presentation.mainactivity.MainActivity
 import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
 
@@ -19,7 +20,7 @@ class RepositoryImpl @Inject constructor(
     private val dao: QuizDao
 ) : Repository {
 
-    override suspend fun deleteQuiz(
+    override fun deleteQuiz(
         id: Int,
         deleteAnswerQuestion: Boolean,
         nameQuiz: String
@@ -31,22 +32,24 @@ class RepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateQuiz(quiz: Quiz) {
+    override fun updateQuiz(quiz: Quiz) {
         dao.updateQuiz(quiz)
     }
 
-    override suspend fun getInfoQuestionList() = dao.getQuizDetailList()
+    override fun getInfoQuestionList() = dao.getQuizDetailList()
 
     override fun getQuiz() = dao.getQuiz()
 
 
-    override suspend fun insertQuiz(quiz: Quiz) {
+    override fun insertQuiz(quiz: Quiz) {
         if (quiz.nameQuestion == "GeoQuiz") {
-            if (dao.getListQuizByNameQuestion("GeoQuiz").isEmpty()) dao.insertQuiz(quiz)
+            if (dao.getListQuizByNameQuestion("GeoQuiz").isEmpty()) {
+                dao.insertQuiz(quiz)
+            }
         } else dao.insertQuiz(quiz)
     }
 
-    override suspend fun insertQuestion(question: Question) {
+    override fun insertQuestion(question: Question) {
         if (question.idListNameQuestion == "GeoQuiz") {
             if (dao.getListQuestionByIdUser("GeoQuiz").isEmpty()) {
                 dao.insertQuestion(question)
@@ -54,18 +57,18 @@ class RepositoryImpl @Inject constructor(
         } else dao.insertQuestion(question)
     }
 
-    override suspend fun getQuestionDay() = dao.getListApiQuestion()
+    override fun getQuestionDay() = dao.getListApiQuestion()
 
-    override suspend fun insertQuestionDay(list: List<ApiQuestion>) {
+    override fun insertQuestionDay(list: List<ApiQuestion>) {
         dao.insertListApiQuestion(list)
     }
 
-    override suspend fun updateQuestionDay(question: ApiQuestion) {
+    override fun updateQuestionDay(question: ApiQuestion) {
         dao.updateApiQuestion(question)
     }
 
 
-    override suspend fun getInfoQuestionParams(
+    override fun getInfoQuestionParams(
         updateAnswer: Boolean,
         insertQuiz: QuizDetail,
         idUser: String
@@ -95,7 +98,7 @@ class RepositoryImpl @Inject constructor(
         return updateAnswerMutableCrime
     }
 
-    override suspend fun insertInfoQuestion(
+    override fun insertInfoQuestion(
         updateAnswer: Boolean,
         insertQuiz: QuizDetail,
         idUser: String
@@ -105,7 +108,7 @@ class RepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun updateInfoQuestion(quizDetail: QuizDetail) {
+    override fun updateInfoQuestion(quizDetail: QuizDetail) {
         dao.updateQuizDetail(quizDetail)
     }
 

@@ -4,7 +4,7 @@ import com.tpov.schoolquiz.domain.repository.Repository
 import javax.inject.Inject
 
 class DeleteQuizUseCase @Inject constructor(private val repository: Repository) {
-    suspend operator fun invoke(
+    operator fun invoke(
         id: Int,
         deleteAnswerQuestion: Boolean,
         nameQuiz: String

@@ -31,7 +31,7 @@ abstract class QuizDatabase : RoomDatabase() {
                         context.applicationContext,               //applicationContext - Так как мы используем во всех активити
                         QuizDatabase::class.java,
                         "GeoQuiz_list.db"
-                    ).fallbackToDestructiveMigration().build()
+                    ).fallbackToDestructiveMigration().allowMainThreadQueries().build()
                     instance
                 }
         }

@@ -97,7 +97,7 @@ class SplashScreen : AppCompatActivity() {
 
     private fun checkQuestionNotDate(systemDate: String) {
         viewModel.numQuestionNotDate = 0
-        viewModel.allGetQuestionDay.observe(this, { item ->
+        viewModel.allGetQuestionDay.observe(this) { item ->
             Log.d("WorkManager", "Загрузка из бд.")
             item.forEach { it ->
                 viewModel.generateQuestion = apiQuestion(it)
@@ -131,13 +131,13 @@ class SplashScreen : AppCompatActivity() {
                         this,
                         "Пожалуйста подождите, вопросы загружаются с сервера (~1Мб)",
                         Toast.LENGTH_LONG
-                    ).show()
+                    )
                 }
                 Log.d("WorkManager", "Пустых вопросов меньше 10, загружаем еще раз")
                 loadApi()
                 viewModel.checkLoadApi = true
             }
-        })
+        }
     }
 
     private fun loadNotification(title: String, name: String) {
@@ -232,7 +232,7 @@ class SplashScreen : AppCompatActivity() {
     private fun loadQuestion() {
         viewModel.loadQuestion()
 
-        loadNotification("Успех", "Загружено: $viewModel.numQuestionInList вопросов")
+        loadNotification("Успех", "Загружены вопросы")
         Log.d("WorkManager", "Закончилась загрузка квеста /n ищем еще раз")
         Thread.sleep(250)
         viewModel.getQuestionDay()

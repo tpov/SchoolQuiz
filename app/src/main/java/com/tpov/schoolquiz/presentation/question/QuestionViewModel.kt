@@ -26,7 +26,7 @@ class QuestionViewModel @Inject constructor(
         private val getQuizUseCase: GetQuizUseCase,
         private val updateInfoQuestionUseCase: UpdateInfoQuestionUseCase,
         private val updateQuizUseCase: UpdateQuizUseCase,
-        private val getInfoQuestionListUseCase: GetInfoQuestionListUseCase,
+        val getInfoQuestionListUseCase: GetInfoQuestionListUseCase,
         private val insertQuizUseCase: InsertQuizUseCase,
         private val insertQuestionUseCase: InsertQuestionUseCase,
         private val deleteQuizUseCase: DeleteQuizUseCase
@@ -169,27 +169,23 @@ class QuestionViewModel @Inject constructor(
     var getQuiz: LiveData<List<Quiz>> = getQuizUseCase()
 
     fun inits() {
-        viewModelScope.launch {
-           getInfoQuestionList = getInfoQuestionListUseCase()
-        }
+        getInfoQuestionList = getInfoQuestionListUseCase()
+        insertQuestion(true, insertQuizDetail(idUser), idUser)
+        getInfoQuestion(true, insertQuizDetail(idUser), idUser)
     }
 
     fun updateInfoQuestion(quizDetail: QuizDetail) = viewModelScope.launch {
         updateInfoQuestionUseCase(quizDetail)
     }
 
-    @InternalCoroutinesApi
     fun updateQuiz(quiz: Quiz) = viewModelScope.launch {
         updateQuizUseCase(quiz)
     }
 
-    @InternalCoroutinesApi
     fun getUpdateQuiz(idUser: String) {
-
-        insertQuestion(true, insertQuizDetail(idUser), idUser)
         _getInfoQuestionLiveData.postValue(getInfoQuestionList)
-        getInfoQuestion(true, insertQuizDetail(idUser), idUser)
     }
+
 
     private fun useCheat() {
         cheatPoints --
@@ -225,7 +221,6 @@ class QuestionViewModel @Inject constructor(
         checkBlock()
     }
 
-    @InternalCoroutinesApi
     fun trueButton() {
         //Проверка нужно ли показывать следующий вопрос после нажатия на кнопку
         if (!updateAnswer) {
@@ -266,8 +261,7 @@ class QuestionViewModel @Inject constructor(
         }
     }
 
-    @InternalCoroutinesApi
-    fun falseButton() {
+        fun falseButton() {
         //Проверка нужно ли показывать следующий вопрос после нажатия на кнопку
         if (!updateAnswer) {
             checkBlockMap()
@@ -311,7 +305,7 @@ class QuestionViewModel @Inject constructor(
         _springAnim.postValue(b)
     }
 
-    @InternalCoroutinesApi
+
     fun endTimer() {
         if (!updateAnswer) {
             checkBlockMap()
@@ -369,7 +363,7 @@ class QuestionViewModel @Inject constructor(
         }
     }
 
-    @InternalCoroutinesApi
+
     fun result(points: Int) {
         persentPoints = if (hardQuestion) (points * COEF_PERCENT_HARD_QUIZ / numQuestion!!) + MAX_PERCENT
         else points * MAX_PERCENT / numQuestion!!
@@ -543,7 +537,7 @@ class QuestionViewModel @Inject constructor(
         _loadBDAnswerLiveData.postValue(l++)
     }
 
-    @InternalCoroutinesApi
+
     @SuppressLint("SetTextI18n")
     fun checkAnswer(userAnswer: Boolean) {
         log("checkAnswer")
@@ -640,7 +634,7 @@ class QuestionViewModel @Inject constructor(
         else _viewResultLiveData.postValue("$persentPoints % Осталось - $leftAnswer")
     }
 
-    @InternalCoroutinesApi
+
     fun getQuizLists(it: List<Question>) {
         loadedQuestion = false
         quizList.clear()
@@ -682,10 +676,10 @@ class QuestionViewModel @Inject constructor(
         }
         updatePersentView(leftAnswer!!, persentPoints)
         decoderBlockMap()
-        checkBlock()
+
         loadedQuestion = false
         setCrimeVar(true, false)
-
+        checkBlock()
         updateQuestion()
         loadPBAnswer()
         loadResultTimer()

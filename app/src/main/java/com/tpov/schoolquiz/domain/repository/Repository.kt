@@ -10,43 +10,43 @@ import com.tpov.schoolquiz.data.database.entities.QuizDetail
 interface Repository {
 
     //MainActivity
-    suspend fun deleteQuiz(id: Int,
+    fun deleteQuiz(id: Int,
                            deleteAnswerQuestion: Boolean,
                            nameQuiz: String)
 
-    suspend fun insertQuiz(quiz: Quiz)
+    fun insertQuiz(quiz: Quiz)
 
-    suspend fun insertQuestion(question: Question)
+    fun insertQuestion(question: Question)
 
     //SplashScreenActivity
-    suspend fun getQuestionDay(): List<ApiQuestion>
+    fun getQuestionDay(): List<ApiQuestion>
 
-    suspend fun insertQuestionDay(list: List<ApiQuestion>)
+    fun insertQuestionDay(list: List<ApiQuestion>)
 
-    suspend fun updateQuestionDay(question: ApiQuestion)
+    fun updateQuestionDay(question: ApiQuestion)
 
     //QuizActivity
-    suspend fun getInfoQuestionParams(
+    fun getInfoQuestionParams(
         updateAnswer: Boolean,
         insertQuiz: QuizDetail,
         idUser: String
     ): LiveData<List<QuizDetail>>
 
-    suspend fun insertInfoQuestion(
+    fun insertInfoQuestion(
         updateAnswer: Boolean,
         insertQuiz: QuizDetail,
         idUser: String
     )
     fun getQuiz(): LiveData<List<Quiz>>
 
-    suspend fun updateInfoQuestion(quizDetail: QuizDetail)
+    fun updateInfoQuestion(quizDetail: QuizDetail)
 
     fun getInfoQuestion(): LiveData<List<QuizDetail>>
 
     fun getQuestion(): LiveData<List<Question>>
 
-    suspend fun updateQuiz(quiz: Quiz)
+    fun updateQuiz(quiz: Quiz)
 
-    suspend fun getInfoQuestionList(): List<QuizDetail>
+    fun getInfoQuestionList(): List<QuizDetail>
 
 }

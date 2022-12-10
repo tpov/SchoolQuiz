@@ -2,6 +2,7 @@ package com.tpov.schoolquiz.presentation.mainactivity
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -36,6 +37,8 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
+    private var recreateActivity: Boolean = false
+
     private val component by lazy {
         (application as MainApp).component
     }
@@ -55,20 +58,21 @@ class MainActivity : AppCompatActivity() {
         FragmentManager.setFragment(FragmentMain.newInstance(), this)
 
         loadNumQuestionNotDate()
+        
     }
 
     //Окраживаем квадратики в красный и зеленый в зависимости сколько осталось запасных вопросов-дня
     private fun loadNumQuestionNotDate() = with(binding) {
-        if (numQuestionNotDate > 0) textView10?.setBackgroundResource(R.color.num_chack_norice_green)
-        if (numQuestionNotDate > 1) textView9?.setBackgroundResource(R.color.num_chack_norice_green)
-        if (numQuestionNotDate > 2) textView8?.setBackgroundResource(R.color.num_chack_norice_green)
-        if (numQuestionNotDate > 3) textView7?.setBackgroundResource(R.color.num_chack_norice_green)
-        if (numQuestionNotDate > 4) textView6?.setBackgroundResource(R.color.num_chack_norice_green)
-        if (numQuestionNotDate > 5) textView5?.setBackgroundResource(R.color.num_chack_norice_green)
-        if (numQuestionNotDate > 6) textView4?.setBackgroundResource(R.color.num_chack_norice_green)
-        if (numQuestionNotDate > 7) textView3?.setBackgroundResource(R.color.num_chack_norice_green)
-        if (numQuestionNotDate > 8) textView2?.setBackgroundResource(R.color.num_chack_norice_green)
-        if (numQuestionNotDate > 9) textView?.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 0) textView10.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 1) textView9.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 2) textView8.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 3) textView7.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 4) textView6.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 5) textView5.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 6) textView4.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 7) textView3.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 8) textView2.setBackgroundResource(R.color.num_chack_norice_green)
+        if (numQuestionNotDate > 9) textView.setBackgroundResource(R.color.num_chack_norice_green)
     }
 
     @InternalCoroutinesApi
@@ -96,7 +100,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setButtonNavListener() {
 
-        binding.bNav?.setOnItemSelectedListener {
+        binding.bNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.menu_home -> {
 

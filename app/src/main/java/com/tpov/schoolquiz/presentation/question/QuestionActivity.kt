@@ -125,28 +125,28 @@ class QuestionActivity : AppCompatActivity() {
     }
 
     private fun springAnimLiveData() {
-        viewModel.springAnim.observe(this, {
+        viewModel.springAnim.observe(this) {
             springAnim(it)
-        })
+        }
     }
 
     private fun viewResult() {
-        viewModel.viewResultLiveData.observe(this, {
+        viewModel.viewResultLiveData.observe(this) {
             binding.viewResult.text = it
-        })
+        }
     }
 
     private fun questionText() {
-        viewModel.questionTextViewLiveData.observe(this, {
+        viewModel.questionTextViewLiveData.observe(this) {
             binding.questionTextView.text = it
-        })
+        }
     }
 
     private fun cheatButtonLiveData() {
-        viewModel.cheatButtonLiveData.observe(this, {
+        viewModel.cheatButtonLiveData.observe(this) {
             binding.cheatButton.isClickable = it
             binding.cheatButton.isEnabled = it
-        })
+        }
     }
 
     override fun onDestroy() {
@@ -155,13 +155,13 @@ class QuestionActivity : AppCompatActivity() {
     }
 
     private fun cheatPointLife() {
-        viewModel.cheatPointsLiveData.observe(this, {
+        viewModel.cheatPointsLiveData.observe(this) {
             binding.cheatPointsLife.text = it
-        })
+        }
     }
 
     private fun getInfoQuestion() {
-        viewModel.getInfoQuestionLiveData.observe(this, {
+        viewModel.getInfoQuestionLiveData.observe(this) {
 
             if (viewModel.insertQuiz) {
                 !viewModel.insertQuiz
@@ -169,7 +169,7 @@ class QuestionActivity : AppCompatActivity() {
                     viewModel.loadCrime(item)
                 }
             }
-        })
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -251,21 +251,21 @@ class QuestionActivity : AppCompatActivity() {
     }
 
     private fun loadTimer() = with(binding) {
-        viewModel.loadTimerLiveData.observe(this@QuestionActivity, {
+        viewModel.loadTimerLiveData.observe(this@QuestionActivity) {
             if (!viewModel.checkTimer) {
 
                 viewModel.startGame(viewModel.mapAnswer[viewModel.currentIndex]!!)
-                viewModel.formattedTime.observe(this@QuestionActivity, {
+                viewModel.formattedTime.observe(this@QuestionActivity) {
 
                     //Если тамер доходит до значения 00:03, то делаем анимацию которая отображает цифры 3,2,1 на весь экран
                     tvTimer.text = it
                     if (it[3] == '0' && it[4] == '3') anim321(3) //Анимация для цифры 3
                     if (it[3] == '0' && it[4] == '2') anim321(2) //2
                     if (it[3] == '0' && it[4] == '1') anim321(1) //1
-                })
+                }
                 viewModel.checkTimer = true
             }
-        })
+        }
     }
 
     @SuppressLint("ResourceType")
@@ -288,6 +288,7 @@ class QuestionActivity : AppCompatActivity() {
         tv321.startAnimation(anim)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (data == null) {
@@ -337,6 +338,7 @@ class QuestionActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onRestoreInstanceState(saveInstanceState: Bundle) {
         super.onRestoreInstanceState(saveInstanceState)
         viewModel.codeMap = saveInstanceState.getString("codeMap")!!
@@ -368,7 +370,7 @@ class QuestionActivity : AppCompatActivity() {
 
         binding.vAndroid.text =
 
-            "vAndroid - ${android.os.Build.VERSION.SDK_INT}, vCode - ${Build.VERSION_CODES.M}"
+            "vAndroid - ${Build.VERSION.SDK_INT}, vCode - ${Build.VERSION_CODES.M}"
         viewModel.updatePersentView(viewModel.leftAnswer!!, viewModel.persentPoints)
         viewModel.decoderBlockMap()
         viewModel.checkBlock()
@@ -376,75 +378,75 @@ class QuestionActivity : AppCompatActivity() {
     }
 
     private fun loadResultTimer() {
-        viewModel.loadResultTimerLiveData.observe(this, {
-            viewModel.gameResult.observe(this, {
+        viewModel.loadResultTimerLiveData.observe(this) {
+            viewModel.gameResult.observe(this) {
                 if (!it) viewModel.endTimer()
-            })
-        })
+            }
+        }
         viewModel.loadResultTimer()
     }
 
     private fun loadBPAnswer() = with(binding) {
-        viewModel.loadBDAnswerLiveData.observe(this@QuestionActivity, {
-            viewModel.answerQuiz.observe(this@QuestionActivity, {
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+        viewModel.loadBDAnswerLiveData.observe(this@QuestionActivity) {
+            viewModel.answerQuiz.observe(this@QuestionActivity) {
+                if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                     pbAnswer.setProgress(it, true)
                 } else {
                     pbAnswer.progress = it
                 }
-            })
-        })
+            }
+        }
     }
 
         //Загружаем вопросы
     private fun getQuizList() {
-        viewModel.getQuizListLiveData.observe(this, {
+        viewModel.getQuizListLiveData.observe(this) {
 
-            this.viewModel.getQuestion.observe(this, {
+            this.viewModel.getQuestion.observe(this) {
                 if (viewModel.loadedQuestion) {     //Заглушка что-бы обсервер не работал когда нам не нужно
                     viewModel.getQuizLists(it)
                 }
-            })
+            }
 
-        })
-    }
+        }
+        }
 
     // TODO: 29.07.2022 -> viewModel
     private fun showToast() {
-        viewModel.loadToastLiveData.observe(this, {
+        viewModel.loadToastLiveData.observe(this) {
             Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-        })
-        viewModel.lastToastLiveData.observe(this, {
+        }
+        viewModel.lastToastLiveData.observe(this) {
             Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-        })
-        viewModel.toastShowLiveData.observe(this, {
+        }
+        viewModel.toastShowLiveData.observe(this) {
             Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-        })
+        }
     }
 
 //Подсчитываем результаты прохождения квеста и заполняем их в бд
     private fun loadQuiz() {
-        viewModel.loadFrontListLiveData.observe(this, {
+        viewModel.loadFrontListLiveData.observe(this) {
             //Загружаем все данные из таблицы QuizDetail
-            viewModel.getInfoQuestion.observe(this, { item ->
+            viewModel.getInfoQuestion.observe(this) { item ->
                 viewModel.listQuestion.clear()
                 item.forEach {
                     viewModel.listQuestion.add(
                         listQuestion(it)
                     )
                 }
-            })
+            }
             //Загружаем все данные из таблицы Question
-            viewModel.getQuestion.observe(this, { it ->
+            viewModel.getQuestion.observe(this) { it ->
                 viewModel.listQuestionInfo.clear()
                 it.forEach {
                     viewModel.listQuestionInfo.add(
                         listQuestionInfo(it)
                     )
                 }
-            })
+            }
             //Обновляем данные квеста
-            viewModel.getQuiz.observe(this, { it ->
+            viewModel.getQuiz.observe(this) { it ->
                 viewModel.listQuiz.clear()
                 it.forEach {
                     if (it.nameQuestion == viewModel.idUser) {
@@ -456,23 +458,23 @@ class QuestionActivity : AppCompatActivity() {
                         }
                     }
                 }
-            })
-        })
-    }
+            }
+        }
+}
 
     //Проверка на блокировку кнопок
     private fun checkBlock() = with(binding) {
-        viewModel.checkBlockLiveData.observe(this@QuestionActivity, {
+        viewModel.checkBlockLiveData.observe(this@QuestionActivity) {
             falseButton.isEnabled = !it
             falseButton.isClickable = !it
             trueButton.isEnabled = !it
             trueButton.isClickable = !it
-        })
+        }
     }
 
     private fun moveToPref() = with(binding) {
 
-        viewModel.moveToPrevLiveData.observe(this@QuestionActivity, {
+        viewModel.moveToPrevLiveData.observe(this@QuestionActivity) {
             var animPref1 =
                 AnimationUtils.loadAnimation(this@QuestionActivity, R.anim.pref_question1)
             var animPref2 =
@@ -510,11 +512,11 @@ class QuestionActivity : AppCompatActivity() {
                 }
             })
             questionTextView.startAnimation(animPref1)
-        })
+        }
     }
 
     private fun moveToNext() {
-        viewModel.moveToNextLiveData.observe(this, {
+        viewModel.moveToNextLiveData.observe(this) {
             var animNext1 = AnimationUtils.loadAnimation(this, R.anim.next_question1)
             var animNext2 = AnimationUtils.loadAnimation(this, R.anim.next_question2)
 
@@ -550,7 +552,7 @@ class QuestionActivity : AppCompatActivity() {
                 }
             })
             binding.questionTextView.startAnimation(animNext1)
-        })
+        }
     }
 
     companion object {

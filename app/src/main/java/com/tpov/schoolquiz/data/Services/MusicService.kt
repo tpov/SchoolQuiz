@@ -20,9 +20,9 @@ class MusicService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        if (player == null) {
-            player = MediaPlayer.create(this@MusicService, R.raw.music_wot)
-        }
+            //if (player == null) {
+        //    player = MediaPlayer.create(this@MusicService, R.raw.music_wot)
+                    //}
 
         coroutineScope.launch {
             player?.start()

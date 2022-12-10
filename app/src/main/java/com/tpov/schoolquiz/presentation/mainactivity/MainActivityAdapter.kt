@@ -116,6 +116,7 @@ class MainActivityAdapter(private val listener: Listener) :
         }
     }
     interface Listener {
+
         fun deleteItem(id: Int)
         fun onClick(name: String, stars: Int)
         fun shareItem(name: String, stars: Int)

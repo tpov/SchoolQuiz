@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat.recreate
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,6 +39,8 @@ class FragmentMain : BaseFragment(), MainActivityAdapter.Listener {
     private val component by lazy {
         (requireActivity().application as MainApp).component
     }
+
+    private lateinit var adapter: MainActivityAdapter
 
     private lateinit var binding: TitleFragmentBinding
     private var createQuiz = false
@@ -70,33 +73,33 @@ class FragmentMain : BaseFragment(), MainActivityAdapter.Listener {
                         getString(R.string.dialog_text_delete) -> {
                             var nameQuiz = ""
                             val startObs = getString(R.string.dialog_short_text_delete)
-                            questionViewModel.getQuiz.observe(this@FragmentMain, {
+                            questionViewModel.getQuiz.observe(this@FragmentMain) {
                                 if (startObs == getString(R.string.dialog_short_text_delete)) {
                                     it.forEach { item ->
                                         if (stars == item.id) nameQuiz = item.nameQuestion
                                     }
                                     questionViewModel.deleteQuiz(id, nameTypeQuestion, nameQuiz)
                                 }
-                            })
+                            }
                         }
                         getString(R.string.dialog_text_share) -> {
                             var nameQuiz = ""
                             val startObs = getString(R.string.dialog_short_text_share)
-                            questionViewModel.getQuiz.observe(this@FragmentMain, {
+                            questionViewModel.getQuiz.observe(this@FragmentMain) {
                                 if (startObs == getString(R.string.dialog_short_text_share)) {
                                     it.forEach { item ->
                                         if (stars == item.id) nameQuiz = item.nameQuestion
                                     }
                                 }
-                            })
-                            questionViewModel.getQuestion.observe(this@FragmentMain, {
+                            }
+                            questionViewModel.getQuestion.observe(this@FragmentMain) {
                                 startActivity(
                                     Intent.createChooser(
                                         ShareHelper.shareShopList(nameQuiz, it, nameTypeQuestion),
                                         "Share by"
                                     )
                                 )
-                            })
+                            }
                         }
                         else -> {
                             val intent = Intent(activity, QuestionActivity::class.java)
@@ -128,6 +131,10 @@ class FragmentMain : BaseFragment(), MainActivityAdapter.Listener {
                                     listNameQuestionSecond,
                                 )
                                 insertFrontList(listUserName, listNameQuestion, nameList)
+
+                                questionViewModel.getQuiz.observe(viewLifecycleOwner) {
+                                    adapter.submitList(it)
+                                }
                             }
                         },
                     )
@@ -138,13 +145,15 @@ class FragmentMain : BaseFragment(), MainActivityAdapter.Listener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         questionViewModel = ViewModelProvider(this, viewModelFactory)[QuestionViewModel::class.java]
-        questionViewModel.getQuiz.observe(viewLifecycleOwner, {
-            val adapter = MainActivityAdapter(this@FragmentMain)
+        adapter = MainActivityAdapter(this@FragmentMain)
+        binding.rcView.layoutManager = LinearLayoutManager(activity)
+        binding.rcView.adapter = adapter
+
+        questionViewModel.getQuiz.observe(viewLifecycleOwner) {
             adapter.submitList(it)
-            binding.rcView.layoutManager = LinearLayoutManager(activity)
-            binding.rcView.adapter = adapter
-        })
+        }
     }
 
     override fun onCreateView(
