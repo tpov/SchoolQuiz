@@ -26,9 +26,7 @@ import com.tpov.schoolquiz.presentation.mainactivity.MainActivity
 import com.tpov.schoolquiz.databinding.ActivitySplashScreenBinding
 import com.tpov.schoolquiz.presentation.MainApp
 import com.tpov.schoolquiz.presentation.factory.ViewModelFactory
-import com.tpov.schoolquiz.presentation.question.QuestionViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
-import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
