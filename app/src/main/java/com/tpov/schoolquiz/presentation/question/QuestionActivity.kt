@@ -10,7 +10,6 @@ import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.*
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.dynamicanimation.animation.DynamicAnimation
 import androidx.dynamicanimation.animation.SpringAnimation
@@ -59,9 +58,11 @@ class QuestionActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this, viewModelFactory)[QuestionViewModel::class.java]
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        val nameQuestionUser = intent.getStringExtra(NAME_QUESTION)
+        var nameQuestionUser = intent.getStringExtra(NAME_QUESTION)
         viewModel.userName = intent.getStringExtra(NAME_USER)
-        viewModel.stars = intent.getStringExtra(STARS)!!.toInt()
+        viewModel.stars = intent.getIntExtra(STARS, 0)
+
+        Log.d("intent", "${viewModel.stars}")
         viewModel.idUser = nameQuestionUser!!
 
         viewModel.insertQuiz()
@@ -472,11 +473,16 @@ Log.d("startAdd", "1")
     //Проверка на блокировку кнопок
     private fun checkBlock() = with(binding) {
         viewModel.checkBlockLiveData.observe(this@QuestionActivity) {
-            falseButton.isEnabled = !it
-            falseButton.isClickable = !it
-            trueButton.isEnabled = !it
-            trueButton.isClickable = !it
+            checkCurrentThis(it)
+            falseButton.isEnabled = it
+            falseButton.isClickable = it
+            trueButton.isEnabled = it
+            trueButton.isClickable = it
         }
+    }
+
+    private fun checkCurrentThis(it: Boolean) {
+        if (it) viewModel.currentIndexThis = viewModel.currentIndex
     }
 
     private fun moveToPref() = with(binding) {
@@ -496,6 +502,7 @@ Log.d("startAdd", "1")
                     questionTextView.visibility = View.GONE
                     viewModel.currentIndex = (viewModel.currentIndex - 1) % viewModel.numQuestion!!
                     viewModel.updateQuestion()
+
 
                     questionTextView.startAnimation(animPref2)
                 }

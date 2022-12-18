@@ -76,6 +76,7 @@ class MainActivityAdapter(private val listener: Listener) :
             tvTime.text = quiz.data
             mainTitleButton.text = quiz.nameQuestion
             mainTitleButton.setOnClickListener {
+                Log.d("intent", "setOnClickListener: ${quiz.stars}")
                 listener.onClick(quiz.nameQuestion, quiz.stars)
             }
             imShare.setOnClickListener {

@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -105,7 +106,8 @@ class FragmentMain : BaseFragment(), MainActivityAdapter.Listener {
                             val intent = Intent(activity, QuestionActivity::class.java)
                             intent.putExtra(QuestionActivity.NAME_QUESTION, name)
                             intent.putExtra(QuestionActivity.NAME_USER, listUserName)
-                            intent.putExtra(QuestionActivity.STARS, stars.toString())
+                            intent.putExtra(QuestionActivity.STARS, stars)
+                            Log.d("intent", "$name, $listUserName, $stars")
                             startActivity(intent)
                         }
                     }

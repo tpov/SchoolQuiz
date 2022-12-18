@@ -27,6 +27,7 @@ import javax.inject.Inject
  * This is the main screen of the application, it consists of a panel that shows how much spare is left.
  * questions of the day and a fragment that displays user and system questions
  */
+
 @InternalCoroutinesApi
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

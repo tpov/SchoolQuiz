@@ -372,7 +372,7 @@ class QuestionViewModel @Inject constructor(
     }
 
 
-    fun result(points: Int) {
+    private fun result(points: Int) {
         persentPoints = if (hardQuestion) (points * COEF_PERCENT_HARD_QUIZ / numQuestion!!) + MAX_PERCENT
         else points * MAX_PERCENT / numQuestion!!
         showToast(persentPoints)

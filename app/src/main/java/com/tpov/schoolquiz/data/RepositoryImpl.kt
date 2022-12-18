@@ -1,6 +1,7 @@
 package com.tpov.schoolquiz.data
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Dao
@@ -50,8 +51,12 @@ class RepositoryImpl @Inject constructor(
     }
 
     override fun insertQuestion(question: Question) {
+        Log.d("insertQuestion", "1 $question")
         if (question.idListNameQuestion == "GeoQuiz") {
-            if (dao.getListQuestionByIdUser("GeoQuiz").isEmpty()) {
+
+            Log.d("insertQuestion", "2")
+            if (dao.getListQuestionByIdUser(question.nameQuestion).isEmpty()) {
+                Log.d("insertQuestion", "3")
                 dao.insertQuestion(question)
             }
         } else dao.insertQuestion(question)
