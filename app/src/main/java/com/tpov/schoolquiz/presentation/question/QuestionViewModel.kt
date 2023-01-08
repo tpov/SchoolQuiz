@@ -70,7 +70,7 @@ class QuestionViewModel @Inject constructor(
     var loadedQuestion: Boolean = true      //Заглушка от повторного запуска
     var constCurrentIndex: Int = 0          //Сколько вопросов осталось
     var points: Int = 0
-    var persentPoints: Int = 0
+    var percentPoints: Int = 0
     var cheatPoints: Int = 3
     var charMap: String? = ""               //Нужно для codeMap
     var idQuiz = 0                          //id в бд
@@ -177,7 +177,7 @@ class QuestionViewModel @Inject constructor(
 
     fun insertQuiz() {
 
-        Log.d("startAdd", "${idUser}")
+        Log.d("startAdd", "$idUser")
         insertQuestion(true, insertQuizDetail(idUser), idUser)
         getInfoQuestion(true, insertQuizDetail(idUser), idUser)
     }
@@ -192,6 +192,7 @@ class QuestionViewModel @Inject constructor(
 
     fun getUpdateQuiz(idUser: String) {
         _getInfoQuestionLiveData.postValue(getInfoQuestionList)
+
     }
 
 
@@ -241,7 +242,7 @@ class QuestionViewModel @Inject constructor(
             if (constCurrentIndex == numAnswer) {
                 result(points)
             } else {
-                setCrimeVar(true, false)
+                setQuizVar(true, false)
             }
         } else {
             checkBlockMap()
@@ -258,14 +259,17 @@ class QuestionViewModel @Inject constructor(
                 moveToNext()
             }
             checkBlock()
+
+            Log.d("v2.4", "constCurrentIndex: $constCurrentIndex")
+            Log.d("v2.4", "numAnswer: $numAnswer")
             if (constCurrentIndex == numAnswer) {
                 result(points)
             } else {
-                setCrimeVar(true, false)
+                setQuizVar(true, false)
             }
         }
         if (constCurrentIndex != numAnswer) {
-            updatePersentView(leftAnswer!!, persentPoints)
+            updatePersentView(leftAnswer!!, percentPoints)
         }
     }
 
@@ -281,7 +285,7 @@ class QuestionViewModel @Inject constructor(
             if (constCurrentIndex == numAnswer) {
                 result(points)
             } else {
-                setCrimeVar(true, false)
+                setQuizVar(true, false)
             }
         } else {
             checkBlockMap()
@@ -302,10 +306,10 @@ class QuestionViewModel @Inject constructor(
         if (constCurrentIndex == numAnswer) {
             result(points)
         } else {
-            setCrimeVar(getUpdateQuestion = true, insertCrime = false)
+            setQuizVar(getUpdateQuestion = true, insertCrime = false)
         }
         if (constCurrentIndex != numAnswer) {
-            updatePersentView(leftAnswer!!, persentPoints)
+            updatePersentView(leftAnswer!!, percentPoints)
         }
     }
 
@@ -325,7 +329,7 @@ class QuestionViewModel @Inject constructor(
             if (constCurrentIndex == numAnswer) {
                 result(points)
             } else {
-                setCrimeVar(true, false)
+                setQuizVar(true, false)
             }
         } else {
             checkBlockMap()
@@ -347,10 +351,10 @@ class QuestionViewModel @Inject constructor(
         if (constCurrentIndex == numAnswer) {
             result(points)
         } else {
-            setCrimeVar(true, false)
+            setQuizVar(true, false)
         }
         if (constCurrentIndex != numAnswer) {
-            updatePersentView(leftAnswer!!, persentPoints)
+            updatePersentView(leftAnswer!!, percentPoints)
         }
         checkTimer = false
     }
@@ -373,22 +377,23 @@ class QuestionViewModel @Inject constructor(
 
 
     private fun result(points: Int) {
-        persentPoints = if (hardQuestion) (points * COEF_PERCENT_HARD_QUIZ / numQuestion!!) + MAX_PERCENT
+        percentPoints = if (hardQuestion) (points * COEF_PERCENT_HARD_QUIZ / numQuestion!!) + MAX_PERCENT
         else points * MAX_PERCENT / numQuestion!!
-        showToast(persentPoints)
-        updatePersentView(leftAnswer!!, persentPoints)
-        setCrimeVar(getUpdateQuestion = false, insertCrime = false)
+        showToast(percentPoints)
+        updatePersentView(leftAnswer!!, percentPoints)
+        setQuizVar(getUpdateQuestion = false, insertCrime = false)
 
         loadFrontList()
         checkTimer = false
         loadTimer()
+        Log.d("v2.4", "result")
     }
 
     //false в маппере значит, что мы ответили на этот вопрос
     private fun checkBlockMap() {
         mapAnswer[currentIndexThis] = false
         leftAnswer = leftAnswer!!.minus(1)
-        updatePersentView(leftAnswer!!, persentPoints)
+        updatePersentView(leftAnswer!!, percentPoints)
         coderBlockMap()
     }
 
@@ -418,8 +423,8 @@ class QuestionViewModel @Inject constructor(
 
     private fun resultTextView(points: Int) {
         log("resultTextView")
-        persentPoints = points * MAX_PERCENT / numAnswer!!
-        updatePersentView(leftAnswer!!, persentPoints)
+        percentPoints = points * MAX_PERCENT / numAnswer!!
+        updatePersentView(leftAnswer!!, percentPoints)
 
         checkTimer = false
         loadPBAnswer()
@@ -526,6 +531,7 @@ class QuestionViewModel @Inject constructor(
 
     private fun loadFrontList() {
         _loadFrontListLiveData.postValue(d++)
+        Log.d("testObserver", "$d")
     }
 
 
@@ -600,7 +606,7 @@ class QuestionViewModel @Inject constructor(
         }
 
         if (leftAnswer != 0) {
-            setCrimeVar(getUpdateQuestion = true, insertCrime = false)
+            setQuizVar(getUpdateQuestion = true, insertCrime = false)
         }
     }
 
@@ -654,6 +660,8 @@ class QuestionViewModel @Inject constructor(
 
         //Загружаем все легкие и сложные вопросы в списки.
         it.forEach { item ->
+
+            Log.d("testAdd", "forEach" )
             if (item.idListNameQuestion == idUser) {
                 if (item.typeQuestion) quizListHardQuestion.add(
                     com.tpov.schoolquiz.data.model.Quiz(
@@ -680,22 +688,23 @@ class QuestionViewModel @Inject constructor(
 
         //Если это новая сессия, то в параметрах квеста(entity QuestionInfo) не будут некоторые начальные значения, создаем их сами.
 
-        Log.d("testAdd", "$numQuestion" )
-        //if (numQuestion == null) {
+        Log.d("testAdd", "numQuestion = $numQuestion")
+        if (numQuestion == null || numQuestion == 0) {
             numQuestion = quizList.size
             numAnswer = quizList.size
             leftAnswer = quizList.size
             charMap = ""
             createCodeAnswer()
             coderBlockMap()
-            Log.d("testAdd", "$numAnswer" )
-        //}
-        updatePersentView(leftAnswer!!, persentPoints)
+            Log.d("asdawda", "$numAnswer" )
+        }
+        updatePersentView(leftAnswer!!, percentPoints)
         decoderBlockMap()
 
         loadedQuestion = false
-        setCrimeVar(true, false)
+        setQuizVar(true, false)
 
+        Log.d("dsawads", "$numAnswer" )
         checkBlock()
         updateQuestion()
         loadPBAnswer()

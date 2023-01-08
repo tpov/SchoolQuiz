@@ -39,9 +39,9 @@ interface QuizDao {
     fun getListApiQuestion(): List<ApiQuestion>
     @Query("SELECT * FROM new_user_table WHERE idListNameQuestion LIKE :idGeoQuiz")
     fun getQuestionByIdGeoQuiz(idGeoQuiz: String): LiveData<List<Question>>
-    @Query("SELECT * FROM new_user_table WHERE nameQuestion LIKE :nameQuestion" )
+    @Query("SELECT * FROM new_user_table WHERE nameQuestion LIKE :nameQuestion")
     fun getListQuestionByIdUser(nameQuestion: String) : List<Question>
-    @Query("SELECT * FROM table_data WHERE updateAnswer LIKE :updateUnswer AND idNameQuiz LIKE :idUser" )
+    @Query("SELECT * FROM table_data WHERE updateAnswer LIKE :updateUnswer AND idNameQuiz LIKE :idUser")
     fun getListQuizDetailByUpdateANDIdUser(updateUnswer: Boolean, idUser: String) : List<QuizDetail>
     @Query("SELECT * FROM front_list WHERE nameQuestion LIKE :nameQuestion")
     fun getListQuizByNameQuestion(nameQuestion: String) : List<Quiz>

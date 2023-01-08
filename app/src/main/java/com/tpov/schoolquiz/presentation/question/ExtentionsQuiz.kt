@@ -1,5 +1,6 @@
 package com.tpov.schoolquiz.presentation.question
 
+import android.util.Log
 import com.tpov.schoolquiz.data.model.ListQuestion
 import com.tpov.schoolquiz.data.model.ListQuestionInfo
 import com.tpov.schoolquiz.data.database.entities.Question
@@ -19,7 +20,7 @@ fun QuestionActivity.quiz(it: Quiz) =
         viewModel.quizListHQVar.size,
         ((it.numA) + 1),
         viewModel.quizListHardQuestion.size,
-        it.starsAll + viewModel.persentPoints
+        it.starsAll + viewModel.percentPoints
     )
 
 fun listQuestionInfo(it: Question) =
@@ -32,7 +33,7 @@ fun listQuestionInfo(it: Question) =
     )
 
 @InternalCoroutinesApi
-fun QuestionActivity.listQuestion(it: QuizDetail) = ListQuestion(
+fun listQuestion(it: QuizDetail) = ListQuestion(
     it.id!!,
     it.userName!!,
     it.idNameQuiz,
@@ -42,10 +43,10 @@ fun QuestionActivity.listQuestion(it: QuizDetail) = ListQuestion(
 )
 
 @InternalCoroutinesApi
-fun QuestionViewModel.insertQuizDetail(idName: String): QuizDetail {
+fun QuestionViewModel.insertQuizDetail(idUserQuestion: String): QuizDetail {
     return QuizDetail(
         null,
-        idName,
+        idUserQuestion,
         userName,
         TimeManager.getCurrentTime(),
         null,
@@ -68,34 +69,35 @@ fun QuestionViewModel.insertQuizDetail(idName: String): QuizDetail {
 
 @InternalCoroutinesApi
 fun QuestionViewModel.loadCrime(quizTable: QuizDetail) {
-    codeAnswer = quizTable.codeAnswer
-    codeMap = quizTable.codeMap
-    currentIndexThis = quizTable.currentIndex
-    isCheater = quizTable.isCheater
-    updateAnswer = quizTable.updateAnswer
-    constCurrentIndex = quizTable.constCurrentIndex
-    points = quizTable.points
-    persentPoints = quizTable.persentPoints
-    cheatPoints = quizTable.cheatPoints
-    charMap = quizTable.charMap
-    i = quizTable.i
-    j = quizTable.j
-    idQuiz = quizTable.id!!
+    this.codeAnswer = quizTable.codeAnswer
+    this.codeMap = quizTable.codeMap
+    this.currentIndexThis = quizTable.currentIndex
+    this.isCheater = quizTable.isCheater
+    this.updateAnswer = quizTable.updateAnswer
+    this.constCurrentIndex = quizTable.constCurrentIndex
+    this.points = quizTable.points
+    this.percentPoints = quizTable.persentPoints
+    this.cheatPoints = quizTable.cheatPoints
+    this.charMap = quizTable.charMap
+    this.i = quizTable.i
+    this.j = quizTable.j
+    this.idQuiz = quizTable.id!!
 
-    leftAnswer = quizTable.leftUnswer
-    numQuestion = quizTable.numQuestion
-    numAnswer = quizTable.numAnswer
-    currentIndex = currentIndexThis
+    this.leftAnswer = quizTable.leftUnswer
+    this.numQuestion = quizTable.numQuestion
+    this.numAnswer = quizTable.numAnswer
+    this.currentIndex = currentIndexThis
 
     if (userName == "") {
-        userName = quizTable.userName
+        this.userName = quizTable.userName
     }
 
     getQuestion
+    Log.d("v2.4", "leftAnswer: $leftAnswer")
 }
 
 @InternalCoroutinesApi
-fun QuestionViewModel.setCrimeVar(getUpdateQuestion: Boolean, insertCrime: Boolean) {
+fun QuestionViewModel.setQuizVar(getUpdateQuestion: Boolean, insertCrime: Boolean) {
 
     if (!insertCrime) {
         if (hardQuestion) {
@@ -110,7 +112,7 @@ fun QuestionViewModel.setCrimeVar(getUpdateQuestion: Boolean, insertCrime: Boole
                 isCheater,
                 constCurrentIndex,
                 points,
-                persentPoints,
+                percentPoints,
                 cheatPoints,
                 charMap,
                 i,
@@ -120,6 +122,8 @@ fun QuestionViewModel.setCrimeVar(getUpdateQuestion: Boolean, insertCrime: Boole
                 numQuestion,
                 numAnswer
             )
+
+            Log.d("v2.4", "updateInfoQuestion $crimeUpdate")
             updateInfoQuestion(crimeUpdate)
         } else {
             var crimeUpdate = QuizDetail(
@@ -133,7 +137,7 @@ fun QuestionViewModel.setCrimeVar(getUpdateQuestion: Boolean, insertCrime: Boole
                 isCheater,
                 constCurrentIndex,
                 points,
-                persentPoints,
+                percentPoints,
                 cheatPoints,
                 charMap,
                 i,
@@ -143,7 +147,10 @@ fun QuestionViewModel.setCrimeVar(getUpdateQuestion: Boolean, insertCrime: Boole
                 numQuestion,
                 numAnswer
             )
+
+            Log.d("v2.4", "updateInfoQuestion $crimeUpdate")
             updateInfoQuestion(crimeUpdate)
         }
     }
+    Log.d("v2.4", "leftAnswer: $leftAnswer")
 }

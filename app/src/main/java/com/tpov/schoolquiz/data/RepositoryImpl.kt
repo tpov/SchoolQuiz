@@ -1,18 +1,15 @@
 package com.tpov.schoolquiz.data
 
-import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.room.Dao
 import com.tpov.schoolquiz.data.database.QuizDao
-import com.tpov.schoolquiz.data.database.QuizDatabase
 import com.tpov.schoolquiz.data.database.entities.ApiQuestion
 import com.tpov.schoolquiz.data.database.entities.Question
 import com.tpov.schoolquiz.data.database.entities.Quiz
 import com.tpov.schoolquiz.data.database.entities.QuizDetail
 import com.tpov.schoolquiz.domain.repository.Repository
-import com.tpov.schoolquiz.presentation.mainactivity.MainActivity
+import com.tpov.schoolquiz.presentation.mainactivity.quiz
 import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
 
@@ -106,11 +103,23 @@ class RepositoryImpl @Inject constructor(
     override fun insertInfoQuestion(
         updateAnswer: Boolean,
         insertQuiz: QuizDetail,
-        idUser: String
+        idUserQuestion: String
     ) {
-        if (dao.getListQuizDetailByUpdateANDIdUser(true, idUser).isEmpty()) dao.insertQuizDetail(
-            insertQuiz
-        )
+        Log.d("v2.4", "$idUserQuestion")
+        Log.d("v2.4", "${(dao.getListQuizDetailByUpdateANDIdUser(true, idUserQuestion))}")
+        Log.d("v2.4", "${(dao.getListQuizDetailByUpdateANDIdUser(true, idUserQuestion).isEmpty())}")
+
+        var quizDao = dao.getQuizDetail()
+        var addQuiz = true
+        quizDao.observeForever {
+            it.forEach { item ->
+                if (item.idNameQuiz == idUserQuestion) !addQuiz
+            }
+            if (addQuiz) dao.insertQuizDetail(insertQuiz)
+            addQuiz = false
+            Log.d("v2.4", "observeForever, addQuiz = $addQuiz")
+            Log.d("v2.4", "$insertQuiz")
+        }
     }
 
     override fun updateInfoQuestion(quizDetail: QuizDetail) {

@@ -111,10 +111,10 @@ class QuestionActivity : AppCompatActivity() {
     private fun startObserve() {
         getInfoQuestion()
 
+        loadQuiz()
         loadBPAnswer()
         getQuizList()
-        showToast()
-        loadQuiz()
+        //showToast()
         springAnimLiveData()
         moveToPref()
         moveToNext()
@@ -321,7 +321,7 @@ Log.d("startAdd", "1")
             putInt("currentIndex", viewModel.currentIndexThis)
             putInt("constCurrentIndex", viewModel.constCurrentIndex)
             putInt("points", viewModel.points)
-            putInt("persentPoints", viewModel.persentPoints)
+            putInt("persentPoints", viewModel.percentPoints)
             putBoolean("isCheater", viewModel.isCheater)
             putInt("cheatPoints", viewModel.cheatPoints)
             putInt("leftAnswer", viewModel.leftAnswer!!)
@@ -353,7 +353,7 @@ Log.d("startAdd", "1")
         viewModel.codeAnswer = saveInstanceState.getString("codeAnswer")!!
         viewModel.currentIndexThis = saveInstanceState.getInt("currentIndex")
         viewModel.points = saveInstanceState.getInt("points")
-        viewModel.persentPoints = saveInstanceState.getInt("persentPoints")
+        viewModel.percentPoints = saveInstanceState.getInt("persentPoints")
         viewModel.isCheater = saveInstanceState.getBoolean("isCheater")
         viewModel.cheatPoints = saveInstanceState.getInt("cheatPoints")
         viewModel.leftAnswer = saveInstanceState.getInt("leftAnswer")
@@ -379,10 +379,10 @@ Log.d("startAdd", "1")
         binding.vAndroid.text =
 
             "vAndroid - ${Build.VERSION.SDK_INT}, vCode - ${Build.VERSION_CODES.M}"
-        viewModel.updatePersentView(viewModel.leftAnswer!!, viewModel.persentPoints)
+        viewModel.updatePersentView(viewModel.leftAnswer!!, viewModel.percentPoints)
         viewModel.decoderBlockMap()
         viewModel.checkBlock()
-        viewModel.setCrimeVar(true, false)
+        viewModel.setQuizVar(true, false)
     }
 
     private fun loadResultTimer() {
@@ -435,10 +435,14 @@ Log.d("startAdd", "1")
 //Подсчитываем результаты прохождения квеста и заполняем их в бд
     private fun loadQuiz() {
         viewModel.loadFrontListLiveData.observe(this) {
+            Log.d("testObserver", "1")
             //Загружаем все данные из таблицы QuizDetail
             viewModel.getInfoQuestion.observe(this) { item ->
+                Log.d("testObserver", "2")
                 viewModel.listQuestion.clear()
                 item.forEach {
+
+                    Log.d("testObserver", "3: $it")
                     viewModel.listQuestion.add(
                         listQuestion(it)
                     )
