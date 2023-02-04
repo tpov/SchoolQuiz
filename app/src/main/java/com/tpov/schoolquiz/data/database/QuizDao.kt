@@ -1,15 +1,11 @@
 package com.tpov.schoolquiz.data.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import com.tpov.schoolquiz.data.database.entities.QuizDetail
-import androidx.room.Query
-import androidx.room.Update
-import com.tpov.schoolquiz.data.database.entities.Question
+import androidx.room.*
 import com.tpov.schoolquiz.data.database.entities.ApiQuestion
+import com.tpov.schoolquiz.data.database.entities.Question
 import com.tpov.schoolquiz.data.database.entities.Quiz
-import kotlinx.coroutines.flow.Flow
+import com.tpov.schoolquiz.data.database.entities.QuizDetail
 
 @Dao
 
@@ -29,6 +25,8 @@ interface QuizDao {
     fun getQuizDetailByName(idName: String?) : LiveData<List<QuizDetail>>
     @Query("SELECT * FROM front_list")
     fun getQuiz() : LiveData<List<Quiz>>
+    @Query("SELECT * FROM front_list")
+    fun getQuizList() : List<Quiz>
     @Query("SELECT* FROM new_user_table")
     fun getQuestion() : LiveData<List<Question>>
     @Query("SELECT * FROM table_generate_question")
@@ -58,11 +56,11 @@ interface QuizDao {
     fun deleteApiQuestionById(questionId: Int)
 
     @Update
-    fun updateQuizDetail(quizDetail: QuizDetail)
+    suspend fun updateQuizDetail(quizDetail: QuizDetail)
     @Update
-    fun updateQuiz(quiz: Quiz)
+    suspend fun updateQuiz(quiz: Quiz)
     @Update
-    fun updateApiQuestion(generateQuestion: ApiQuestion)
+    suspend fun updateApiQuestion(generateQuestion: ApiQuestion)
 
 
 }

@@ -11,7 +11,9 @@ import com.tpov.schoolquiz.data.database.entities.QuizDetail
 import com.tpov.schoolquiz.domain.repository.Repository
 import com.tpov.schoolquiz.presentation.mainactivity.quiz
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
+import kotlin.concurrent.thread
 
 @InternalCoroutinesApi
 class RepositoryImpl @Inject constructor(
@@ -30,13 +32,15 @@ class RepositoryImpl @Inject constructor(
         }
     }
 
-    override fun updateQuiz(quiz: Quiz) {
+    override suspend fun updateQuiz(quiz: Quiz) {
         dao.updateQuiz(quiz)
     }
 
     override fun getInfoQuestionList() = dao.getQuizDetailList()
 
     override fun getQuiz() = dao.getQuiz()
+
+    override fun getQuizList() = dao.getQuizList()
 
 
     override fun insertQuiz(quiz: Quiz) {
@@ -65,7 +69,7 @@ class RepositoryImpl @Inject constructor(
         dao.insertListApiQuestion(list)
     }
 
-    override fun updateQuestionDay(question: ApiQuestion) {
+    override suspend fun updateQuestionDay(question: ApiQuestion) {
         dao.updateApiQuestion(question)
     }
 
@@ -122,8 +126,13 @@ class RepositoryImpl @Inject constructor(
         }
     }
 
-    override fun updateInfoQuestion(quizDetail: QuizDetail) {
-        dao.updateQuizDetail(quizDetail)
+    override suspend fun updateInfoQuestion(quizDetail: QuizDetail) {
+        Log.d("v2.4", "dao. $quizDetail")
+
+        coroutineScope {
+
+            dao.updateQuizDetail(quizDetail)
+        }
     }
 
     override fun getInfoQuestion(): LiveData<List<QuizDetail>> = dao.getQuizDetail()

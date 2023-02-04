@@ -23,7 +23,7 @@ interface Repository {
 
     fun insertQuestionDay(list: List<ApiQuestion>)
 
-    fun updateQuestionDay(question: ApiQuestion)
+    suspend fun updateQuestionDay(question: ApiQuestion)
 
     //QuizActivity
     fun getInfoQuestionParams(
@@ -39,14 +39,15 @@ interface Repository {
     )
     fun getQuiz(): LiveData<List<Quiz>>
 
-    fun updateInfoQuestion(quizDetail: QuizDetail)
+    suspend fun updateInfoQuestion(quizDetail: QuizDetail)
 
     fun getInfoQuestion(): LiveData<List<QuizDetail>>
 
     fun getQuestion(): LiveData<List<Question>>
 
-    fun updateQuiz(quiz: Quiz)
+    suspend fun updateQuiz(quiz: Quiz)
 
     fun getInfoQuestionList(): List<QuizDetail>
 
+    fun getQuizList(): List<Quiz>
 }

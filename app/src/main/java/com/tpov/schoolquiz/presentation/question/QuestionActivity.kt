@@ -109,9 +109,8 @@ class QuestionActivity : AppCompatActivity() {
     }
 
     private fun startObserve() {
-        getInfoQuestion()
+        viewModel.getInfoQuestion()
 
-        loadQuiz()
         loadBPAnswer()
         getQuizList()
         //showToast()
@@ -161,22 +160,6 @@ class QuestionActivity : AppCompatActivity() {
     private fun cheatPointLife() {
         viewModel.cheatPointsLiveData.observe(this) {
             binding.cheatPointsLife.text = it
-        }
-    }
-
-    private fun getInfoQuestion() {
-
-        viewModel.getInfoQuestionLiveData.observe(this) {
-Log.d("startAdd", "1")
-            if (viewModel.insertQuiz) {
-                Log.d("startAdd", "2")
-                !viewModel.insertQuiz
-                it.forEach { item ->
-
-                    Log.d("startAdd", "3")
-                    viewModel.loadCrime(item)
-                }
-            }
         }
     }
 
@@ -431,48 +414,6 @@ Log.d("startAdd", "1")
             Toast.makeText(this, it, Toast.LENGTH_LONG).show()
         }
     }
-
-//Подсчитываем результаты прохождения квеста и заполняем их в бд
-    private fun loadQuiz() {
-        viewModel.loadFrontListLiveData.observe(this) {
-            Log.d("testObserver", "1")
-            //Загружаем все данные из таблицы QuizDetail
-            viewModel.getInfoQuestion.observe(this) { item ->
-                Log.d("testObserver", "2")
-                viewModel.listQuestion.clear()
-                item.forEach {
-
-                    Log.d("testObserver", "3: $it")
-                    viewModel.listQuestion.add(
-                        listQuestion(it)
-                    )
-                }
-            }
-            //Загружаем все данные из таблицы Question
-            viewModel.getQuestion.observe(this) { it ->
-                viewModel.listQuestionInfo.clear()
-                it.forEach {
-                    viewModel.listQuestionInfo.add(
-                        listQuestionInfo(it)
-                    )
-                }
-            }
-            //Обновляем данные квеста
-            viewModel.getQuiz.observe(this) { it ->
-                viewModel.listQuiz.clear()
-                it.forEach {
-                    if (it.nameQuestion == viewModel.idUser) {
-                        viewModel.updateQuiz++
-                        if (viewModel.updateQuiz == 2) {       //Костыль, потому что эта фн-я почему-то выполняется 2 раза
-
-                            var frontList = quiz(it)
-                            viewModel.updateQuiz(frontList)
-                        }
-                    }
-                }
-            }
-        }
-}
 
     //Проверка на блокировку кнопок
     private fun checkBlock() = with(binding) {

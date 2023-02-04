@@ -92,6 +92,8 @@ fun QuestionViewModel.loadCrime(quizTable: QuizDetail) {
         this.userName = quizTable.userName
     }
 
+    Log.d("v2.4", "loadCrime: ${quizTable.id}")
+    Log.d("v2.4", "loadCrime: $idQuiz")
     getQuestion
     Log.d("v2.4", "leftAnswer: $leftAnswer")
 }
