@@ -65,11 +65,10 @@ class QuestionActivity : AppCompatActivity() {
         Log.d("intent", "${viewModel.stars}")
         viewModel.idUser = nameQuestionUser!!
 
-        viewModel.insertQuiz()
+        viewModel.insertQuizDetail()
         viewModel.inits()
         viewModel.hardQuestion = viewModel.getHardQuestion(viewModel.stars)
         viewModel.getUpdateQuiz(viewModel.idUser)
-        viewModel.getQuizList()
 
         binding.apply {
             if (viewModel.hardQuestion) {
@@ -112,7 +111,10 @@ class QuestionActivity : AppCompatActivity() {
         viewModel.getInfoQuestion()
 
         loadBPAnswer()
-        getQuizList()
+        viewModel.getQuestion.observe(this) {
+            if (viewModel.loadedQuestion) viewModel.getQuizLists(it)
+        }
+
         //showToast()
         springAnimLiveData()
         moveToPref()
@@ -390,17 +392,7 @@ class QuestionActivity : AppCompatActivity() {
     }
 
         //Загружаем вопросы
-    private fun getQuizList() {
-        viewModel.getQuizListLiveData.observe(this) {
 
-            this.viewModel.getQuestion.observe(this) {
-                if (viewModel.loadedQuestion) {     //Заглушка что-бы обсервер не работал когда нам не нужно
-                    viewModel.getQuizLists(it)
-                }
-            }
-
-        }
-        }
 
     // TODO: 29.07.2022 -> viewModel
     private fun showToast() {

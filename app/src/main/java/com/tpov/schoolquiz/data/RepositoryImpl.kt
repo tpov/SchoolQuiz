@@ -3,6 +3,7 @@ package com.tpov.schoolquiz.data
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.tpov.schoolquiz.data.database.QuizDao
 import com.tpov.schoolquiz.data.database.entities.ApiQuestion
 import com.tpov.schoolquiz.data.database.entities.Question
@@ -115,15 +116,19 @@ class RepositoryImpl @Inject constructor(
 
         var quizDao = dao.getQuizDetail()
         var addQuiz = true
-        quizDao.observeForever {
+
+        val observer = Observer<List<QuizDetail>> {
             it.forEach { item ->
-                if (item.idNameQuiz == idUserQuestion) !addQuiz
+                if (item.idNameQuiz == idUserQuestion && !item.updateAnswer)
+                    addQuiz = false
             }
-            if (addQuiz) dao.insertQuizDetail(insertQuiz)
-            addQuiz = false
             Log.d("v2.4", "observeForever, addQuiz = $addQuiz")
             Log.d("v2.4", "$insertQuiz")
         }
+
+        quizDao.observeForever (observer)
+        quizDao.removeObserver(observer)
+        if (addQuiz) dao.insertQuizDetail(insertQuiz)
     }
 
     override suspend fun updateInfoQuestion(quizDetail: QuizDetail) {

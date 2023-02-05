@@ -47,7 +47,7 @@ class QuestionViewModel @Inject constructor(
     val gameResult: LiveData<Boolean>
         get() = _gameResult
 
-    private var listQuestion = mutableListOf <ListQuestion>()
+    private var listQuestion = mutableListOf<ListQuestion>()
     private lateinit var listQuestionInfo: List<ListQuestionInfo>
     private lateinit var listQuiz: List<ListQuiz>
     var quizList = mutableListOf<com.tpov.schoolquiz.data.model.Quiz>()
@@ -103,7 +103,7 @@ class QuestionViewModel @Inject constructor(
     private var h = 0
     private var l = 0
 
-    fun insertQuiz(quiz: Quiz) = viewModelScope.launch { insertQuizUseCase(quiz) }
+    fun insertQuizDetail(quiz: Quiz) = viewModelScope.launch { insertQuizUseCase(quiz) }
     fun insertQuestion(question: Question) =
         viewModelScope.launch { insertQuestionUseCase(question) }
 
@@ -113,11 +113,13 @@ class QuestionViewModel @Inject constructor(
 
     private fun insertQuestion(updateAnswer: Boolean, insertQuiz: QuizDetail, idUser: String) =
         viewModelScope.launch {
+            Log.d("v2.4", "insertQuestion")
             insertInfoQuestionUseCase(updateAnswer, insertQuiz, idUser)
         }
 
     private fun getInfoQuestion(updateQuestion: Boolean, insertQuiz: QuizDetail, idUser: String) =
         viewModelScope.launch {
+            Log.d("v2.4", "getInfoQuestion")
             getInfoQuestionParamsUseCase(updateQuestion, insertQuiz, idUser)
         }
 
@@ -188,7 +190,7 @@ class QuestionViewModel @Inject constructor(
 
     }
 
-    fun insertQuiz() {
+    fun insertQuizDetail() {
 
         Log.d("startAdd", "$idUser")
         insertQuestion(true, insertQuizDetail(idUser), idUser)
@@ -201,7 +203,7 @@ class QuestionViewModel @Inject constructor(
 
     fun updateQuiz(quiz: Quiz) = viewModelScope.launch {
         Log.d("v2.4", "updateQuiz ${quiz.toString()}")
-        updateQuizUseCase(quiz)
+        if (quiz.stars != 0) updateQuizUseCase(quiz)
     }
 
     fun getUpdateQuiz(idUser: String) {
@@ -422,7 +424,7 @@ class QuestionViewModel @Inject constructor(
             list1 = it
         }
         list2 = getInfoQuestionListUseCase()
-         list3 = getQuizListUseCase()
+        list3 = getQuizListUseCase()
 
         loadQuiz(list2, list1, list3)
     }
@@ -581,13 +583,6 @@ class QuestionViewModel @Inject constructor(
         _loadResultTimerLiveData.postValue(f++)
     }
 
-
-    fun getQuizList() {
-        _getQuizListLiveData.postValue(h++)
-
-        Log.d("startAdd", "${getInfoQuestionListUseCase()}")
-    }
-
     private fun log(text: String) {
         Log.d("QuestionListActivity", "$text")
     }
@@ -699,28 +694,28 @@ class QuestionViewModel @Inject constructor(
 
 
     fun getQuizLists(it: List<Question>) {
-        loadedQuestion = false
         list1 = it
         quizList.clear()
 
-        //Загружаем все легкие и сложные вопросы в списки.
-        it.forEach { item ->
+            loadedQuestion = false
+            //Загружаем все легкие и сложные вопросы в списки.
+            it.forEach { item ->
 
-            Log.d("testAdd", "forEach")
-            if (item.idListNameQuestion == idUser) {
-                if (item.typeQuestion) quizListHardQuestion.add(
-                    com.tpov.schoolquiz.data.model.Quiz(
-                        item.nameQuestion,
-                        item.answerQuestion
+                Log.d("testAdd", "forEach")
+                if (item.idListNameQuestion == idUser) {
+                    if (item.typeQuestion) quizListHardQuestion.add(
+                        com.tpov.schoolquiz.data.model.Quiz(
+                            item.nameQuestion,
+                            item.answerQuestion
+                        )
                     )
-                )
-                else quizList.add(
-                    com.tpov.schoolquiz.data.model.Quiz(
-                        item.nameQuestion,
-                        item.answerQuestion
+                    else quizList.add(
+                        com.tpov.schoolquiz.data.model.Quiz(
+                            item.nameQuestion,
+                            item.answerQuestion
+                        )
                     )
-                )
-            }
+                }
         }
 
         //В зависимости сложные или легкие вопросы нужно отобразить, мы выбераем из двух списков - один нужный список
@@ -770,8 +765,8 @@ class QuestionViewModel @Inject constructor(
         var k = true
 
         quizDelailDB.forEach {
+            if (it.charMap != null) listQuestion.add(listQuestion(it))
             Log.d("v2.4", "quizDelailDB: $it")
-            listQuestion.add(listQuestion(it))
         }
 
         //Обновляем данные квеста
@@ -794,7 +789,7 @@ class QuestionViewModel @Inject constructor(
                             getStartAll(listQuestion)
                         )
                     )
-            }
+                }
 
             }
         }

@@ -88,7 +88,7 @@
         android:layout_marginBottom="50dp"
         android:fontFamily="@font/annie_use_your_telescope"
         android:shadowColor="#B3FFFFFF"
-        android:text="ChatNoir"
+        android:text="Установка соединение с сервером"
         android:textColor="#93923D"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"

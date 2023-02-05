@@ -1,6 +1,5 @@
 package com.tpov.schoolquiz.presentation.mainactivity
 
-import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -9,8 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat.recreate
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tpov.schoolquiz.R
@@ -149,6 +146,11 @@ class FragmentMain : BaseFragment(), MainActivityAdapter.Listener {
         super.onViewCreated(view, savedInstanceState)
 
         questionViewModel = ViewModelProvider(this, viewModelFactory)[QuestionViewModel::class.java]
+
+    }
+
+    override fun onResume() {
+        super.onResume()
         adapter = MainActivityAdapter(this@FragmentMain)
         binding.rcView.layoutManager = LinearLayoutManager(activity)
         binding.rcView.adapter = adapter
@@ -157,7 +159,6 @@ class FragmentMain : BaseFragment(), MainActivityAdapter.Listener {
             adapter.submitList(it)
         }
     }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -180,7 +181,7 @@ class FragmentMain : BaseFragment(), MainActivityAdapter.Listener {
             0,
             0
         )
-        questionViewModel.insertQuiz(frontList)
+        questionViewModel.insertQuizDetail(frontList)
         if (createQuiz) questionViewModel.insertQuestion(nameList)
 
         createQuiz = false
