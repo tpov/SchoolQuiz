@@ -10,7 +10,6 @@ import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.*
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.dynamicanimation.animation.DynamicAnimation
 import androidx.dynamicanimation.animation.SpringAnimation
@@ -59,16 +58,17 @@ class QuestionActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this, viewModelFactory)[QuestionViewModel::class.java]
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        val nameQuestionUser = intent.getStringExtra(NAME_QUESTION)
+        var nameQuestionUser = intent.getStringExtra(NAME_QUESTION)
         viewModel.userName = intent.getStringExtra(NAME_USER)
-        viewModel.stars = intent.getStringExtra(STARS)!!.toInt()
+        viewModel.stars = intent.getIntExtra(STARS, 0)
+
+        Log.d("intent", "${viewModel.stars}")
         viewModel.idUser = nameQuestionUser!!
 
-        viewModel.insertQuiz()
+        viewModel.insertQuizDetail()
         viewModel.inits()
         viewModel.hardQuestion = viewModel.getHardQuestion(viewModel.stars)
         viewModel.getUpdateQuiz(viewModel.idUser)
-        viewModel.getQuizList()
 
         binding.apply {
             if (viewModel.hardQuestion) {
@@ -108,12 +108,14 @@ class QuestionActivity : AppCompatActivity() {
     }
 
     private fun startObserve() {
-        getInfoQuestion()
+        viewModel.getInfoQuestion()
 
         loadBPAnswer()
-        getQuizList()
-        showToast()
-        loadQuiz()
+        viewModel.getQuestion.observe(this) {
+            if (viewModel.loadedQuestion) viewModel.getQuizLists(it)
+        }
+
+        //showToast()
         springAnimLiveData()
         moveToPref()
         moveToNext()
@@ -160,22 +162,6 @@ class QuestionActivity : AppCompatActivity() {
     private fun cheatPointLife() {
         viewModel.cheatPointsLiveData.observe(this) {
             binding.cheatPointsLife.text = it
-        }
-    }
-
-    private fun getInfoQuestion() {
-
-        viewModel.getInfoQuestionLiveData.observe(this) {
-Log.d("startAdd", "1")
-            if (viewModel.insertQuiz) {
-                Log.d("startAdd", "2")
-                !viewModel.insertQuiz
-                it.forEach { item ->
-
-                    Log.d("startAdd", "3")
-                    viewModel.loadCrime(item)
-                }
-            }
         }
     }
 
@@ -320,7 +306,7 @@ Log.d("startAdd", "1")
             putInt("currentIndex", viewModel.currentIndexThis)
             putInt("constCurrentIndex", viewModel.constCurrentIndex)
             putInt("points", viewModel.points)
-            putInt("persentPoints", viewModel.persentPoints)
+            putInt("persentPoints", viewModel.percentPoints)
             putBoolean("isCheater", viewModel.isCheater)
             putInt("cheatPoints", viewModel.cheatPoints)
             putInt("leftAnswer", viewModel.leftAnswer!!)
@@ -352,7 +338,7 @@ Log.d("startAdd", "1")
         viewModel.codeAnswer = saveInstanceState.getString("codeAnswer")!!
         viewModel.currentIndexThis = saveInstanceState.getInt("currentIndex")
         viewModel.points = saveInstanceState.getInt("points")
-        viewModel.persentPoints = saveInstanceState.getInt("persentPoints")
+        viewModel.percentPoints = saveInstanceState.getInt("persentPoints")
         viewModel.isCheater = saveInstanceState.getBoolean("isCheater")
         viewModel.cheatPoints = saveInstanceState.getInt("cheatPoints")
         viewModel.leftAnswer = saveInstanceState.getInt("leftAnswer")
@@ -378,10 +364,10 @@ Log.d("startAdd", "1")
         binding.vAndroid.text =
 
             "vAndroid - ${Build.VERSION.SDK_INT}, vCode - ${Build.VERSION_CODES.M}"
-        viewModel.updatePersentView(viewModel.leftAnswer!!, viewModel.persentPoints)
+        viewModel.updatePersentView(viewModel.leftAnswer!!, viewModel.percentPoints)
         viewModel.decoderBlockMap()
         viewModel.checkBlock()
-        viewModel.setCrimeVar(true, false)
+        viewModel.setQuizVar(true, false)
     }
 
     private fun loadResultTimer() {
@@ -406,17 +392,7 @@ Log.d("startAdd", "1")
     }
 
         //Загружаем вопросы
-    private fun getQuizList() {
-        viewModel.getQuizListLiveData.observe(this) {
 
-            this.viewModel.getQuestion.observe(this) {
-                if (viewModel.loadedQuestion) {     //Заглушка что-бы обсервер не работал когда нам не нужно
-                    viewModel.getQuizLists(it)
-                }
-            }
-
-        }
-        }
 
     // TODO: 29.07.2022 -> viewModel
     private fun showToast() {
@@ -431,52 +407,19 @@ Log.d("startAdd", "1")
         }
     }
 
-//Подсчитываем результаты прохождения квеста и заполняем их в бд
-    private fun loadQuiz() {
-        viewModel.loadFrontListLiveData.observe(this) {
-            //Загружаем все данные из таблицы QuizDetail
-            viewModel.getInfoQuestion.observe(this) { item ->
-                viewModel.listQuestion.clear()
-                item.forEach {
-                    viewModel.listQuestion.add(
-                        listQuestion(it)
-                    )
-                }
-            }
-            //Загружаем все данные из таблицы Question
-            viewModel.getQuestion.observe(this) { it ->
-                viewModel.listQuestionInfo.clear()
-                it.forEach {
-                    viewModel.listQuestionInfo.add(
-                        listQuestionInfo(it)
-                    )
-                }
-            }
-            //Обновляем данные квеста
-            viewModel.getQuiz.observe(this) { it ->
-                viewModel.listQuiz.clear()
-                it.forEach {
-                    if (it.nameQuestion == viewModel.idUser) {
-                        viewModel.updateQuiz++
-                        if (viewModel.updateQuiz == 2) {       //Костыль, потому что эта фн-я почему-то выполняется 2 раза
-
-                            var frontList = quiz(it)
-                            viewModel.updateQuiz(frontList)
-                        }
-                    }
-                }
-            }
-        }
-}
-
     //Проверка на блокировку кнопок
     private fun checkBlock() = with(binding) {
         viewModel.checkBlockLiveData.observe(this@QuestionActivity) {
-            falseButton.isEnabled = !it
-            falseButton.isClickable = !it
-            trueButton.isEnabled = !it
-            trueButton.isClickable = !it
+            checkCurrentThis(it)
+            falseButton.isEnabled = it
+            falseButton.isClickable = it
+            trueButton.isEnabled = it
+            trueButton.isClickable = it
         }
+    }
+
+    private fun checkCurrentThis(it: Boolean) {
+        if (it) viewModel.currentIndexThis = viewModel.currentIndex
     }
 
     private fun moveToPref() = with(binding) {
@@ -496,6 +439,7 @@ Log.d("startAdd", "1")
                     questionTextView.visibility = View.GONE
                     viewModel.currentIndex = (viewModel.currentIndex - 1) % viewModel.numQuestion!!
                     viewModel.updateQuestion()
+
 
                     questionTextView.startAnimation(animPref2)
                 }

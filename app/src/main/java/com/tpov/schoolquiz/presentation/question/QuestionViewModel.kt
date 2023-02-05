@@ -19,17 +19,18 @@ import kotlin.random.Random
 
 @InternalCoroutinesApi
 class QuestionViewModel @Inject constructor(
-        private val insertInfoQuestionUseCase: InsertInfoQuestionUseCase,
-        private val getInfoQuestionParamsUseCase: GetInfoQuestionParamsUseCase,
-        private val getQuestionUseCase: GetQuestionUseCase,
-        private val getInfoQuestionUseCase: GetInfoQuestionUseCase,
-        private val getQuizUseCase: GetQuizUseCase,
-        private val updateInfoQuestionUseCase: UpdateInfoQuestionUseCase,
-        private val updateQuizUseCase: UpdateQuizUseCase,
-        val getInfoQuestionListUseCase: GetInfoQuestionListUseCase,
-        private val insertQuizUseCase: InsertQuizUseCase,
-        private val insertQuestionUseCase: InsertQuestionUseCase,
-        private val deleteQuizUseCase: DeleteQuizUseCase
+    private val insertInfoQuestionUseCase: InsertInfoQuestionUseCase,
+    private val getInfoQuestionParamsUseCase: GetInfoQuestionParamsUseCase,
+    private val getQuestionUseCase: GetQuestionUseCase,
+    private val getInfoQuestionUseCase: GetInfoQuestionUseCase,
+    private val getQuizUseCase: GetQuizUseCase,
+    private val updateInfoQuestionUseCase: UpdateInfoQuestionUseCase,
+    private val updateQuizUseCase: UpdateQuizUseCase,
+    val getInfoQuestionListUseCase: GetInfoQuestionListUseCase,
+    private val insertQuizUseCase: InsertQuizUseCase,
+    private val insertQuestionUseCase: InsertQuestionUseCase,
+    private val deleteQuizUseCase: DeleteQuizUseCase,
+    private val getQuizListUseCase: GetQuizListUseCase
 ) : ViewModel() {
 
     private var timer: CountDownTimer? = null
@@ -46,10 +47,9 @@ class QuestionViewModel @Inject constructor(
     val gameResult: LiveData<Boolean>
         get() = _gameResult
 
-    var listQuestion = mutableListOf<ListQuestion>()
-    var listQuestionInfo = mutableListOf<ListQuestionInfo>()
-    var listQuiz = mutableListOf<ListQuiz>()
-
+    private var listQuestion = mutableListOf<ListQuestion>()
+    private lateinit var listQuestionInfo: List<ListQuestionInfo>
+    private lateinit var listQuiz: List<ListQuiz>
     var quizList = mutableListOf<com.tpov.schoolquiz.data.model.Quiz>()
     var quizListHardQuestion = mutableListOf<com.tpov.schoolquiz.data.model.Quiz>()
     var quizListHQVar = mutableListOf<com.tpov.schoolquiz.data.model.Quiz>()
@@ -57,23 +57,32 @@ class QuestionViewModel @Inject constructor(
     var mapAnswer: MutableMap<Int, Boolean> = mutableMapOf()
     val TAG = "QuestionViewModel"
 
+
+    private lateinit var list1: List<Question>
+    private lateinit var list2: List<QuizDetail>
+    private lateinit var list3: List<Quiz>
+
     //Начальные данные для квеста
     var numQuestion: Int? = 0               //К-во вопросов
     var numAnswer: Int? = 0                 //К-во ответов
     var leftAnswer: Int? = 0                //WTF
-    var codeAnswer: String? = ""            //Строка показывает как игрок ответил на все вопросы (напр. "02102" - Если в квесте 5 вопросов)
-    var codeMap: String? = ""               //Строка показывает какой вопрос был отвечен что-бы блокировать кнопки (напр "01011" - если 5 вопросов)
+    var codeAnswer: String? =
+        ""            //Строка показывает как игрок ответил на все вопросы (напр. "02102" - Если в квесте 5 вопросов)
+    var codeMap: String? =
+        ""               //Строка показывает какой вопрос был отвечен что-бы блокировать кнопки (напр "01011" - если 5 вопросов)
     var currentIndexThis: Int = -1          //Номер вопроса на который стоит таймер
     var isCheater: Boolean = false          //Использовал ли игрок жизнь
-    var updateAnswer: Boolean = true        //Нужно ли восстанавливать эту сессию при следующем запуске
-    var insertQuiz: Boolean = true          //Заглушка от повторного запуска обсервера getInfoQuestion
+    var updateAnswer: Boolean =
+        true        //Нужно ли восстанавливать эту сессию при следующем запуске
+    var insertQuiz: Boolean =
+        true          //Заглушка от повторного запуска обсервера getInfoQuestion
     var loadedQuestion: Boolean = true      //Заглушка от повторного запуска
     var constCurrentIndex: Int = 0          //Сколько вопросов осталось
     var points: Int = 0
-    var persentPoints: Int = 0
+    var percentPoints: Int = 0
     var cheatPoints: Int = 3
     var charMap: String? = ""               //Нужно для codeMap
-    var idQuiz = 0                          //id в бд
+    var idQuiz = 1                          //id в бд
     var userName: String? = ""
     var idUser = ""                         //Имя квеста который хочет пройти пользователь
     var hardQuestion = false
@@ -94,7 +103,7 @@ class QuestionViewModel @Inject constructor(
     private var h = 0
     private var l = 0
 
-    fun insertQuiz(quiz: Quiz) = viewModelScope.launch { insertQuizUseCase(quiz) }
+    fun insertQuizDetail(quiz: Quiz) = viewModelScope.launch { insertQuizUseCase(quiz) }
     fun insertQuestion(question: Question) =
         viewModelScope.launch { insertQuestionUseCase(question) }
 
@@ -104,11 +113,13 @@ class QuestionViewModel @Inject constructor(
 
     private fun insertQuestion(updateAnswer: Boolean, insertQuiz: QuizDetail, idUser: String) =
         viewModelScope.launch {
+            Log.d("v2.4", "insertQuestion")
             insertInfoQuestionUseCase(updateAnswer, insertQuiz, idUser)
         }
 
     private fun getInfoQuestion(updateQuestion: Boolean, insertQuiz: QuizDetail, idUser: String) =
         viewModelScope.launch {
+            Log.d("v2.4", "getInfoQuestion")
             getInfoQuestionParamsUseCase(updateQuestion, insertQuiz, idUser)
         }
 
@@ -166,6 +177,7 @@ class QuestionViewModel @Inject constructor(
     var getQuestion: LiveData<List<Question>> = getQuestionUseCase()
     var getInfoQuestion: LiveData<List<QuizDetail>> = getInfoQuestionUseCase()
     lateinit var getInfoQuestionList: List<QuizDetail>
+    lateinit var getQuizList: List<Quiz>
     var getQuiz: LiveData<List<Quiz>> = getQuizUseCase()
 
     fun inits() {
@@ -173,11 +185,14 @@ class QuestionViewModel @Inject constructor(
         Log.d("startAdd", "${getInfoQuestionList}")
 
         Log.d("startAdd", "${idUser}")
+
+        Log.d("v2.4", "result")
+
     }
 
-    fun insertQuiz() {
+    fun insertQuizDetail() {
 
-        Log.d("startAdd", "${idUser}")
+        Log.d("startAdd", "$idUser")
         insertQuestion(true, insertQuizDetail(idUser), idUser)
         getInfoQuestion(true, insertQuizDetail(idUser), idUser)
     }
@@ -187,16 +202,29 @@ class QuestionViewModel @Inject constructor(
     }
 
     fun updateQuiz(quiz: Quiz) = viewModelScope.launch {
-        updateQuizUseCase(quiz)
+        Log.d("v2.4", "updateQuiz ${quiz.toString()}")
+        if (quiz.stars != 0) updateQuizUseCase(quiz)
     }
 
     fun getUpdateQuiz(idUser: String) {
         _getInfoQuestionLiveData.postValue(getInfoQuestionList)
+
     }
 
+    fun getInfoQuestion() {
+
+        getInfoQuestionLiveData.observeForever {
+            if (insertQuiz) {
+                !insertQuiz
+                it.forEach { item ->
+                    if (item.updateAnswer) loadCrime(item)
+                }
+            }
+        }
+    }
 
     private fun useCheat() {
-        cheatPoints --
+        cheatPoints--
         _cheatPointsLifeLiveData.postValue("Life = $cheatPoints")
         if (cheatPoints == 0) {
             _cheatButtonLiveData.postValue(false)
@@ -241,7 +269,7 @@ class QuestionViewModel @Inject constructor(
             if (constCurrentIndex == numAnswer) {
                 result(points)
             } else {
-                setCrimeVar(true, false)
+                setQuizVar(true, false)
             }
         } else {
             checkBlockMap()
@@ -258,37 +286,40 @@ class QuestionViewModel @Inject constructor(
                 moveToNext()
             }
             checkBlock()
+
+            Log.d("v2.4", "constCurrentIndex: $constCurrentIndex")
+            Log.d("v2.4", "numAnswer: $numAnswer")
             if (constCurrentIndex == numAnswer) {
                 result(points)
             } else {
-                setCrimeVar(true, false)
+                setQuizVar(true, false)
             }
         }
         if (constCurrentIndex != numAnswer) {
-            updatePersentView(leftAnswer!!, persentPoints)
+            updatePersentView(leftAnswer!!, percentPoints)
         }
     }
 
-        fun falseButton() {
+    fun falseButton() {
         //Проверка нужно ли показывать следующий вопрос после нажатия на кнопку
         if (!updateAnswer) {
             checkBlockMap()
             checkBlock()
             coderBlockMap()
             checkAnswer(false)
-            constCurrentIndex ++
+            constCurrentIndex++
             resultTextView(points)
             if (constCurrentIndex == numAnswer) {
                 result(points)
             } else {
-                setCrimeVar(true, false)
+                setQuizVar(true, false)
             }
         } else {
             checkBlockMap()
             checkBlock()
             coderBlockMap()
             checkAnswer(false)
-            constCurrentIndex ++
+            constCurrentIndex++
             resultTextView(points)
 
             if (currentIndex == numAnswer!! - 1) {
@@ -302,10 +333,10 @@ class QuestionViewModel @Inject constructor(
         if (constCurrentIndex == numAnswer) {
             result(points)
         } else {
-            setCrimeVar(getUpdateQuestion = true, insertCrime = false)
+            setQuizVar(getUpdateQuestion = true, insertCrime = false)
         }
         if (constCurrentIndex != numAnswer) {
-            updatePersentView(leftAnswer!!, persentPoints)
+            updatePersentView(leftAnswer!!, percentPoints)
         }
     }
 
@@ -320,12 +351,12 @@ class QuestionViewModel @Inject constructor(
             checkBlock()
             coderBlockMap()
             checkAnswer(intToBool(Random.nextInt(0, 1)))
-            constCurrentIndex ++
+            constCurrentIndex++
             resultTextView(points)
             if (constCurrentIndex == numAnswer) {
                 result(points)
             } else {
-                setCrimeVar(true, false)
+                setQuizVar(true, false)
             }
         } else {
             checkBlockMap()
@@ -333,7 +364,7 @@ class QuestionViewModel @Inject constructor(
             coderBlockMap()
             checkAnswer(intToBool(Random.nextInt(0, 1)))
 
-            constCurrentIndex ++
+            constCurrentIndex++
             resultTextView(points)
 
             if (currentIndex == numAnswer!! - 1) {
@@ -347,15 +378,17 @@ class QuestionViewModel @Inject constructor(
         if (constCurrentIndex == numAnswer) {
             result(points)
         } else {
-            setCrimeVar(true, false)
+            setQuizVar(true, false)
         }
         if (constCurrentIndex != numAnswer) {
-            updatePersentView(leftAnswer!!, persentPoints)
+            updatePersentView(leftAnswer!!, percentPoints)
         }
         checkTimer = false
     }
 
-    private fun moveToNext() { _moveToNextLiveData.postValue(z++) }
+    private fun moveToNext() {
+        _moveToNextLiveData.postValue(z++)
+    }
 
     private fun intToBool(nextInt: Int): Boolean = nextInt == 1
 
@@ -372,23 +405,35 @@ class QuestionViewModel @Inject constructor(
     }
 
 
-    fun result(points: Int) {
-        persentPoints = if (hardQuestion) (points * COEF_PERCENT_HARD_QUIZ / numQuestion!!) + MAX_PERCENT
-        else points * MAX_PERCENT / numQuestion!!
-        showToast(persentPoints)
-        updatePersentView(leftAnswer!!, persentPoints)
-        setCrimeVar(getUpdateQuestion = false, insertCrime = false)
+    private fun result(points: Int) {
+        percentPoints =
+            if (hardQuestion) (points * COEF_PERCENT_HARD_QUIZ / numQuestion!!) + MAX_PERCENT
+            else points * MAX_PERCENT / numQuestion!!
+        showToast(percentPoints)
+        updatePersentView(leftAnswer!!, percentPoints)
+        setQuizVar(getUpdateQuestion = false, insertCrime = false)
 
         loadFrontList()
         checkTimer = false
         loadTimer()
+
+        Log.d("v2.4", "result")
+        getQuestion.observeForever {
+
+            Log.d("v2.4", "result list1 $it")
+            list1 = it
+        }
+        list2 = getInfoQuestionListUseCase()
+        list3 = getQuizListUseCase()
+
+        loadQuiz(list2, list1, list3)
     }
 
     //false в маппере значит, что мы ответили на этот вопрос
     private fun checkBlockMap() {
         mapAnswer[currentIndexThis] = false
         leftAnswer = leftAnswer!!.minus(1)
-        updatePersentView(leftAnswer!!, persentPoints)
+        updatePersentView(leftAnswer!!, percentPoints)
         coderBlockMap()
     }
 
@@ -418,8 +463,8 @@ class QuestionViewModel @Inject constructor(
 
     private fun resultTextView(points: Int) {
         log("resultTextView")
-        persentPoints = points * MAX_PERCENT / numAnswer!!
-        updatePersentView(leftAnswer!!, persentPoints)
+        percentPoints = points * MAX_PERCENT / numAnswer!!
+        updatePersentView(leftAnswer!!, percentPoints)
 
         checkTimer = false
         loadPBAnswer()
@@ -468,6 +513,7 @@ class QuestionViewModel @Inject constructor(
                 override fun onTick(millisUntilFinished: Long) {
                     _formattedTime.postValue(formatTime(millisUntilFinished))
                 }
+
                 override fun onFinish() {
                     _gameResult.postValue(false)
                 }
@@ -512,8 +558,11 @@ class QuestionViewModel @Inject constructor(
             _lastToastLiveData.postValue(" ")
         }
 
-        Log.d("testAdd", "$currentIndex, $currentIndexThis, ${mapAnswer[currentIndex]}, ${mapAnswer[currentIndexThis]}" )
-        Log.d("testAdd","${getInfoQuestionListUseCase()}")
+        Log.d(
+            "testAdd",
+            "$currentIndex, $currentIndexThis, ${mapAnswer[currentIndex]}, ${mapAnswer[currentIndexThis]}"
+        )
+        Log.d("testAdd", "${getInfoQuestionListUseCase()}")
         //if (mapAnswer[currentIndex]!! && !mapAnswer[currentIndexThis]!!) checkTimer = false
         //if (mapAnswer[currentIndex]!!) currentIndexThis = currentIndex
 
@@ -526,18 +575,12 @@ class QuestionViewModel @Inject constructor(
 
     private fun loadFrontList() {
         _loadFrontListLiveData.postValue(d++)
+        Log.d("testObserver", "$d")
     }
 
 
     fun loadResultTimer() {
         _loadResultTimerLiveData.postValue(f++)
-    }
-
-
-    fun getQuizList() {
-        _getQuizListLiveData.postValue(h++)
-
-        Log.d("startAdd", "${getInfoQuestionListUseCase()}")
     }
 
     private fun log(text: String) {
@@ -600,13 +643,15 @@ class QuestionViewModel @Inject constructor(
         }
 
         if (leftAnswer != 0) {
-            setCrimeVar(getUpdateQuestion = true, insertCrime = false)
+            setQuizVar(getUpdateQuestion = true, insertCrime = false)
         }
     }
 
     private fun loadStars(points: Int): Int = points / MAX_PERCENT
 
-    private fun showToast(text: Int) { _toastShowLiveData.postValue(text) }
+    private fun showToast(text: Int) {
+        _toastShowLiveData.postValue(text)
+    }
 
     fun loadUserName(question: String): String {
         log("loadUserName")
@@ -649,25 +694,28 @@ class QuestionViewModel @Inject constructor(
 
 
     fun getQuizLists(it: List<Question>) {
-        loadedQuestion = false
+        list1 = it
         quizList.clear()
 
-        //Загружаем все легкие и сложные вопросы в списки.
-        it.forEach { item ->
-            if (item.idListNameQuestion == idUser) {
-                if (item.typeQuestion) quizListHardQuestion.add(
-                    com.tpov.schoolquiz.data.model.Quiz(
-                        item.nameQuestion,
-                        item.answerQuestion
+            loadedQuestion = false
+            //Загружаем все легкие и сложные вопросы в списки.
+            it.forEach { item ->
+
+                Log.d("testAdd", "forEach")
+                if (item.idListNameQuestion == idUser) {
+                    if (item.typeQuestion) quizListHardQuestion.add(
+                        com.tpov.schoolquiz.data.model.Quiz(
+                            item.nameQuestion,
+                            item.answerQuestion
+                        )
                     )
-                )
-                else quizList.add(
-                    com.tpov.schoolquiz.data.model.Quiz(
-                        item.nameQuestion,
-                        item.answerQuestion
+                    else quizList.add(
+                        com.tpov.schoolquiz.data.model.Quiz(
+                            item.nameQuestion,
+                            item.answerQuestion
+                        )
                     )
-                )
-            }
+                }
         }
 
         //В зависимости сложные или легкие вопросы нужно отобразить, мы выбераем из двух списков - один нужный список
@@ -680,27 +728,93 @@ class QuestionViewModel @Inject constructor(
 
         //Если это новая сессия, то в параметрах квеста(entity QuestionInfo) не будут некоторые начальные значения, создаем их сами.
 
-        Log.d("testAdd", "$numQuestion" )
-        //if (numQuestion == null) {
+        Log.d("testAdd", "numQuestion = $numQuestion")
+        if (numQuestion == null || numQuestion == 0) {
             numQuestion = quizList.size
             numAnswer = quizList.size
             leftAnswer = quizList.size
             charMap = ""
             createCodeAnswer()
             coderBlockMap()
-            Log.d("testAdd", "$numAnswer" )
-        //}
-        updatePersentView(leftAnswer!!, persentPoints)
+            Log.d("asdawda", "$numAnswer")
+        }
+        updatePersentView(leftAnswer!!, percentPoints)
         decoderBlockMap()
 
         loadedQuestion = false
-        setCrimeVar(true, false)
+        setQuizVar(true, false)
 
+        Log.d("dsawads", "$numAnswer")
         checkBlock()
         updateQuestion()
         loadPBAnswer()
         loadResultTimer()
     }
+
+
+    //Подсчитываем результаты прохождения квеста и заполняем их в бд
+    private fun loadQuiz(
+        quizDelailDB: List<QuizDetail>,
+        questionDB: List<Question>,
+        quizDB: List<Quiz>
+    ) {
+        Log.d("testObserver", "1")
+        //Загружаем все данные из таблицы QuizDetail
+        var i = 0
+        var j = 0
+        var k = true
+
+        quizDelailDB.forEach {
+            if (it.charMap != null) listQuestion.add(listQuestion(it))
+            Log.d("v2.4", "quizDelailDB: $it")
+        }
+
+        //Обновляем данные квеста
+        quizDB.forEach {
+            if (k) {
+                k = false
+
+                Log.d("v2.4", "updateQuiz: $it")
+                if (it.nameQuestion == idUser) {
+                    updateQuiz(
+                        Quiz(
+                            it.id,
+                            it.nameQuestion,
+                            it.userName,
+                            it.data,
+                            getStars(listQuestion),
+                            it.numQ,
+                            it.numA,
+                            it.numHQ,
+                            getStartAll(listQuestion)
+                        )
+                    )
+                }
+
+            }
+        }
+    }
+
+    private fun getStartAll(listQuestion: List<ListQuestion>): Int {
+        var count = 0
+        var stars = 0
+        listQuestion.forEach {
+            count++
+            stars += it.listPoints
+        }
+        return stars / count
+    }
+
+    private fun getStars(listQuestion: List<ListQuestion>): Int {
+        var maxStars = 0
+
+        Log.d("v2.4", "getStars: $listQuestion")
+        listQuestion.forEach {
+            if (maxStars < it.listPoints) maxStars = it.listPoints
+        }
+        return maxStars
+    }
+
 
     companion object {
         private const val MILLIS_IN_SECONDS = 1000L
@@ -710,6 +824,7 @@ class QuestionViewModel @Inject constructor(
         private const val TIME_LIGHT_QUESTION = 20
 
         private const val MAX_PERCENT = 100
-        private const val COEF_PERCENT_HARD_QUIZ = 20 //Это нужно что-бы посчитать проценты сложных вопросов
+        private const val COEF_PERCENT_HARD_QUIZ =
+            20 //Это нужно что-бы посчитать проценты сложных вопросов
     }
 }

@@ -1,19 +1,20 @@
 package com.tpov.schoolquiz.data
 
-import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.room.Dao
+import androidx.lifecycle.Observer
 import com.tpov.schoolquiz.data.database.QuizDao
-import com.tpov.schoolquiz.data.database.QuizDatabase
 import com.tpov.schoolquiz.data.database.entities.ApiQuestion
 import com.tpov.schoolquiz.data.database.entities.Question
 import com.tpov.schoolquiz.data.database.entities.Quiz
 import com.tpov.schoolquiz.data.database.entities.QuizDetail
 import com.tpov.schoolquiz.domain.repository.Repository
-import com.tpov.schoolquiz.presentation.mainactivity.MainActivity
+import com.tpov.schoolquiz.presentation.mainactivity.quiz
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
+import kotlin.concurrent.thread
 
 @InternalCoroutinesApi
 class RepositoryImpl @Inject constructor(
@@ -32,13 +33,15 @@ class RepositoryImpl @Inject constructor(
         }
     }
 
-    override fun updateQuiz(quiz: Quiz) {
+    override suspend fun updateQuiz(quiz: Quiz) {
         dao.updateQuiz(quiz)
     }
 
     override fun getInfoQuestionList() = dao.getQuizDetailList()
 
     override fun getQuiz() = dao.getQuiz()
+
+    override fun getQuizList() = dao.getQuizList()
 
 
     override fun insertQuiz(quiz: Quiz) {
@@ -50,8 +53,12 @@ class RepositoryImpl @Inject constructor(
     }
 
     override fun insertQuestion(question: Question) {
+        Log.d("insertQuestion", "1 $question")
         if (question.idListNameQuestion == "GeoQuiz") {
-            if (dao.getListQuestionByIdUser("GeoQuiz").isEmpty()) {
+
+            Log.d("insertQuestion", "2")
+            if (dao.getListQuestionByIdUser(question.nameQuestion).isEmpty()) {
+                Log.d("insertQuestion", "3")
                 dao.insertQuestion(question)
             }
         } else dao.insertQuestion(question)
@@ -63,7 +70,7 @@ class RepositoryImpl @Inject constructor(
         dao.insertListApiQuestion(list)
     }
 
-    override fun updateQuestionDay(question: ApiQuestion) {
+    override suspend fun updateQuestionDay(question: ApiQuestion) {
         dao.updateApiQuestion(question)
     }
 
@@ -101,15 +108,36 @@ class RepositoryImpl @Inject constructor(
     override fun insertInfoQuestion(
         updateAnswer: Boolean,
         insertQuiz: QuizDetail,
-        idUser: String
+        idUserQuestion: String
     ) {
-        if (dao.getListQuizDetailByUpdateANDIdUser(true, idUser).isEmpty()) dao.insertQuizDetail(
-            insertQuiz
-        )
+        Log.d("v2.4", "$idUserQuestion")
+        Log.d("v2.4", "${(dao.getListQuizDetailByUpdateANDIdUser(true, idUserQuestion))}")
+        Log.d("v2.4", "${(dao.getListQuizDetailByUpdateANDIdUser(true, idUserQuestion).isEmpty())}")
+
+        var quizDao = dao.getQuizDetail()
+        var addQuiz = true
+
+        val observer = Observer<List<QuizDetail>> {
+            it.forEach { item ->
+                if (item.idNameQuiz == idUserQuestion && !item.updateAnswer)
+                    addQuiz = false
+            }
+            Log.d("v2.4", "observeForever, addQuiz = $addQuiz")
+            Log.d("v2.4", "$insertQuiz")
+        }
+
+        quizDao.observeForever (observer)
+        quizDao.removeObserver(observer)
+        if (addQuiz) dao.insertQuizDetail(insertQuiz)
     }
 
-    override fun updateInfoQuestion(quizDetail: QuizDetail) {
-        dao.updateQuizDetail(quizDetail)
+    override suspend fun updateInfoQuestion(quizDetail: QuizDetail) {
+        Log.d("v2.4", "dao. $quizDetail")
+
+        coroutineScope {
+
+            dao.updateQuizDetail(quizDetail)
+        }
     }
 
     override fun getInfoQuestion(): LiveData<List<QuizDetail>> = dao.getQuizDetail()
