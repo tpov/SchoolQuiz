@@ -350,7 +350,7 @@ class QuestionViewModel @Inject constructor(
             checkBlockMap()
             checkBlock()
             coderBlockMap()
-            checkAnswer(intToBool(Random.nextInt(0, 1)))
+            checkAnswer(intToBool(Random.nextInt(0, 2)))
             constCurrentIndex++
             resultTextView(points)
             if (constCurrentIndex == numAnswer) {
@@ -362,7 +362,7 @@ class QuestionViewModel @Inject constructor(
             checkBlockMap()
             checkBlock()
             coderBlockMap()
-            checkAnswer(intToBool(Random.nextInt(0, 1)))
+            checkAnswer(intToBool(Random.nextInt(0, 2)))
 
             constCurrentIndex++
             resultTextView(points)

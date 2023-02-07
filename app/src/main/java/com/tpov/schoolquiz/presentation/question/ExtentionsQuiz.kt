@@ -51,7 +51,7 @@ fun QuestionViewModel.insertQuizDetail(idUserQuestion: String): QuizDetail {
         TimeManager.getCurrentTime(),
         null,
         null,
-        1, //Потому что костыль
+        0, //Потому что костыль
         false,
         0,
         0,
