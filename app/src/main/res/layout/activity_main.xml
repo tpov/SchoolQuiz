@@ -4,63 +4,63 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/view_background"
-    android:background="#2C60BC">
+    android:id="@+id/view_background">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/title_fragment"
         android:name="com.tpov.schoolquiz.presentation.fragment.BaseFragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginBottom="50dp"
-        android:background="#547FD5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="48dp"
+        android:background="@drawable/db_design3_main"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cv"
         app:layout_constraintVertical_bias="0.0" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bNav"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="1dp"
-        android:background="#4D2C2C2C"
-        app:circularflow_defaultRadius="3dip"
-        app:itemRippleColor="#00FFFFFF"
+        android:background="@color/design3_main_end"
+        style="@style/CustomBottomNavigationStyle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/menu_title_activity" />
 
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_weight="1"
+        app:layout_constraintBottom_toBottomOf="@id/cv"
+        app:srcCompat="@drawable/db_design3_card_bottom" />
+
     <LinearLayout
-        android:layout_width="409dp"
-        android:layout_height="78dp"
-        android:layout_marginLeft="8dp"
+        android:id="@+id/cv"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:elevation="20dp"
         android:orientation="vertical"
-        android:background="#215BC1"
-        app:layout_constraintBottom_toTopOf="@+id/title_fragment"
+        android:background="@drawable/db_design3_top_90"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintTop_toTopOf="parent">
+
 
         <TextView
             android:id="@+id/tv_num_chack_n"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="6dp"
             android:gravity="center"
             android:text="@string/FrontActivity_num_chack_norice"
             android:textColor="#FFFFFF" />
 
         <LinearLayout
+            android:id="@+id/top_card"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
@@ -195,9 +195,8 @@
                 android:foregroundGravity="center"
                 android:gravity="center"
                 android:text="10" />
+
         </LinearLayout>
-
     </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
