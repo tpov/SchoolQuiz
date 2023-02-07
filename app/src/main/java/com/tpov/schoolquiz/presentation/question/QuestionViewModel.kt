@@ -89,7 +89,7 @@ class QuestionViewModel @Inject constructor(
     var updateQuiz = 0
     var stars = 0
     var percentAnswer = 0
-    var currentIndex = 0                    //Номер вопроса который видет пользователь
+    var currentIndex = 1                    //Номер вопроса который видет пользователь
     var checkTimer = false
 
     //Ильтераторы с помощю которых при их изменении активируется ливдата
