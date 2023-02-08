@@ -51,6 +51,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Remove the action bar
+        supportActionBar?.hide()
+
         viewModel = ViewModelProvider(this, viewModelFactory)[MainActivityViewModel::class.java]
         insertQuestion("GeoQuiz")
 

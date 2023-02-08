@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/design3_main_start"
+
     android:id="@+id/view_background">
 
     <androidx.fragment.app.FragmentContainerView
@@ -32,13 +34,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/menu_title_activity" />
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:layout_weight="1"
-        app:layout_constraintBottom_toBottomOf="@id/cv"
-        app:srcCompat="@drawable/db_design3_card_bottom" />
 
     <LinearLayout
         android:id="@+id/cv"
@@ -46,11 +41,10 @@
         android:layout_height="100dp"
         android:elevation="20dp"
         android:orientation="vertical"
-        android:background="@drawable/db_design3_top_90"
+        android:background="@drawable/rounded_corners_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
 
         <TextView
             android:id="@+id/tv_num_chack_n"
