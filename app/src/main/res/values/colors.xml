@@ -22,4 +22,5 @@
     <color name="design3_main_end">#242C41</color>
     <color name="design3_top_start">#9485F2</color>
     <color name="design3_top_end">#3F51B5</color>
+    <color name="checked_item_menu">#FFFFFF</color>
 </resources>

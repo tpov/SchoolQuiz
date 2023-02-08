@@ -16,8 +16,6 @@ class MainActivityViewModel @Inject constructor(
     private val insertQuestionUseCase: InsertQuestionUseCase
 ) : ViewModel() {
 
-
-
     fun insertQuiz(quiz: Quiz) = viewModelScope.launch { insertQuizUseCase(quiz) }
 
     fun insertQuestion(question: com.tpov.schoolquiz.data.database.entities.Question) =

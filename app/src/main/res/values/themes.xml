@@ -1,34 +1,36 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.GeoQuiz" parent="Theme.AppCompat.Light">
+    <style name="Theme.GeoQuiz" parent="Theme.AppCompat">
         <!-- Primary brand color. -->
+        <!-- Secondary brand color. -->
+
         <item name="android:colorPrimary">@color/white</item>
-        <item name="android:colorPrimaryDark">@color/white</item>
-        <item name="android:colorAccent">@color/white</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <item name="colorControlNormal">@color/white</item>
-        <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:colorPrimaryDark">@color/design3_main_end</item> //Цвет статуса бара
+        <item name="android:colorAccent">#FFFFFF</item>    //текст
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorControlNormal">#FFFFFF</item>
+        <item name="colorControlHighlight">#66FF0000</item> //Волновой єффект єлемента меню
 
         <!-- Secondary brand color. -->
         <!-- Status bar color. -->
-        <item name="android:windowFullscreen">true</item>
+        <!-- Status bar color. -->
         <!-- Customize your theme here. -->
     </style>
 
     <style name="RatingBar" parent="Theme.AppCompat">
-    <item name="android:colorControlActivated">@color/ratingBar</item>
-        <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:colorControlActivated">@color/ratingBar</item>
+        <item name="android:textColorSecondary">#3F51B5</item>
     </style>
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorControlNormal">@color/white</item>
-
-        <item name="android:textColorSecondary">@color/white</item>
+    <style name="AppTheme" parent="Theme.AppCompat">
+        <item name="android:textColorSecondary">#FF0000</item>
+        <item name="colorControlNormal">#FFFFFF</item>
     </style>
 
-    <style name="CustomTheme" parent="android:Theme.Material">
+    <style name="CustomTheme" parent="Theme.AppCompat">
+        <item name="android:textColorSecondary">@color/white</item>
         <item name="android:colorPrimary">@color/white</item>
-        <item name="android:textColorSecondary">@color/white</item>
         <item name="android:colorPrimaryDark">@color/white</item>
         <item name="android:colorAccent">@color/white</item>
+        <item name="android:background">#121D5C</item>
     </style>
 </resources>

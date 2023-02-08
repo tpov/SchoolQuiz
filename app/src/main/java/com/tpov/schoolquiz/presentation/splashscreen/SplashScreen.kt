@@ -173,7 +173,7 @@ class SplashScreen : AppCompatActivity() {
         ).build()
 
         workManager.getWorkInfoByIdLiveData(requeust2.id)
-            .observe(this, {
+            .observe(this) {
                 Log.d("WorkManager", "finish воркер")
                 if (it.state.isFinished) {
                     Log.d(
@@ -182,8 +182,10 @@ class SplashScreen : AppCompatActivity() {
                                 "${it.outputData.getStringArray(RefreshDataWorker.QUESTION)}, Принимаем данные из воркера"
                     )
 
-                    viewModel.questionApiArray = it.outputData.getStringArray(RefreshDataWorker.QUESTION)
-                    viewModel.answerApiArray = it.outputData.getStringArray(RefreshDataWorker.ANSWER)
+                    viewModel.questionApiArray =
+                        it.outputData.getStringArray(RefreshDataWorker.QUESTION)
+                    viewModel.answerApiArray =
+                        it.outputData.getStringArray(RefreshDataWorker.ANSWER)
 
 
                     if (viewModel.questionApiArray != null) {
@@ -223,7 +225,7 @@ class SplashScreen : AppCompatActivity() {
                         createAnimation()
                     }
                 }
-            })
+            }
         Log.d("WorkManager", "Передаем - $viewModel.numQuestionNotDate")
         loadNotification("Загрузка", "Подключение к сети")
         workManager.enqueue(requeust2)

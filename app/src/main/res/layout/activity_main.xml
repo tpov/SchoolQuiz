@@ -25,9 +25,10 @@
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:background="@color/design3_main_end"
-        style="@style/CustomBottomNavigationStyle"
+        app:itemTextColor="@color/checked_item_menu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:itemIconTint="@drawable/nav_item_color_state"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/menu_title_activity" />
 
