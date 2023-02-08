@@ -53,7 +53,7 @@ class QuestionListActivity : AppCompatActivity(), QuestionListRecyclerAdapter.Up
         questionBankAdapter.clear()
         Log.d("QuestionListActivity", "map1 = ${questionBankAdapter.map { (it.textResId) }}")
 
-        questionViewModel.getQuestion.observe(this, {
+        questionViewModel.getQuestion.observe(this) {
             it.forEach { item ->
 
                 if (idUser == item.idListNameQuestion) {
@@ -71,7 +71,7 @@ class QuestionListActivity : AppCompatActivity(), QuestionListRecyclerAdapter.Up
                 codeAnswerArray,
                 questionBankAdapter
             )
-        })
+        }
     }
 
     private fun funIntent(
