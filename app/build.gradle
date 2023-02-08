@@ -13,11 +13,11 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.tpov.geoquiz"
+        applicationId "com.tpov.schoolquiz"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 2320
-        versionName "2.3.2"
+        versionCode 2330
+        versionName "2.3.3"
 
         javaCompileOptions {
             annotationProcessorOptions {

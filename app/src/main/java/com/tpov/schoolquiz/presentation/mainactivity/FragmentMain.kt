@@ -129,7 +129,10 @@ class FragmentMain : BaseFragment(), MainActivityAdapter.Listener {
                                     nameTypeQuestion,
                                     listNameQuestionSecond,
                                 )
-                                insertFrontList(listUserName, listNameQuestion, nameList)
+                                Log.d("v2.4", "asdasd1 $listNameQuestionSecond")
+                                Log.d("v2.4", "asdasd2 $listNameQuestion")
+                                Log.d("v2.4", "asdasd3 $nameList")
+                                insertFrontList(listNameQuestion, listNameQuestionSecond, nameList, closeDialog)
 
                                 questionViewModel.getQuiz.observe(viewLifecycleOwner) {
                                     adapter.submitList(it)
@@ -169,20 +172,29 @@ class FragmentMain : BaseFragment(), MainActivityAdapter.Listener {
     }
 
     @InternalCoroutinesApi
-    fun insertFrontList(listNameQuestion: String, listUserName: String, nameList: Question) {
-        val frontList = Quiz(
-            null,
-            listNameQuestion,
-            listUserName,
-            TimeManager.getCurrentTime(),
-            0,
-            0,
-            0,
-            0,
-            0
-        )
-        questionViewModel.insertQuizDetail(frontList)
-        if (createQuiz) questionViewModel.insertQuestion(nameList)
+    fun insertFrontList(
+        listNameQuestion: String,
+        listUserName: String,
+        nameList: Question,
+        closeDialog: Boolean
+    ) {
+        if (closeDialog) {
+            val frontList = Quiz(
+                null,
+                listUserName,
+                "",
+                TimeManager.getCurrentTime(),
+                0,
+                0,
+                0,
+                0,
+                0
+            )
+            questionViewModel.insertQuizDetail(frontList)
+        }
+
+
+        questionViewModel.insertQuestion(nameList)
 
         createQuiz = false
     }

@@ -58,12 +58,11 @@ class QuestionActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this, viewModelFactory)[QuestionViewModel::class.java]
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        var nameQuestionUser = intent.getStringExtra(NAME_QUESTION)
         viewModel.userName = intent.getStringExtra(NAME_USER)
         viewModel.stars = intent.getIntExtra(STARS, 0)
 
         Log.d("intent", "${viewModel.stars}")
-        viewModel.idUser = nameQuestionUser!!
+        viewModel.idUser = intent.getStringExtra(NAME_QUESTION) ?: "GeoQuiz"
 
         viewModel.insertQuizDetail()
         viewModel.inits()
@@ -191,7 +190,7 @@ class QuestionActivity : AppCompatActivity() {
 
             R.id.item_list_answer -> {
                 if (!viewModel.hardQuestion) {
-                    val questionActivityIntent = Intent(this, QuestionActivity::class.java)
+                    val questionActivityIntent = Intent(this, QuestionListActivity::class.java)
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         val optionsList =

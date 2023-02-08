@@ -21,6 +21,7 @@ class RefreshDataWorker(
     private val localBroadcastManager by lazy {
         LocalBroadcastManager.getInstance(context)
     }
+    var num = 0
 
     @SuppressLint("RestrictedApi")
     override suspend fun doWork(): Result {
@@ -50,6 +51,7 @@ class RefreshDataWorker(
             val intent = Intent("loaded").apply {
                 putExtra("percent", ((i + 1) * 10)) //Подсчет процента загрузки
             }
+            num++
             localBroadcastManager.sendBroadcast(intent)
         }
 
@@ -60,6 +62,11 @@ class RefreshDataWorker(
 
         Log.d("WorkManager", "Воркер завершен, входные данные-  $questionNum")
         return Result.success(outputData)
+    }
+
+    override fun toString(): String {
+        return String.format("Загруженно вопросов: %s", num)
+
     }
 
     companion object {

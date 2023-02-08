@@ -89,7 +89,7 @@ class QuestionViewModel @Inject constructor(
     var updateQuiz = 0
     var stars = 0
     var percentAnswer = 0
-    var currentIndex = 0                    //Номер вопроса который видет пользователь
+    var currentIndex = 1                    //Номер вопроса который видет пользователь
     var checkTimer = false
 
     //Ильтераторы с помощю которых при их изменении активируется ливдата
@@ -350,7 +350,7 @@ class QuestionViewModel @Inject constructor(
             checkBlockMap()
             checkBlock()
             coderBlockMap()
-            checkAnswer(intToBool(Random.nextInt(0, 1)))
+            checkAnswer(intToBool(Random.nextInt(0, 2)))
             constCurrentIndex++
             resultTextView(points)
             if (constCurrentIndex == numAnswer) {
@@ -362,7 +362,7 @@ class QuestionViewModel @Inject constructor(
             checkBlockMap()
             checkBlock()
             coderBlockMap()
-            checkAnswer(intToBool(Random.nextInt(0, 1)))
+            checkAnswer(intToBool(Random.nextInt(0, 2)))
 
             constCurrentIndex++
             resultTextView(points)
@@ -697,25 +697,25 @@ class QuestionViewModel @Inject constructor(
         list1 = it
         quizList.clear()
 
-            loadedQuestion = false
-            //Загружаем все легкие и сложные вопросы в списки.
-            it.forEach { item ->
+        loadedQuestion = false
+        //Загружаем все легкие и сложные вопросы в списки.
+        it.forEach { item ->
 
-                Log.d("testAdd", "forEach")
-                if (item.idListNameQuestion == idUser) {
-                    if (item.typeQuestion) quizListHardQuestion.add(
-                        com.tpov.schoolquiz.data.model.Quiz(
-                            item.nameQuestion,
-                            item.answerQuestion
-                        )
+            Log.d("testAdd", "forEach")
+            if (item.idListNameQuestion == idUser) {
+                if (item.typeQuestion) quizListHardQuestion.add(
+                    com.tpov.schoolquiz.data.model.Quiz(
+                        item.nameQuestion,
+                        item.answerQuestion
                     )
-                    else quizList.add(
-                        com.tpov.schoolquiz.data.model.Quiz(
-                            item.nameQuestion,
-                            item.answerQuestion
-                        )
+                )
+                else quizList.add(
+                    com.tpov.schoolquiz.data.model.Quiz(
+                        item.nameQuestion,
+                        item.answerQuestion
                     )
-                }
+                )
+            }
         }
 
         //В зависимости сложные или легкие вопросы нужно отобразить, мы выбераем из двух списков - один нужный список
@@ -771,11 +771,12 @@ class QuestionViewModel @Inject constructor(
 
         //Обновляем данные квеста
         quizDB.forEach {
-            if (k) {
-                k = false
+            if (it.nameQuestion == idUser) {
 
-                Log.d("v2.4", "updateQuiz: $it")
-                if (it.nameQuestion == idUser) {
+                if (k) {
+                    k = false
+
+                    Log.d("v2.4", "updateQuiz: $it")
                     updateQuiz(
                         Quiz(
                             it.id,
@@ -790,7 +791,6 @@ class QuestionViewModel @Inject constructor(
                         )
                     )
                 }
-
             }
         }
     }
