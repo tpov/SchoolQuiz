@@ -3,28 +3,26 @@
     <item>
         <shape android:shape="rectangle">
             <corners
-                android:bottomLeftRadius="20dp"
-                android:bottomRightRadius="20dp"
-                android:topLeftRadius="20dp"
-                android:topRightRadius="20dp"/>
+                android:bottomLeftRadius="25dp"
+                android:bottomRightRadius="25dp"/>
             <gradient
-                android:angle="0"
-                android:startColor="@color/design3_top_start"
-                android:endColor="@color/design3_top_end"
+                android:angle="-90"
+                android:startColor="#4D587E"
+                android:endColor="#3E4365"
                 android:type="linear" />
         </shape>
     </item>
     <item
         android:gravity="bottom"
-        android:height="20dp">
+        android:height="25dp">
         <shape android:shape="rectangle">
             <corners
-                android:bottomLeftRadius="20dp"
-                android:bottomRightRadius="20dp"/>
+                android:bottomLeftRadius="25dp"
+                android:bottomRightRadius="25dp"/>
             <gradient
                 android:angle="-90"
                 android:startColor="#00FFFFFF"
-                android:endColor="#80FFFFFF"
+                android:endColor="#26FFFFFF"
                 android:type="linear" />
         </shape>
     </item>

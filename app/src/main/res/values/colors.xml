@@ -16,11 +16,12 @@
     <color name="num_chack_norice_green">#3315FF00</color>
     <color name="tv_main_activity">#3C208324</color>
 
-    <color name="backgraund_item_front_activity">#BF124F5E</color>
+    <color name="backgraund_item_front_activity">#00124F5E</color>
 
     <color name="design3_main_start">#3E486B</color>
     <color name="design3_main_end">#242C41</color>
+    <color name="design3_main_middle">#313654</color>
     <color name="design3_top_start">#9485F2</color>
-    <color name="design3_top_end">#3F51B5</color>
+    <color name="design3_top_end">#5040B8</color>
     <color name="checked_item_menu">#FFFFFF</color>
 </resources>
