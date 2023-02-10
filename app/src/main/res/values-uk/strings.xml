@@ -110,4 +110,5 @@
     <string name="dialog_short_text_delete">delete</string>
     <string name="dialog_short_text_share">Share</string>
     <string name="dialog_text_share">Share text</string>
+    <string name="menu_network">Network</string>
 </resources>

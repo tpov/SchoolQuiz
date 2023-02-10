@@ -216,14 +216,10 @@ class FragmentMain : BaseFragment(), MainActivityAdapter.Listener {
     }
 
     override fun reloadData() {
-        adapter = MainActivityAdapter(this@FragmentMain)
-        binding.rcView.layoutManager = LinearLayoutManager(activity)
-        binding.rcView.adapter = adapter
-
-        questionViewModel.getQuiz.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
-            binding.swipeRefreshLayout.isRefreshing = false;
-        }
+        //val transaction: FragmentTransaction = requireFragmentManager().beginTransaction()
+        //transaction.remove(this)
+        //transaction.add( FragmentMain , com.tpov.schoolquiz.R.id.container)
+        //transaction.commit()
 
     }
 

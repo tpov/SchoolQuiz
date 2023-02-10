@@ -1,11 +1,16 @@
 package com.tpov.schoolquiz.presentation.mainactivity
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
@@ -19,7 +24,9 @@ import com.tpov.schoolquiz.presentation.MainApp
 import com.tpov.schoolquiz.presentation.factory.ViewModelFactory
 import com.tpov.schoolquiz.presentation.fragment.FragmentManager
 import com.tpov.schoolquiz.presentation.mainactivity.info.InfoActivity
-import com.tpov.schoolquiz.presentation.question.QuestionViewModel
+import com.tpov.schoolquiz.presentation.network.profile.ContactFragment
+import com.tpov.schoolquiz.presentation.network.profile.ContactFragment.Companion.PERMISSION_REQUEST_CONTACTS
+import com.tpov.schoolquiz.presentation.network.profile.ContactFragment.Companion.permissions
 import com.tpov.schoolquiz.presentation.settings.SettingsActivity
 import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
@@ -45,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         (application as MainApp).component
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         component.inject(this)
         super.onCreate(savedInstanceState)
@@ -103,6 +111,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun setButtonNavListener() {
 
         binding.bNav.setOnItemSelectedListener {
@@ -113,7 +122,7 @@ class MainActivity : AppCompatActivity() {
 
             when (it.itemId) {
                 R.id.menu_home -> {
-
+                    FragmentManager.setFragment(FragmentMain.newInstance(), this)
                 }
 
                 R.id.menu_new_quiz -> {
@@ -127,10 +136,16 @@ class MainActivity : AppCompatActivity() {
                 R.id.menu_info -> {
                     startActivity(Intent(this@MainActivity, InfoActivity::class.java))
                 }
+
+                R.id.menu_network -> {
+                    FragmentManager.setFragment(ContactFragment.newInstance(), this)
+                }
             }
             true
         }
     }
+
+
 
     private fun loadInterAd() {
         val request = AdRequest.Builder().build()

@@ -13,7 +13,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.tpov.geoquiz"
+        applicationId "com.tpov.schoolquiz"
         minSdkVersion 21
         targetSdkVersion 33
         versionCode 2320
