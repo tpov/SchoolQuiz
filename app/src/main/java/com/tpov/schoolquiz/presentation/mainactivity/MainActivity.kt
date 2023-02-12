@@ -18,15 +18,18 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.google.firebase.auth.FirebaseAuth
 import com.tpov.schoolquiz.R
 import com.tpov.schoolquiz.databinding.ActivityMainBinding
 import com.tpov.schoolquiz.presentation.MainApp
 import com.tpov.schoolquiz.presentation.factory.ViewModelFactory
 import com.tpov.schoolquiz.presentation.fragment.FragmentManager
 import com.tpov.schoolquiz.presentation.mainactivity.info.InfoActivity
+import com.tpov.schoolquiz.presentation.network.AutorisationFragment
 import com.tpov.schoolquiz.presentation.network.profile.ContactFragment
 import com.tpov.schoolquiz.presentation.network.profile.ContactFragment.Companion.PERMISSION_REQUEST_CONTACTS
 import com.tpov.schoolquiz.presentation.network.profile.ContactFragment.Companion.permissions
+import com.tpov.schoolquiz.presentation.network.profile.ProfileFragment
 import com.tpov.schoolquiz.presentation.settings.SettingsActivity
 import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
@@ -43,6 +46,7 @@ class MainActivity : AppCompatActivity() {
     private var iAd: InterstitialAd? = null
     private var numQuestionNotDate = 0
     private lateinit var viewModel: MainActivityViewModel
+
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
@@ -71,7 +75,7 @@ class MainActivity : AppCompatActivity() {
         FragmentManager.setFragment(FragmentMain.newInstance(), this)
 
         loadNumQuestionNotDate()
-        
+
     }
 
     //Окраживаем квадратики в красный и зеленый в зависимости сколько осталось запасных вопросов-дня
@@ -117,8 +121,8 @@ class MainActivity : AppCompatActivity() {
         binding.bNav.setOnItemSelectedListener {
             //it.isChecked = true
             //val animation = AnimationUtils.loadAnimation(applicationContext, R.anim.pulsation)
-                //binding.bNav.startAnimation(animation)
-                //true
+            //binding.bNav.startAnimation(animation)
+            //true
 
             when (it.itemId) {
                 R.id.menu_home -> {
@@ -138,13 +142,25 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.menu_network -> {
-                    FragmentManager.setFragment(ContactFragment.newInstance(), this)
+
+                    val user = FirebaseAuth.getInstance().currentUser
+                    if (user != null) {
+                        Toast.makeText(this@MainActivity, "Аккаунт найден", Toast.LENGTH_LONG)
+                            .show()
+                        FragmentManager.setFragment(ProfileFragment.newInstance(), this)
+                    } else {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Аккаунт не найден, авторизуйтесь.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        FragmentManager.setFragment(AutorisationFragment.newInstance(), this)
+                    }
                 }
             }
             true
         }
     }
-
 
 
     private fun loadInterAd() {
