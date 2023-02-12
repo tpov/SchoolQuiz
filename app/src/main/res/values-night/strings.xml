@@ -7,4 +7,5 @@
     <string name="prompt_password">password</string>
     <string name="action_sign_in_short">out email</string>
     <string name="action_sign_in">Login</string>
+    <string name="action_registration">registration</string>
 </resources>

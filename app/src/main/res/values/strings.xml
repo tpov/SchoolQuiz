@@ -115,5 +115,6 @@ In general, the timer starts if you read an unanswered question.</string>
     <string name="prompt_password">password</string>
     <string name="action_sign_in_short">out email</string>
     <string name="action_sign_in">Login</string>
+    <string name="action_registration">registration</string>
 
 </resources>

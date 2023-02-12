@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity() {
     private var iAd: InterstitialAd? = null
     private var numQuestionNotDate = 0
     private lateinit var viewModel: MainActivityViewModel
+    private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -76,6 +77,11 @@ class MainActivity : AppCompatActivity() {
 
         loadNumQuestionNotDate()
 
+    }
+
+    override fun onStop() {
+        super.onStop()
+        auth.signOut()
     }
 
     //Окраживаем квадратики в красный и зеленый в зависимости сколько осталось запасных вопросов-дня
