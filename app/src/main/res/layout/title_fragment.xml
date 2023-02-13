@@ -5,8 +5,7 @@
     android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/db_design3_main"
-    android:elevation="20dp">
+    android:background="@drawable/db_design3_main">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"

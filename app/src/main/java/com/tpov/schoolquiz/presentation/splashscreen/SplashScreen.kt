@@ -7,6 +7,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -152,10 +154,14 @@ class SplashScreen : AppCompatActivity() {
             notificationManager.createNotificationChannel(notificationChannel)
         }
 
+        val largeIcon = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher3)
+        val smallIcon = Bitmap.createScaledBitmap(largeIcon, 128, 128, false)
+
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(title)
             .setContentText(name)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.mipmap.ic_launcher3)
+            .setLargeIcon(smallIcon)
             .build()
         notificationManager.notify(1, notification)
     }
