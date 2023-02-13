@@ -47,9 +47,9 @@ class MainActivityAdapter(private val listener: Listener) :
             tvAllStars.text =
                 String.format("%.2f", (quiz.starsAll.toFloat() * PERCENT_TWO_STARS) / quiz.numA)
 
-            if (quiz.stars >= MAX_PERCENT) {
-                mainTitleButton.setBackgroundResource(R.color.num_chack_norice_red)
-            } else mainTitleButton.setBackgroundResource(R.color.num_chack_norice_green)
+            //if (quiz.stars >= MAX_PERCENT) {
+            //    mainTitleButton.setBackgroundResource(R.color.num_chack_norice_red)
+            //} else mainTitleButton.setBackgroundResource(R.color.num_chack_norice_green)
             imDeleteQuiz.setOnClickListener {
                 listener.deleteItem(quiz.id!!)
             }
@@ -63,10 +63,10 @@ class MainActivityAdapter(private val listener: Listener) :
 
             if (quiz.stars >= MAX_PERCENT) {
                 tvHardQuiz.setText(R.string.hard_question)
-                tvHardQuiz.setBackgroundResource(R.color.num_chack_norice_red)
+                //tvHardQuiz.setBackgroundResource(R.color.num_chack_norice_red)
             } else {
                 tvHardQuiz.setText(R.string.light_question)
-                tvHardQuiz.setBackgroundResource(R.color.num_chack_norice_green)
+                //tvHardQuiz.setBackgroundResource(R.color.num_chack_norice_green)
             }
 
             if (quiz.stars <= MAX_PERCENT) ratingBar.rating = (quiz.stars.toFloat() / 50)
