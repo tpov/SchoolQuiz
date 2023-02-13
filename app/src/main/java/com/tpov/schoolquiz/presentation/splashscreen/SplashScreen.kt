@@ -155,7 +155,7 @@ class SplashScreen : AppCompatActivity() {
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(title)
             .setContentText(name)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.mipmap.ic_launcher3)
             .build()
         notificationManager.notify(1, notification)
     }
