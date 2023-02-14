@@ -114,4 +114,6 @@
     <string name="action_sign_in_short">out email</string>
     <string name="action_sign_in">Login</string>
     <string name="action_registration">registration</string>
+    <string name="prompt_name">Your name</string>
+    <string name="prompt_years">Your years</string>
 </resources>

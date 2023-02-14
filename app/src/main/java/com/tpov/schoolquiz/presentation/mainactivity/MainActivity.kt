@@ -1,16 +1,11 @@
 package com.tpov.schoolquiz.presentation.mainactivity
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
@@ -26,9 +21,6 @@ import com.tpov.schoolquiz.presentation.factory.ViewModelFactory
 import com.tpov.schoolquiz.presentation.fragment.FragmentManager
 import com.tpov.schoolquiz.presentation.mainactivity.info.InfoActivity
 import com.tpov.schoolquiz.presentation.network.AutorisationFragment
-import com.tpov.schoolquiz.presentation.network.profile.ContactFragment
-import com.tpov.schoolquiz.presentation.network.profile.ContactFragment.Companion.PERMISSION_REQUEST_CONTACTS
-import com.tpov.schoolquiz.presentation.network.profile.ContactFragment.Companion.permissions
 import com.tpov.schoolquiz.presentation.network.profile.ProfileFragment
 import com.tpov.schoolquiz.presentation.settings.SettingsActivity
 import kotlinx.coroutines.InternalCoroutinesApi

@@ -3,28 +3,22 @@ package com.tpov.schoolquiz.presentation.network
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.tpov.schoolquiz.R
 import com.tpov.schoolquiz.presentation.fragment.BaseFragment
-import com.tpov.schoolquiz.presentation.fragment.FragmentManager
-import com.tpov.schoolquiz.presentation.mainactivity.FragmentMain
 import com.tpov.schoolquiz.presentation.network.profile.ProfileFragment
 
 class AutorisationFragment : BaseFragment() {
     private lateinit var usernameEditText: EditText
     private lateinit var passwordEditText: EditText
+    private lateinit var nameEditText: EditText
+    private lateinit var dateEditText: EditText
+    private lateinit var loginCity: EditText
     private lateinit var loginButton: Button
     private lateinit var registrationButton: Button
     private lateinit var loadingProgressBar: ProgressBar
@@ -48,9 +42,12 @@ class AutorisationFragment : BaseFragment() {
         viewModel = ViewModelProvider(this)[AutorisationViewModel::class.java]
         usernameEditText = view.findViewById(R.id.username)
         passwordEditText = view.findViewById(R.id.password)
+        nameEditText = view.findViewById(R.id.loginName)
+        dateEditText = view.findViewById(R.id.years)
         loginButton = view.findViewById(R.id.login)
         loadingProgressBar = view.findViewById(R.id.loading)
         registrationButton = view.findViewById(R.id.registration)
+        loginCity = view.findViewById(R.id.city)
 
         loginButton.setOnClickListener {
             viewModel.loginAcc(
@@ -64,7 +61,10 @@ class AutorisationFragment : BaseFragment() {
             viewModel.createAcc(
                 usernameEditText.text.toString(),
                 passwordEditText.text.toString(),
-                requireContext()
+                requireContext(),
+                nameEditText.text.toString(),
+                dateEditText.text.toString(),
+                loginCity.text.toString()
             )
         }
 
@@ -77,11 +77,5 @@ class AutorisationFragment : BaseFragment() {
                 Log.d("v3.0", "fragmentTransaction?.commit()")
             }
         }
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-
     }
 }
