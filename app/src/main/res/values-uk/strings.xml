@@ -110,4 +110,10 @@
     <string name="dialog_short_text_delete">delete</string>
     <string name="dialog_short_text_share">Share</string>
     <string name="dialog_text_share">Share text</string>
+    <string name="menu_network">Network</string>
+    <string name="prompt_email">email</string>
+    <string name="prompt_password">password</string>
+    <string name="action_sign_in_short">out email</string>
+    <string name="action_sign_in">Login</string>
+    <string name="action_registration">registration</string>
 </resources>

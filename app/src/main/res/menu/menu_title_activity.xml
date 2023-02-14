@@ -26,4 +26,10 @@
         android:title="@string/menu_info"
         app:showAsAction="always"
         />
+
+    <item android:id="@+id/menu_network"
+        android:icon="@drawable/baseline_public_24"
+        android:title="@string/menu_network"
+        app:showAsAction="ifRoom"
+        />
 </menu>
