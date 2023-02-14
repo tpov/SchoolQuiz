@@ -5,9 +5,11 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.tpov.schoolquiz.data.model.Buy
@@ -19,7 +21,9 @@ import com.tpov.schoolquiz.data.model.TimeInGames
 class AutorisationViewModel : ViewModel() {
 
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
+    private val database: FirebaseDatabase by lazy { FirebaseDatabase.getInstance() }
     val someData = MutableLiveData<Boolean>()
+    private lateinit var databaseReference: DatabaseReference
 
     fun loginAcc(email: String, pass: String, context: Context) {
         val user = auth.currentUser
@@ -41,6 +45,8 @@ class AutorisationViewModel : ViewModel() {
         city: String
     ) {
         auth.createUserWithEmailAndPassword(email, pass).addOnSuccessListener {
+            val databaseReference = FirebaseDatabase.getInstance().reference
+
             val user = auth.currentUser
             user?.sendEmailVerification()?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -49,72 +55,31 @@ class AutorisationViewModel : ViewModel() {
                         "Verification email sent to ${user.email}",
                         Toast.LENGTH_LONG
                     ).show()
+
+                        database.getReference("Profiles/${user.uid}").setValue(
+                        Profile(
+                            -1,
+                            email,
+                            name,
+                            date,
+                            Points(0, 0, 0, 0),
+                            "0",
+                            Buy(1, 0, 1, "0", "0", "0"),
+                            "0",
+                            "",
+                            city,
+                            0,
+                            TimeInGames("", "", "0", 0)
+                        )
+                    )
+
                 } else {
                     Toast.makeText(context, "Failed to send verification email.", Toast.LENGTH_LONG)
                         .show()
                 }
             }
-            Toast.makeText(context, "create account successful", Toast.LENGTH_LONG).show()
             //todo start Activity
-
-            val usersRef = FirebaseDatabase.getInstance().getReference("Profiles")
-
-
-            val databaseReference = FirebaseDatabase.getInstance().reference
-            val usersReference = databaseReference.child("Profiles")
-
-            usersReference.orderByChild("tpovId").limitToLast(1)
-                .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        if (snapshot.hasChildren()) {
-                            val lastUser = snapshot.children.first().getValue(Profile::class.java)
-                            // создайте новый объект Profile с новым tpovId и отправьте его в Firebase
-                            usersRef.push().setValue(
-                                Profile(
-                                    lastUser!!.tpovId.plus(1),
-                                    email,
-                                    name,
-                                    date,
-                                    Points(0, 0.0, 0.0, 0),
-                                    "0",
-                                    Buy(1, 0, 1, "0", "0", "0"),
-                                    "0",
-                                    "",
-                                    city,
-                                    0,
-                                    TimeInGames("", "", "0", 0)
-                                )
-                            )
-                        } else {
-                            usersRef.push().setValue(
-                                Profile(
-                                    1,
-                                    email,
-                                    name,
-                                    date,
-                                    Points(0, 0.0, 0.0, 0),
-                                    "0",
-                                    Buy(1, 0, 1, "0", "0", "0"),
-                                    "0",
-                                    "",
-                                    city,
-                                    0,
-                                    TimeInGames("", "", "0", 0)
-                                )
-                            )
-                        }
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        // обработайте ошибку
-                    }
-                })
-
-
-        }.addOnFailureListener {
-            Toast.makeText(context, "error create account, try again", Toast.LENGTH_LONG).show()
         }
-
     }
 
 
@@ -128,7 +93,7 @@ class AutorisationViewModel : ViewModel() {
         auth.addAuthStateListener { firebaseAuth ->
             val user = firebaseAuth.currentUser
             if (user != null) {
-                loadData()
+
             } else {
 
             }
@@ -144,8 +109,5 @@ class AutorisationViewModel : ViewModel() {
         }
     }
 
-    private fun loadData() {
-
-    }
 
 }

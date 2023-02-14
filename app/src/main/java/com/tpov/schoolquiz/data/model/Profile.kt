@@ -23,9 +23,9 @@ data class TimeInGames(
 )
 
 data class Buy(
-    val heart: Byte,
-    val goldHeart: Byte,
-    val quizPlace: Byte,
+    val heart: Int,
+    val goldHeart: Int,
+    val quizPlace: Int,
     val theme: String,
     val music: String,
     val logo: String
@@ -33,7 +33,7 @@ data class Buy(
 
 data class Points(
     val gold: Int,
-    val skill: Double,
-    val skillInSesone: Double,
+    val skill: Int,
+    val skillInSesone: Int,
     val nolics: Int
 )
