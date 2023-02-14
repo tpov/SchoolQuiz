@@ -3,6 +3,7 @@ package com.tpov.schoolquiz.di
 import android.app.Application
 import com.tpov.schoolquiz.presentation.mainactivity.FragmentMain
 import com.tpov.schoolquiz.presentation.mainactivity.MainActivity
+import com.tpov.schoolquiz.presentation.network.profile.ProfileFragment
 import com.tpov.schoolquiz.presentation.question.QuestionActivity
 import com.tpov.schoolquiz.presentation.question.QuestionListActivity
 import com.tpov.schoolquiz.presentation.splashscreen.SplashScreen
@@ -28,6 +29,8 @@ interface ApplicationComponent {
     fun inject(activity: SplashScreen)
 
     fun inject(activity: MainActivity)
+
+    fun inject(profileFragment: ProfileFragment)
 
     @Component.Factory
     interface Factory {     //Граф зависимостей

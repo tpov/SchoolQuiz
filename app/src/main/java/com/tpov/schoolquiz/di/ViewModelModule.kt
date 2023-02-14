@@ -3,6 +3,7 @@ package com.tpov.schoolquiz.di
 import androidx.lifecycle.ViewModel
 import com.tpov.schoolquiz.di.ViewModelKey
 import com.tpov.schoolquiz.presentation.mainactivity.MainActivityViewModel
+import com.tpov.schoolquiz.presentation.network.profile.ProfileViewModel
 import com.tpov.schoolquiz.presentation.question.QuestionViewModel
 import com.tpov.schoolquiz.presentation.splashscreen.SplashScreenViewModel
 import dagger.Binds
@@ -30,5 +31,10 @@ interface ViewModelModule {
     @IntoMap
     @ViewModelKey(SplashScreenViewModel::class)
     fun bindSplashScreenViewModel(viewModel: SplashScreenViewModel): ViewModel
+    @InternalCoroutinesApi
+    @Binds
+    @IntoMap
+    @ViewModelKey(ProfileViewModel::class)
+    fun bindProfileViewModel(viewModel: ProfileViewModel): ViewModel
 
 }

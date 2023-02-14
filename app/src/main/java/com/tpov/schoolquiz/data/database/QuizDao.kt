@@ -27,6 +27,10 @@ interface QuizDao {
     fun getQuiz() : LiveData<List<Quiz>>
     @Query("SELECT * FROM front_list")
     fun getQuizList() : List<Quiz>
+
+    @Query("SELECT * FROM new_user_table")
+    fun getQuestionList() : List<Question>
+
     @Query("SELECT* FROM new_user_table")
     fun getQuestion() : LiveData<List<Question>>
     @Query("SELECT * FROM table_generate_question")

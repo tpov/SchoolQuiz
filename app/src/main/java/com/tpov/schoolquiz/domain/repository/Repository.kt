@@ -50,4 +50,6 @@ interface Repository {
     fun getInfoQuestionList(): List<QuizDetail>
 
     fun getQuizList(): List<Quiz>
+
+    fun getQuestionListUseVase(): List<Question>
 }

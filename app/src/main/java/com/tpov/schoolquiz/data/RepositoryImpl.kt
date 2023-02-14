@@ -42,6 +42,7 @@ class RepositoryImpl @Inject constructor(
     override fun getQuiz() = dao.getQuiz()
 
     override fun getQuizList() = dao.getQuizList()
+    override fun getQuestionListUseVase() = dao.getQuestionList()
 
 
     override fun insertQuiz(quiz: Quiz) {
