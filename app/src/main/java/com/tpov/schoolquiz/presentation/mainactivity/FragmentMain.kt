@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.tpov.schoolquiz.R
 import com.tpov.schoolquiz.data.database.entities.Question
 import com.tpov.schoolquiz.data.database.entities.Quiz
@@ -27,6 +28,7 @@ import com.tpov.shoppinglist.utils.ShareHelper
 import com.tpov.shoppinglist.utils.TimeManager
 import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
+
 
 @InternalCoroutinesApi
 class FragmentMain : BaseFragment(), MainActivityAdapter.Listener {
@@ -168,6 +170,7 @@ class FragmentMain : BaseFragment(), MainActivityAdapter.Listener {
         savedInstanceState: Bundle?
     ): View {
         binding = inflate(inflater, container, false)
+        binding.swipeRefreshLayout.setOnRefreshListener { reloadData() }
         return binding.root
     }
 
@@ -210,6 +213,18 @@ class FragmentMain : BaseFragment(), MainActivityAdapter.Listener {
 
     override fun shareItem(name: String, stars: Int) {
         FragmentManager.currentFrag?.onClickNew(SHARE_QUIZ, stars)
+    }
+
+    override fun reloadData() {
+        adapter = MainActivityAdapter(this@FragmentMain)
+        binding.rcView.layoutManager = LinearLayoutManager(activity)
+        binding.rcView.adapter = adapter
+
+        questionViewModel.getQuiz.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
+            binding.swipeRefreshLayout.isRefreshing = false;
+        }
+
     }
 
     companion object {

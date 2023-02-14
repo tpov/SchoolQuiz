@@ -3,6 +3,7 @@ package com.tpov.schoolquiz.presentation.mainactivity
 import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -49,6 +50,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Remove the action bar
+        supportActionBar?.hide()
 
         viewModel = ViewModelProvider(this, viewModelFactory)[MainActivityViewModel::class.java]
         insertQuestion("GeoQuiz")
@@ -102,6 +106,11 @@ class MainActivity : AppCompatActivity() {
     private fun setButtonNavListener() {
 
         binding.bNav.setOnItemSelectedListener {
+            //it.isChecked = true
+            //val animation = AnimationUtils.loadAnimation(applicationContext, R.anim.pulsation)
+                //binding.bNav.startAnimation(animation)
+                //true
+
             when (it.itemId) {
                 R.id.menu_home -> {
 
